@@ -17,19 +17,21 @@ for an X amount of ADA.
 # TODOs
 
 Front-End 
-    [x] integrate button on front end that instantiates a mint 
-    [x] Button needs to submit an api to its local proxy localhost:30001 and hit the /api/mint/ get request endpoint
-    - Get Request returns a hashed metadata of the contents the user will mint (can also build the transaction in the backend since we dont have
+
+    * [x] integrate button on front end that instantiates a mint 
+    * [x] Button needs to submit an api to its local proxy localhost:30001 and hit the /api/mint/ get request endpoint
+    * Get Request returns a hashed metadata of the contents the user will mint (can also build the transaction in the backend since we dont have
       to hide the nft asset like standard vending machine mints)
-    - If status is 200 build transaction of the nft, the amount of ada they plan to pay on the front end (safer if i build this in the backend)
-    - Prompt user to sign transaction via nami wallet smart contract
-    - Submit signed transaction to /api/mint/submitTransaction endpoint
+    * If status is 200 build transaction of the nft, the amount of ada they plan to pay on the front end (safer if i build this in the backend)
+    * Prompt user to sign transaction via nami wallet smart contract
+    * Submit signed transaction to /api/mint/submitTransaction endpoint
 Back-End
-    - /api/mint endpoint
-        - build hashed metadata and respond to request with data
-        - can possibly build the full transaction here and submit just that (look into)
-    - /api/submit-transaction
-        - attach my signature + signature from front end to witnesses
-        - attach witness to transaction to submit to blockchain
-        - verify txhash and return a confirmation that the user minted the asset
+
+    * /api/mint endpoint
+        * build hashed metadata and respond to request with data
+        * can possibly build the full transaction here and submit just that (look into)
+    * /api/submit-transaction
+        * attach my signature + signature from front end to witnesses
+        * attach witness to transaction to submit to blockchain
+        * verify txhash and return a confirmation that the user minted the asset
     
