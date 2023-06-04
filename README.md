@@ -25,8 +25,10 @@ Front-End
     * If status is 200 build transaction of the nft, the amount of ada they plan to pay on the front end (safer if i build this in the backend)
     * Prompt user to sign transaction via nami wallet smart contract
     * Submit signed transaction to /api/mint/submitTransaction endpoint
-Back-End
 
+Back-End
+    * redirect discord to a route that only the backend can instantiate
+        * ensure auth token is saved to a db with a respected user and update token property (could be useful later)
     * /api/mint endpoint
         * build hashed metadata and respond to request with data
         * can possibly build the full transaction here and submit just that (look into)
