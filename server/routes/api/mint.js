@@ -1,6 +1,7 @@
 import { Router } from 'express';
 const router = Router();
 
+// /api/mint
 // instantiate mint process from server
 router.get('/', async (req, res) => {
   console.log('hit')

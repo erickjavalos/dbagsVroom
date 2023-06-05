@@ -20,6 +20,8 @@ Front-End
 
     * [x] integrate button on front end that instantiates a mint 
     * [x] Button needs to submit an api to its local proxy localhost:30001 and hit the /api/mint/ get request endpoint
+    * create method to ensure auth token is valid and not a fake one loaded to local storage
+    * ensure that auth token refresh errors out and prompts user to sign in again after expiration
     * Get Request returns a hashed metadata of the contents the user will mint (can also build the transaction in the backend since we dont have
       to hide the nft asset like standard vending machine mints)
     * If status is 200 build transaction of the nft, the amount of ada they plan to pay on the front end (safer if i build this in the backend)
