@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import { fromText, Lucid,Blockfrost } from "lucid-cardano";
 import Header from '../../components/Header';
+import Auth from '../../utils/auth';
+
+
 // TODO: may have to hide this api key later on for security reasons
 const lucid = await Lucid.new(
     new Blockfrost("https://cardano-preprod.blockfrost.io/api/v0", "preprod537IKjHMy3Pots7uk6KKitjlUyIKGdw0"),
@@ -29,26 +32,40 @@ function Home() {
       // const tx = await lucid.newTx()
       // console.log(tx)
     }
+    // helper functions
+    const logout = (event) => {
+      event.preventDefault();
+      Auth.logout();
+    };
 
     return (
-
         <>
-            <Header updateWalletConnected={updateWalletConnected}/>
+          {Auth.loggedIn() ? (
+            <>
+              <Header updateWalletConnected={updateWalletConnected} loggedIn={true} logout={logout}/>
 
-            {walletConnected === null ? 
-              <h1>Wallet not connected</h1> 
-              :
-              <section className="bg-gray-200 p-4 flex justify-center items-center">
-                <div className="container mx-auto">
-                  <button 
-                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={processMintRequest}
-                  >
-                    Mint
-                  </button>
-                </div>
-              </section>
-            }
+              {walletConnected === null ? 
+                <h1>Wallet not connected</h1> 
+                :
+                <section className="bg-gray-200 p-4 flex justify-center items-center">
+                  <div className="container mx-auto">
+                    <button 
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={processMintRequest}
+                    >
+                      Mint
+                    </button>
+                  </div>
+                </section>
+              }
+            </>
+            ) :
+            (
+            <>
+              <Header updateWalletConnected={updateWalletConnected} loggedIn={false}/>
+
+            </>              
+            )}
 
         </>
     )
