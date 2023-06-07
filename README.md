@@ -31,6 +31,8 @@ Front-End
 Back-End
     * redirect discord to a route that only the backend can instantiate
         * ensure auth token is saved to a db with a respected user and update token property (could be useful later)
+    * ensure that security is set up between api requests to the backend.
+        - use graphql that uses their respected auth token to only mint assets that belong to them. 
     * /api/mint endpoint
         * build hashed metadata and respond to request with data
         * can possibly build the full transaction here and submit just that (look into)
@@ -38,4 +40,5 @@ Back-End
         * attach my signature + signature from front end to witnesses
         * attach witness to transaction to submit to blockchain
         * verify txhash and return a confirmation that the user minted the asset
+    * when i receive the signature back find a way to verify the wallet they signed with and the wallet they connect with, if true! we are good !
     
