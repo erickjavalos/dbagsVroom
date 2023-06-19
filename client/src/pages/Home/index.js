@@ -6,7 +6,7 @@ import Auth from '../../utils/auth';
 
 // TODO: may have to hide this api key later on for security reasons
 const lucid = await Lucid.new(
-    new Blockfrost("https://cardano-preprod.blockfrost.io/api/v0", "preprod537IKjHMy3Pots7uk6KKitjlUyIKGdw0"),
+    new Blockfrost("https://cardano-preprod.blockfrost.io/api/v0", "preprodEfV6mA9d1Mkavc5XRYmFGsPdqAfj1HGx"),
     "Preprod",
   );
 
