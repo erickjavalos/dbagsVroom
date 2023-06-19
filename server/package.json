@@ -2,11 +2,11 @@
   "name": "nami-wallet-integration",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "clean": "rm -rf node_modules/ package-lock.json && cd nami-node-js && rm -rf node_modules/ package-lock.json && cd -",
     "install": "cd nami-node-js && npm i",
-    "start": "webpack serve --config ./webpack.config.js --mode development",
+    "start": "node server.js",
     "test": "echo \"No test specified\" && exit 0"
   },
   "keywords": [],
