@@ -2,6 +2,9 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const REMOTE_URL = process.env.REMOTE_URL || 'http://localhost:3001/';
+
+
 module.exports = {
   entry: path.resolve(__dirname, './src/index.js'),
   module: {
@@ -51,7 +54,15 @@ module.exports = {
     publicPath: '/', 
     port: 3000,
     host: '0.0.0.0',
-      disableHostCheck: true,
+    disableHostCheck: true,
+    proxy: {
+      '/api': {
+           target: 'http://localhost:3000',
+           router: () => 'http://localhost:3001',
+           logLevel: 'debug' /*optional*/
+      }
+   }
+
     
   },
 };

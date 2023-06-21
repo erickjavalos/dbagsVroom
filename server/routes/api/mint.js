@@ -15,6 +15,7 @@ nami.setPrivateKey(process.env.WALLET_PRIVATE_KEY)
 // /api/mint
 // instantiate mint process from server
 router.get('/', async (req, res) => {
+  console.log('backend is hit!!!!!!!!!!!!!!*****')
   // read in policy script that was generated
   var policyScript = JSON.parse(fs.readFileSync("./policyScripts/policy.json", "utf8"))
 

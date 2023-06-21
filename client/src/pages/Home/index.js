@@ -13,19 +13,6 @@ const lucid = await Lucid.new(
 function Home() {
     const [walletConnected, setWalletConnected] = useState(null);
 
-    const getDerivedStateFromError=(error)=> {
-      // Update state so the next render will show the fallback UI.
-      return { hasError: true };
-    }
-    const  componentDidCatch = (error, info)=> {
-      // Example "componentStack":
-      //   in ComponentThatThrows (created by App)
-      //   in ErrorBoundary (created by App)
-      //   in div (created by App)
-      //   in App
-      logErrorToMyService(error, info.componentStack);
-    }
-
     // Function to update walletConnected in the App component
     const updateWalletConnected = async (wallet) => {
       setWalletConnected(wallet);
@@ -35,28 +22,21 @@ function Home() {
 
 
     const processMintRequest = async () => {
-      console.log('minting')
       // get hashed metadata
 
       const address = await lucid.wallet.address();
       console.log(address)
 
-      // ping backend
+      // ping backend to initiate mint
       const mint = await fetch('/api/mint/', {
         headers: {
           'Content-Type': 'application/json',
-          // authorization: `Bearer ${token}`,
         },
       });
-      // const data = mint.json()
+
       const data = await mint.json();
       console.log(data)
-
-
-      // const payload = fromText("Hello from Lucid!");
-
-      // const tx = await lucid.newTx()
-      // console.log(tx)
+      
     }
     // helper functions
     const logout = (event) => {
