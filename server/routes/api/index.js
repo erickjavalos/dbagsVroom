@@ -1,9 +1,8 @@
-import { Router } from 'express';
-const router = Router();
+const router = require('express').Router();
 // helper files
-import mint from "./mint.js"
+const mint = require("./mint.js")
 
 // instantiate mint apis endpoint
 router.use('/mint', mint);
 
-export default router;
+module.exports = router;

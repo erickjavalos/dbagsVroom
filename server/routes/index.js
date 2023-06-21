@@ -1,12 +1,11 @@
 // import libraries
-import path from "path"
-import { Router } from 'express';
-const router = Router();
+const path = require('path')
+const router = require('express').Router();
 // import helper files
-import apiRoutes from "./api/index.js"
+const apiRoutes =  require("./api")
 
 // API routes
 router.use('/api', apiRoutes);
 
 // export router
-export default router;
+module.exports = router;

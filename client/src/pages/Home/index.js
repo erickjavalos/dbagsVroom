@@ -27,6 +27,19 @@ function Home() {
 
       const address = await lucid.wallet.address();
       console.log(address)
+
+      // ping backend
+      const mint = await fetch('/api/mint/', {
+        headers: {
+          'Content-Type': 'application/json',
+          // authorization: `Bearer ${token}`,
+        },
+      });
+      // const data = mint.json()
+      const data = await mint.json();
+      console.log(data)
+
+
       // const payload = fromText("Hello from Lucid!");
 
       // const tx = await lucid.newTx()
