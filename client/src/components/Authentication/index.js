@@ -11,6 +11,7 @@ const Authentication = () => {
 
     useEffect(() => {
         // get has returned from discord
+        console.log('authentication hit')
         const query = window.location.hash;
         // verify if query exists 
         if (query) {

@@ -51,6 +51,11 @@ function Home() {
       Auth.logout();
     };
 
+    useEffect()
+    {
+      
+    }
+
     return (
         <>
           {Auth.loggedIn() ? (
