@@ -35,7 +35,9 @@ const Authentication = () => {
             Auth.login(accessToken, Date.now()/1000 + parseInt(expiration))
 
         }
-        }, [window.location.search])
+        }, [])
+
+        // }, [window.location.search])
 
     return (
         <>         

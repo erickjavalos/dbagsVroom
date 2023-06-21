@@ -4,13 +4,12 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 
 import './App.css';
 import Login from './pages/Login';
-import Authentication from './components/Authentication';
+import Authentication from './components/Authentication/index.js';
 import Home from './pages/Home';
 
+// import input from './input.css' ;
+import './dist/output.css'
 
-import NamiWalletApi, { Cardano } from './nami-js';
-import blockfrostApiKey from '../config.js'; 
-let nami;
 
 
 export default function App() {
@@ -21,7 +20,7 @@ export default function App() {
                 <Routes>
                     <Route path="/Login" element={<Login />} />
                     {/* authentication */}
-                    <Route path="/auth/discord" element={<Authentication />} />
+                    <Route path="/auth" element={<Authentication />} />
                     {/* default homepage */}
                     <Route path="/Home" element={<Home />} />
 
