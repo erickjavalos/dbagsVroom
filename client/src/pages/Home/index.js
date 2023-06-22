@@ -4,6 +4,13 @@ import Header from '../../components/Header';
 import Auth from '../../utils/auth';
 
 
+// import nami 
+
+import NamiWalletApi, { Cardano } from '../../nami-js';
+import blockfrostApiKey from '../../../config.js'; 
+let nami;
+
+
 // TODO: may have to hide this api key later on for security reasons
 const lucid = await Lucid.new(
     new Blockfrost("https://cardano-preprod.blockfrost.io/api/v0", "preprodEfV6mA9d1Mkavc5XRYmFGsPdqAfj1HGx"),
@@ -23,6 +30,12 @@ function Home() {
 
     const processMintRequest = async () => {
       // get hashed metadata
+      const S = await Cardano();
+      nami = new NamiWalletApi(
+          S,
+          window.cardano,
+          blockfrostApiKey
+      )
 
       const address = await lucid.wallet.address();
       console.log(address)
@@ -35,7 +48,68 @@ function Home() {
       });
 
       const data = await mint.json();
-      console.log(data)
+      const hashedMeta = data.metaDataHash
+
+      let paymentAddress = await nami.getAddress() // nami wallet address
+      console.log(hashedMeta)
+      console.log(paymentAddress)
+
+      let recipients = [
+          {address: "addr_test1qrnns8ctrctt5ga9g990nc4d7pt0k25gaj0mnlda320ejmprlzyh4mr2psnrgh6ht6kaw860j5rhv44x4mt4csl987zslcr4p6", amount: "10"}, // Seller Wallet, NFT price 10ADA
+          {address: paymentAddress,  amount: "0",
+            mintedAssets:[
+                {
+                  "assetName":"Test1",
+                  "quantity":"1",
+                  "policyId":"91d319c0fc8c557244d2ac5c2d1c0cbeaeb40a13804f122a51705da1",
+                  "policyScript":"8201828200581c98d6a076c31a9d248ec8fe5459682f2ec2623cf376ad0c1c5a61237b82051a02d518fb"
+              }
+          ]} // NFTs to be minted
+          ] // list of recipients
+
+      let dummyMetadata =  {"721":
+          {"36aa169af7dc9bb5a566987191221f2d7a92aab211350f7119fc1541": // policyId
+          {"Test1": // NFTName
+          {"name":"sfgsdfgdfsg",
+          "description":"gsdffsgdfsgdfsgdfsg",
+          "image":"isdgdfsgafsgdfdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfgdfgdfsgdfsgdfsgdfsg"}}
+          }
+      }
+    
+
+      let transaction = await nami.transaction( 
+          {
+              PaymentAddress : paymentAddress, 
+              recipients : recipients,
+              metadata : dummyMetadata, 
+              metadataHash : hashedMeta, 
+              addMetadata : false, 
+              utxosRaw : (await nami.getUtxosHex()),
+              multiSig : true
+          }
+      ) 
+
+
+      // console.log("trying to sign transaction")
+      const witnessBuyer = await nami.signTx(transaction, true)
+      const jsonData = {
+        "witnessBuyer" : witnessBuyer,
+        "transaction" : transaction
+      }
+
+      // console.log(jsonData)
+      // send data to the backend
+      const processMint = await fetch('/api/mint/processMint', {
+        method: 'POST',
+        body: JSON.stringify({
+          "witnessBuyer" : witnessBuyer,
+          "transaction" : transaction
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log(jsonData)
       
     }
     // helper functions

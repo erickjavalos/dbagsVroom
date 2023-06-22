@@ -413,9 +413,31 @@ class NamiWalletApi {
         return Buffer.from(RawTransaction, "hex").toString("hex")
       
     }
+
+    async signTxCBOR(txHash,signingKeyHexCBOR){ 
+
+        const transaction = S.Transaction.from_bytes(Buffer.from(txHash, "hex"));
+
+        const transaction_body = transaction.body()
+    
+        const txBodyHash = S.hash_transaction(transaction_body)
+    
+        // const witness = S.make_vkey_witness(txBodyHash, this.paymentKey.to_raw_key())
+        const signingKey = S.PrivateKey.from_normal_bytes(Buffer.from(signingKeyHexCBOR,'hex'));
+        const witness = S.make_vkey_witness(txBodyHash, signingKey)
+        const witnessSet = S.TransactionWitnessSet.new()
+        const vKeys = S.Vkeywitnesses.new();
+        vKeys.add(witness);
+        witnessSet.set_vkeys(vKeys);
+
+        return Buffer.from(witnessSet.to_bytes(), "hex").toString("hex")
+
+    }
+
     signTx(txHash){ 
 
         const transaction = S.Transaction.from_bytes(Buffer.from(txHash, "hex"));
+
 
         const transaction_body = transaction.body()
     
@@ -450,9 +472,7 @@ class NamiWalletApi {
         const totalVkeys = S.Vkeywitnesses.new();
         const totalScripts = S.NativeScripts.new();
 
-
         for (let witness of witnesses){
-        console.log(witness)
         const addWitnesses = S.TransactionWitnessSet.from_bytes(
             Buffer.from(witness, "hex")
         );
