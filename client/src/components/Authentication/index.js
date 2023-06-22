@@ -11,6 +11,7 @@ const Authentication = () => {
 
     useEffect(() => {
         // get has returned from discord
+        console.log('authentication hit')
         const query = window.location.hash;
         // verify if query exists 
         if (query) {
@@ -34,7 +35,9 @@ const Authentication = () => {
             Auth.login(accessToken, Date.now()/1000 + parseInt(expiration))
 
         }
-        }, [window.location.search])
+        }, [])
+
+        // }, [window.location.search])
 
     return (
         <>         
