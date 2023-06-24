@@ -22,38 +22,48 @@ function Home() {
 
     // Function to update walletConnected in the App component
     const updateWalletConnected = async (wallet) => {
+      console.log('updating wallet thats connected')
+      console.log(await wallet.getBalance())
       setWalletConnected(wallet);
       lucid.selectWallet(wallet);
-      console.log(await lucid.wallet.address())
+      // console.log(await lucid.wallet.address())
     };
 
 
     const processMintRequest = async () => {
       // get hashed metadata
+      console.log('gettin address')
+      // instantiate serialization lib that helps decode blockchain data
       const S = await Cardano();
+      // initialize nami wallet helper class
       nami = new NamiWalletApi(
           S,
           window.cardano,
-          blockfrostApiKey
+          blockfrostApiKey,
+          walletConnected
       )
 
-      const address = await lucid.wallet.address();
-      console.log(address)
-
-      // ping backend to initiate mint
+      // GET hashed metadata
       const mint = await fetch('/api/mint/', {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-
+      
+      // extract data 
       const data = await mint.json();
+      // extract hashed metadata
       const hashedMeta = data.metaDataHash
+      console.log(`hashed metadata ${hashedMeta}`)
 
+      // extract payment address
       let paymentAddress = await nami.getAddress() // nami wallet address
-      console.log(hashedMeta)
-      console.log(paymentAddress)
+          
+      // ********************************************
+      // Build Transaction 
+      // ********************************************
 
+      // build recipients 
       let recipients = [
           {address: "addr_test1qrnns8ctrctt5ga9g990nc4d7pt0k25gaj0mnlda320ejmprlzyh4mr2psnrgh6ht6kaw860j5rhv44x4mt4csl987zslcr4p6", amount: "10"}, // Seller Wallet, NFT price 10ADA
           {address: paymentAddress,  amount: "0",
@@ -66,7 +76,7 @@ function Home() {
               }
           ]} // NFTs to be minted
           ] // list of recipients
-
+      // build fake metadata to help estimate gas fees (use maximum packet size to be safe)
       let dummyMetadata =  {"721":
           {"36aa169af7dc9bb5a566987191221f2d7a92aab211350f7119fc1541": // policyId
           {"Test1": // NFTName
@@ -75,8 +85,9 @@ function Home() {
           "image":"isdgdfsgafsgdfdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfgdfgdfsgdfsgdfsgdfsg"}}
           }
       }
-    
 
+      console.log("building transaction...")
+      // combine and build transaction
       let transaction = await nami.transaction( 
           {
               PaymentAddress : paymentAddress, 
@@ -88,17 +99,12 @@ function Home() {
               multiSig : true
           }
       ) 
+      console.log("SUCCESS: transaction built!")
 
-
-      // console.log("trying to sign transaction")
+      // prompt user to sign and retreive signature hash
       const witnessBuyer = await nami.signTx(transaction, true)
-      const jsonData = {
-        "witnessBuyer" : witnessBuyer,
-        "transaction" : transaction
-      }
 
-      // console.log(jsonData)
-      // send data to the backend
+      // send witness buyer signature and transaction to backend to submit to chain
       const processMint = await fetch('/api/mint/processMint', {
         method: 'POST',
         body: JSON.stringify({
@@ -109,7 +115,6 @@ function Home() {
           'Content-Type': 'application/json',
         },
       });
-      console.log(jsonData)
       
     }
     // helper functions
@@ -118,14 +123,9 @@ function Home() {
       Auth.logout();
     };
 
-    // useEffect()
-    // {
-      
-    // }
-
     return (
         <>
-
+          {/* ensure user is signed in */}
           {Auth.loggedIn() ? (
             <>
               <Header updateWalletConnected={updateWalletConnected} loggedIn={true} logout={logout}/>

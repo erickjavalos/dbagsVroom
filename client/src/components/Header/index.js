@@ -41,13 +41,14 @@ function Header({updateWalletConnected, loggedIn, logout}) {
   };
   
   const connectWallet = async (option) => {
+    console.log(`connecting ${option}`)
     // instantiate nami wallet
     if (option === 'nami')
     {
       try {
         let isNamiConnected = await nami.enable()
-        setWalletConnected("nami")
         updateWalletConnected(isNamiConnected)
+
       }
       catch (error) {
         console.log('User did not connect wallet')

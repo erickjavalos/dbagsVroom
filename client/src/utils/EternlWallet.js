@@ -15,7 +15,7 @@ class EternlWallet {
     // prompts user to connect their wallet 
     async enable() {
         try {
-        return await this.cardano.eternl.enable()
+            return await this.cardano.eternl.enable()
         } catch (error) {
         throw error
         }

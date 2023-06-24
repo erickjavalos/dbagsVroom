@@ -15,10 +15,12 @@ const ERROR = {
 }
 
 class NamiWalletApi {
-    constructor(serilizationLib, nami, apiKey) {
+    constructor(serilizationLib, nami, apiKey, walletConnected) {
         this.apiKey  = apiKey
         this.Nami = nami
         this.S = serilizationLib
+        this.walletConnected = walletConnected
+
     }
 // Nami Wallet Endpoints
   async isInstalled() {
@@ -43,10 +45,11 @@ class NamiWalletApi {
 
   async getAddress() {
     
+    // check if wallet is enabled 
     if (!this.isEnabled()) throw ERROR.NOT_CONNECTED;
     
     const addressHex = Buffer.from(
-        (await this.Nami.getUsedAddresses())[0],
+        (await this.walletConnected.getUsedAddresses())[0],
         "hex"
     );
     
@@ -189,7 +192,7 @@ class NamiWalletApi {
 
 
     async getUtxosHex() {
-        return await this.Nami.getUtxos()
+        return await this.walletConnected.getUtxos()
     }
 
 
@@ -376,7 +379,7 @@ class NamiWalletApi {
 
     async signTx(transaction, partialSign = false) {
         if (!this.isEnabled()) throw ERROR.NOT_CONNECTED;
-        return await this.Nami.signTx(transaction, partialSign)
+        return await this.walletConnected.signTx(transaction, partialSign)
       }
     
     async signData(string) {
