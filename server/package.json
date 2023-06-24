@@ -6,6 +6,7 @@
   "scripts": {
     "clean": "rm -rf node_modules/ package-lock.json && cd nami-node-js && rm -rf node_modules/ package-lock.json && cd -",
     "install": "cd nami-node-js && npm i",
+    "seed": "node seeders/seed.js",
     "start": "node server.js",
     "test": "echo \"No test specified\" && exit 0",
     "watch": "nodemon server.js"
