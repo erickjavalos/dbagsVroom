@@ -3,7 +3,7 @@ const fetch = require("node-fetch");
 // global variables to test with 
 // const address = "addr1q87yt2za4kffkdhsfzdu7vdvneqmq88g2lhz05fws8n6dz0u3jv9a6thqhl78emaank57ysk63yrg0wnrnu65su9uplsd6ahr0"
 // good test
-const address = "addr1q80pljq9mqjlx23dn6ryny7enfrf24k5v3aefn4pxds9s7edmsmpfaq4mzhh5jmyhsdk8h68xczw0k9r3n0vcxllz79q3vksqr"
+const address = "addr1q87zlevtssntccuu5afvg0j8hpdyes7k5w9k3lg7eu6jxsd46zeke4dvex433xpgufpz3q8tvh2vhcr6hnel8673khfsnzpy2f"
 
 const dbagsPolicyId = "320eb1b7e2f7127be233d43ff051abfb83684d7bcecb381aa10c238a"
 
@@ -71,8 +71,8 @@ const getAllAssetUnits = async (stakeAddress,projectPolicyID) => {
             if (policyID === projectPolicyID)
             {
                 // get full asset details and append to array
-                const assetDetails = await getAssetInformation(assetsUnit[i].unit)
-                assets.push(assetDetails)
+                // const assetDetails = await getAssetInformation(assetsUnit[i].unit)
+                assets.push(assetsUnit[i])
             }
         }
 
