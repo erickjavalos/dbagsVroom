@@ -102,9 +102,12 @@ function Home() {
       console.log("SUCCESS: transaction built!")
 
       // prompt user to sign and retreive signature hash
+      console.log("Prompting user to sign")
       const witnessBuyer = await nami.signTx(transaction, true)
+      console.log("SUCCESS: user signed transaction")
 
       // send witness buyer signature and transaction to backend to submit to chain
+      console.log("Asset minting...")
       const processMint = await fetch('/api/mint/processMint', {
         method: 'POST',
         body: JSON.stringify({
