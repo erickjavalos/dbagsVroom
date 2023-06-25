@@ -1,6 +1,8 @@
 // libraries
 const express = require('express')
 const routes = require('./routes/')
+const db = require('./config/connection');
+
 
 // instantiate express and port 
 const app = express();
@@ -13,4 +15,8 @@ app.use(express.json());
 app.use(routes);
 
 // start server
-app.listen(PORT, () => console.log('Now listening'));
+db.once('open', () => {
+    app.listen(PORT, () => {
+      console.log(`API server running on port ${PORT}!`);
+    });
+});
