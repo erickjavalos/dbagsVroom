@@ -18,16 +18,6 @@ import "./dist/output.css";
 export default function App() {
   return (
     <>
-      <h1 className="bg-red-100">Very light red</h1>
-      <h1 className="bg-red-200">Light red</h1>
-      <h1 className="bg-red-300">Medium light red</h1>
-      <h1 className="bg-red-400">Medium red</h1>
-      <h1 className="bg-red-500">Default red</h1>
-      <h1 className="bg-red-600">Medium dark red</h1>
-      <h1 className="bg-red-700">Dark red</h1>
-      <h1 className="bg-red-800">Very dark red</h1>
-      <h1 className="bg-red-900">Almost black red</h1>
-
       <Router>
         <Routes>
           <Route path="/Login" element={<Login />} />
