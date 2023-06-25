@@ -3,6 +3,7 @@ import namiImg from "../../images/nami.png";
 import eternlImg from "../../images/eternl.png";
 import NamiWallet from "../../utils/NamiWallet";
 import EternlWallet from "../../utils/EternlWallet";
+import LoadingButton from '../../components/LoadingButton/'
 
 // let nami and eternl wallet be a global variable that can be access all throughout the app
 let nami = null;
@@ -10,6 +11,7 @@ let eternl = null;
 
 // header component
 function Header({updateWalletConnected, loggedIn, logout}) {
+  const [showLoader, setShowLoader] = useState(false)
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [namisInstalled, setNamisInstalled] = useState(true);
   const [eternlInstalled, setEternlInstalled] = useState(true);
@@ -33,6 +35,11 @@ function Header({updateWalletConnected, loggedIn, logout}) {
     verifyWallets()
 
   }, [])
+
+  const onSubmit = () => {
+    // setShowLoader(true)
+    // setTimeout(() => setShowLoader(false), 1000)
+  }
     
 
   const selectWallet = () => {
@@ -41,6 +48,7 @@ function Header({updateWalletConnected, loggedIn, logout}) {
   };
   
   const connectWallet = async (option) => {
+    setShowLoader(true)
     console.log(`connecting ${option}`)
     // instantiate nami wallet
     if (option === 'nami')
@@ -48,7 +56,8 @@ function Header({updateWalletConnected, loggedIn, logout}) {
       try {
         let isNamiConnected = await nami.enable()
         setWalletConnected("nami")
-        updateWalletConnected(isNamiConnected)
+        await updateWalletConnected(isNamiConnected)
+        
 
       }
       catch (error) {
@@ -60,7 +69,7 @@ function Header({updateWalletConnected, loggedIn, logout}) {
       try {
         let isEternlConnected = await eternl.enable()
         setWalletConnected("eternl")
-        updateWalletConnected(isEternlConnected)
+        await updateWalletConnected(isEternlConnected)
       }
       catch (error) {
         console.log('User did not connect wallet')
@@ -68,6 +77,7 @@ function Header({updateWalletConnected, loggedIn, logout}) {
       }
     }
     setDropdownOpen(!isDropdownOpen);
+    setShowLoader(false)
   };
 
  
@@ -78,12 +88,20 @@ function Header({updateWalletConnected, loggedIn, logout}) {
     <div className="relative">
       {loggedIn ? ( 
         <>
-          <button
+        <LoadingButton
+          text="Submit"
+          onSubmit={selectWallet}
+          loading={showLoader}
+          disabled={showLoader}
+          walletConnected={walletConnected}
+          
+        />
+          {/* <button
             onClick={selectWallet}
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             {walletConnected ? walletConnected + " connected" : "Connect Wallet"}
-          </button>
+          </button> */}
           <button
             onClick={logout}
             className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"

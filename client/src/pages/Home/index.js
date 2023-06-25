@@ -22,11 +22,8 @@ function Home() {
 
     // Function to update walletConnected in the App component
     const updateWalletConnected = async (wallet) => {
-      console.log('updating wallet thats connected')
-      console.log(await wallet.getBalance())
       setWalletConnected(wallet);
-      lucid.selectWallet(wallet);
-      // console.log(await lucid.wallet.address())
+      console.log('wallet was set')
     };
 
 
