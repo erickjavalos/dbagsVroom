@@ -19,12 +19,45 @@ const lucid = await Lucid.new(
 
 function Home() {
     const [walletConnected, setWalletConnected] = useState(null);
-
+    const [assets, setAssets] = useState([])
+    
     // Function to update walletConnected in the App component
     const updateWalletConnected = async (wallet) => {
+      // get assets from wallet
+      const assetsData = await getAssets();
+      // set assets state to render in the front end
+      setAssets(assetsData)
+      console.log(assetsData)
+      // submit get request to backend
       setWalletConnected(wallet);
       console.log('wallet was set')
     };
+
+    const getAssets = async () => {
+      // TODO: Need to poll the blockchain here for all assets (O(N) look up time)
+      const testdata = {
+        "dbagAssets" : [
+          "dbagMfer1",
+          "dbagMfer2",
+          "dbagMfer6969"
+        ],
+        "autoAssets": [
+          "Dbag Mfers Auto Club 6948",
+          "Dbag Mfers Auto Club 7000"
+        ]
+      }
+      const assets = await fetch('/api/projectData/getIPFS', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(testdata)
+      });
+
+      const data = await assets.json()
+
+      return data
+    }
 
 
     const processMintRequest = async () => {

@@ -3,7 +3,7 @@ const { Dbags, Autos } = require('../../models');
 
 
 // instantiate mint process from server
-router.get('/getIPFS', async (req, res) => {
+router.post('/getIPFS', async (req, res) => {
 
     const dbagAssets = await Dbags.find()
         .where('assetName')
