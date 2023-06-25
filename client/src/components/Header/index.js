@@ -47,6 +47,7 @@ function Header({updateWalletConnected, loggedIn, logout}) {
     {
       try {
         let isNamiConnected = await nami.enable()
+        setWalletConnected("nami")
         updateWalletConnected(isNamiConnected)
 
       }
