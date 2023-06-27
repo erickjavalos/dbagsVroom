@@ -90,115 +90,116 @@ const Minting = () => {
       {/* Header component*/}
       <Header />
       <div className="flex justify-center items-center h-screen bg-green-900">
-  <div className="w-2/3">
-    <div className="flex justify-center items-center h-2/3 bg-white bg-opacity-50 rounded-lg"> {/* Change h-full to h-2/3 */}
-      <div className="w-1/2 bg-purple-800 rounded-lg">
-        <div className="h-2/3 flex flex-col justify-center items-center">
-          <div className="w-full h-2/3">
-            {/* Minted assets/NFT will render here */}
-            {imageUrls.length > 0 && (
-              <img
-                src={imageUrls[0]}
-                alt="Image 1"
-                className="w-full h-full object-contain"
-              />
-            )}
+        <div className="w-2/3">
+          <div className="flex justify-center items-center h-2/3 bg-white bg-opacity-50 rounded-lg">
+            {" "}
+            {/* Change h-full to h-2/3 */}
+            <div className="w-1/2 bg-purple-800 rounded-lg">
+              <div className="h-2/3 flex flex-col justify-center items-center">
+                <div className="w-full h-2/3">
+                  {/* Minted assets/NFT will render here */}
+                  {imageUrls.length > 0 && (
+                    <img
+                      src={imageUrls[0]}
+                      alt="Image 1"
+                      className="w-full h-full object-contain"
+                    />
+                  )}
+                </div>
+              </div>
+              {/* Minting button */}
+              <div className="flex justify-center items-center">
+                <button
+                  className="w-1/5 py-2 mt-4 bg-blue-400 text-white rounded hover:bg-blue-600"
+                  onClick={handleMintButtonClick}
+                >
+                  Mint
+                </button>
+              </div>
+            </div>
+            <div className="w-1/2 rounded-lg">
+              <div className="h-1/2 p-6 border border-gray-300 bg-purple-600 bg-opacity-50 rounded-lg">
+                <h3 className="text-center">Dbags</h3>
+                <div className="flex gap-4 mt-4">
+                  {/* Dbags assets/NFTs render here */}
+                  {imageUrls
+                    .slice(currentSlide + 1, currentSlide + 4)
+                    .map((imageUrl, index) => (
+                      <div key={index} className="card">
+                        <img
+                          src={imageUrl}
+                          alt={`Image ${currentSlide + index + 2}`}
+                          className="w-full h-full object-contain"
+                        />
+                        <div className="asset-info">
+                          {/* Render the asset name/number */}
+                          {metadata[currentSlide + index + 1]?.name ||
+                            "Asset Name/Number"}
+                        </div>
+                      </div>
+                    ))}
+                </div>
+                {/* Carousel navigation */}
+                <div className="flex justify-center mt-4">
+                  <button
+                    className="mr-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
+                    onClick={prevSlide}
+                    disabled={currentSlide === 0}
+                  >
+                    {"<"}
+                  </button>
+                  <button
+                    className="ml-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
+                    onClick={nextSlide}
+                    disabled={currentSlide >= imageUrls.length - 7}
+                  >
+                    {">"}
+                  </button>
+                </div>
+              </div>
+              <div className="h-1/2 p-6 mt-4 border border-gray-300 bg-purple-600 bg-opacity-50 rounded-lg">
+                <h3 className="text-center">Whips</h3>
+                <div className="flex gap-4 mt-4">
+                  {/* WHIPS assets/NFTs render here */}
+                  {imageUrls
+                    .slice(currentSlide + 4, currentSlide + 7)
+                    .map((imageUrl, index) => (
+                      <div key={index} className="card">
+                        <img
+                          src={imageUrl}
+                          alt={`Image ${currentSlide + index + 5}`}
+                          className="w-full h-full object-contain"
+                        />
+                        <div className="asset-info">
+                          {/* Render the asset name/number */}
+                          {metadata[currentSlide + index + 4]?.name ||
+                            "Asset Name/Number"}
+                        </div>
+                      </div>
+                    ))}
+                </div>
+                {/* Carousel navigation */}
+                <div className="flex justify-center mt-4">
+                  <button
+                    className="mr-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
+                    onClick={prevSlide}
+                    disabled={currentSlide === 0}
+                  >
+                    {"<"}
+                  </button>
+                  <button
+                    className="ml-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
+                    onClick={nextSlide}
+                    disabled={currentSlide >= imageUrls.length - 7}
+                  >
+                    {">"}
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-        {/* Minting button */}
-        <div className="flex justify-center items-center">
-          <button
-            className="w-1/5 py-2 mt-4 bg-blue-400 text-white rounded hover:bg-blue-600"
-            onClick={handleMintButtonClick}
-          >
-            Mint
-          </button>
         </div>
       </div>
-      <div className="w-1/2 rounded-lg">
-        <div className="h-1/2 p-6 border border-gray-300 bg-purple-600 bg-opacity-50 rounded-lg">
-          <h3 className="text-center">Dbags</h3>
-          <div className="flex gap-4 mt-4">
-            {/* Dbags assets/NFTs render here */}
-            {imageUrls
-              .slice(currentSlide + 1, currentSlide + 4)
-              .map((imageUrl, index) => (
-                <div key={index} className="card">
-                  <img
-                    src={imageUrl}
-                    alt={`Image ${currentSlide + index + 2}`}
-                    className="w-full h-full object-contain"
-                  />
-                  <div className="asset-info">
-                    {/* Render the asset name/number */}
-                    {metadata[currentSlide + index + 1]?.name ||
-                      "Asset Name/Number"}
-                  </div>
-                </div>
-              ))}
-          </div>
-          {/* Carousel navigation */}
-          <div className="flex justify-center mt-4">
-            <button
-              className="mr-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
-              onClick={prevSlide}
-              disabled={currentSlide === 0}
-            >
-              {"<"}
-            </button>
-            <button
-              className="ml-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
-              onClick={nextSlide}
-              disabled={currentSlide >= imageUrls.length - 7}
-            >
-              {">"}
-            </button>
-          </div>
-        </div>
-        <div className="h-1/2 p-6 mt-4 border border-gray-300 bg-purple-600 bg-opacity-50 rounded-lg">
-          <h3 className="text-center">Whips</h3>
-          <div className="flex gap-4 mt-4">
-            {/* WHIPS assets/NFTs render here */}
-            {imageUrls
-              .slice(currentSlide + 4, currentSlide + 7)
-              .map((imageUrl, index) => (
-                <div key={index} className="card">
-                  <img
-                    src={imageUrl}
-                    alt={`Image ${currentSlide + index + 5}`}
-                    className="w-full h-full object-contain"
-                  />
-                  <div className="asset-info">
-                    {/* Render the asset name/number */}
-                    {metadata[currentSlide + index + 4]?.name ||
-                      "Asset Name/Number"}
-                  </div>
-                </div>
-              ))}
-          </div>
-          {/* Carousel navigation */}
-          <div className="flex justify-center mt-4">
-            <button
-              className="mr-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
-              onClick={prevSlide}
-              disabled={currentSlide === 0}
-            >
-              {"<"}
-            </button>
-            <button
-              className="ml-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
-              onClick={nextSlide}
-              disabled={currentSlide >= imageUrls.length - 7}
-            >
-              {">"}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
     </div>
   );
 };
