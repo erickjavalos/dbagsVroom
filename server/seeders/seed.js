@@ -5,27 +5,25 @@ const dbagSeeds = require('./dbagSeeds.json');
 const autoSeeds = require('./autoSeeds.json');
 
 
+
 const loadData = async (model, data, str) => {
   // load dbags into db
   let cnt = 0
+
+  // iterate through each seed and manually create it for each model
   for (let i = 0; i < data.length; i++)
   {
     try{
-      const name = data[i].onchain_metadata.name
-      const ipfs = data[i].onchain_metadata.image
-      // console.log(name)
-      await model.create({
-        assetName: name,
-        ipfs: ipfs
-      })
+      await model.create(data[i])
 
       cnt += 1
     }
     catch(err){
     }
   }
-  console.log(`loaded ${cnt} ${str}...`)
 
+  console.log(`loaded ${cnt} ${str}...`)
+  
 }
 
 db.once('open', async () => {
@@ -34,7 +32,8 @@ db.once('open', async () => {
     await Dbags.deleteMany({});
     await Autos.deleteMany({})
 
-    // load dbags and autos
+    // load dbags and auto
+    // await Dbags.create(dbagSeeds)
     await loadData(Dbags,dbagSeeds, "dbags")
     await loadData(Autos,autoSeeds, "autos")
     

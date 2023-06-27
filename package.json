@@ -30,11 +30,13 @@
         "font-awesome": "^4.7.0",
         "graphql": "^15.8.0",
         "graphql-yoga": "^3.8.0",
+        "jimp": "^0.22.8",
         "jsonwebtoken": "^9.0.0",
         "lucid-cardano": "^0.10.6",
         "mongoose": "^7.0.3",
         "node-fetch": "^2.6.11",
         "nodemon": "^2.0.22",
-        "semver": "^7.3.8"
+        "semver": "^7.3.8",
+        "sharp": "^0.32.1"
     }
 }

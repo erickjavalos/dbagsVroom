@@ -3,19 +3,32 @@ const { Dbags, Autos } = require('../../models');
 
 
 // instantiate mint process from server
-router.post('/getIPFS', async (req, res) => {
+router.post('/getSelectedMetaData', async (req, res) => {
 
     const dbagAssets = await Dbags.find()
-        .where('assetName')
+        .where('onchain_metadata.name')
         .in(req.body.dbagAssets)
-        .select('assetName ipfs')
+        .select()
         .exec();    
-
+    // console.log(await Autos.find())
     const autoAssets = await Autos.find()
-        .where('assetName')
+        .where('asset_name')
         .in(req.body.autoAssets)
-        .select('assetName ipfs')
-        .exec();   
+        .select()
+        .exec(); 
+                
+    // return metadataHash
+    res.status(200).json({
+        'dbagAssets': dbagAssets,
+        'autoAssets': autoAssets 
+    });
+});
+
+router.get('/getMetaData', async (req, res) => {
+    const dbagAssets = await Dbags.find()
+    // console.log(dbagAssets)
+    const autoAssets = await Autos.find()
+    // console.log(autoAssets) 
         
     // return metadataHash
     res.status(200).json({
@@ -23,6 +36,9 @@ router.post('/getIPFS', async (req, res) => {
         'autoAssets': autoAssets 
     });
 });
+
+
+
 
 // router.post('/processMint', async (req, res) => {
   
