@@ -21,9 +21,7 @@ export default function App() {
       <Router>
         <Routes>
           <Route path="/Login" element={<Login />} />
-          {/* authentication */}
           <Route path="/auth" element={<Authentication />} />
-          {/* default homepage */}
           <Route path="/Home" element={<Home />} />
           <Route path="/minting" element={<Minting />} />
         </Routes>
