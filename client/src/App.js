@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import DateTimePicker from "react-datetime-picker";
 import {
   BrowserRouter as Router,
   Routes,
@@ -14,7 +13,7 @@ import Home from "./pages/Home";
 import Minting from "./pages/Minting";
 
 // import input from './input.css' ;
-import "./dist/output.css";
+// import "./dist/output.css";
 
 export default function App() {
   return (

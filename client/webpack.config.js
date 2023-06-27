@@ -1,6 +1,9 @@
 
 const path = require('path');
 const webpack = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
+
 
 const REMOTE_URL = process.env.REMOTE_URL || 'http://localhost:3001/';
 
@@ -11,12 +14,37 @@ module.exports = {
     rules: [
     
       {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: ['babel-loader'],},
+        test: /\.(jsx|js)$/,
+          include: path.resolve(__dirname, 'src'),
+          exclude: /node_modules/,
+          use: [{
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                ['@babel/preset-env', {
+                  "targets": {
+                    "node": "12"
+                  }
+                }],
+                '@babel/preset-react'
+              ]
+            }
+          }]
+      },
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        include: path.resolve(__dirname, 'src'),
+        exclude: /node_modules/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1
+            }
+          },
+          'postcss-loader'
+        ]
       },
       {
         test: /\.(jpe?g|png|gif|woff|woff2|otf|eot|ttf|svg)(\?[a-z0-9=.]+)?$/,
@@ -45,7 +73,12 @@ module.exports = {
   experiments: {
     syncWebAssembly: true,
   },
-  plugins: [new webpack.HotModuleReplacementPlugin(), 
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name].bundle.css',
+      chunkFilename: '[id].css'
+    }),
+    new webpack.HotModuleReplacementPlugin(), 
 ],
   devServer: {
     contentBase: path.resolve(__dirname, './dist'),
