@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Lucid, Blockfrost } from "lucid-cardano";
+import { Lucid, Blockfrost, CardanoWallet, Cardano } from "lucid-cardano";
 import blockfrostApiKey from "../../../config";
 import Header from "../../components/Header/index";
 
 const Minting = () => {
   const [imageUrls, setImageUrls] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [metadata, setMetadata] = useState([]);
 
   useEffect(() => {
     fetchImageUrls();
@@ -22,10 +23,11 @@ const Minting = () => {
       );
 
       // Replace '{asset_id}' with the actual asset ID
-      const metadata = await lucid.assets.fetchMetadata("{asset_id}");
+      const fetchedMetadata = await lucid.assets.fetchMetadata("{asset_id}");
 
-      const urls = metadata.map((asset) => asset.url);
+      const urls = fetchedMetadata.map((asset) => asset.url);
       setImageUrls(urls);
+      setMetadata(fetchedMetadata);
     } catch (error) {
       console.error("Error fetching image URLs:", error);
     }
@@ -85,82 +87,118 @@ const Minting = () => {
 
   return (
     <div>
-      {/* Header component renders here */}
+      {/* Header component*/}
       <Header />
-      <div className="flex justify-center items-center h-screen">
-        <div className="w-1/2">
-          <div className="h-2/3 flex flex-col justify-center items-center">
-            <div className="w-full h-2/3">
-              {/* Minted assets/NFT will render here */}
-              {imageUrls.length > 0 && (
-                <img
-                  src={imageUrls[0]}
-                  alt="Image 1"
-                  className="w-full h-full object-contain"
-                />
-              )}
-            </div>
+      <div className="flex justify-center items-center h-screen bg-green-900">
+  <div className="w-2/3">
+    <div className="flex justify-center items-center h-2/3 bg-white bg-opacity-50 rounded-lg"> {/* Change h-full to h-2/3 */}
+      <div className="w-1/2 bg-purple-800 rounded-lg">
+        <div className="h-2/3 flex flex-col justify-center items-center">
+          <div className="w-full h-2/3">
+            {/* Minted assets/NFT will render here */}
+            {imageUrls.length > 0 && (
+              <img
+                src={imageUrls[0]}
+                alt="Image 1"
+                className="w-full h-full object-contain"
+              />
+            )}
           </div>
-          {/* Minting button */}
+        </div>
+        {/* Minting button */}
+        <div className="flex justify-center items-center">
           <button
-            className="w-full py-2 mt-4 bg-blue-500 text-white rounded hover:bg-blue-600"
-            onClick={handleMintButtonClick} // Add the click event handler
+            className="w-1/5 py-2 mt-4 bg-blue-400 text-white rounded hover:bg-blue-600"
+            onClick={handleMintButtonClick}
           >
             Mint
           </button>
         </div>
-        <div className="w-1/2">
-          <div className="h-1/2 p-6 border border-gray-300 bg-purple-200">
-            <h3 className="text-center">Dbags</h3>
-            <div className="flex gap-4 mt-4">
-              {/* Dbags assets/NFTs render here */}
-              {imageUrls
-                .slice(currentSlide + 1, currentSlide + 4)
-                .map((imageUrl, index) => (
+      </div>
+      <div className="w-1/2 rounded-lg">
+        <div className="h-1/2 p-6 border border-gray-300 bg-purple-600 bg-opacity-50 rounded-lg">
+          <h3 className="text-center">Dbags</h3>
+          <div className="flex gap-4 mt-4">
+            {/* Dbags assets/NFTs render here */}
+            {imageUrls
+              .slice(currentSlide + 1, currentSlide + 4)
+              .map((imageUrl, index) => (
+                <div key={index} className="card">
                   <img
-                    key={index}
                     src={imageUrl}
                     alt={`Image ${currentSlide + index + 2}`}
-                    className="w-1/3 object-contain"
+                    className="w-full h-full object-contain"
                   />
-                ))}
-            </div>
+                  <div className="asset-info">
+                    {/* Render the asset name/number */}
+                    {metadata[currentSlide + index + 1]?.name ||
+                      "Asset Name/Number"}
+                  </div>
+                </div>
+              ))}
           </div>
-          <div className="h-1/2 p-6 mt-4 border border-gray-300 bg-purple-200">
-            <h3 className="text-center">Whips</h3>
-            <div className="flex gap-4 mt-4">
-              {/* WHIPS assets/NFTs render here */}
-              {imageUrls
-                .slice(currentSlide + 4, currentSlide + 7)
-                .map((imageUrl, index) => (
+          {/* Carousel navigation */}
+          <div className="flex justify-center mt-4">
+            <button
+              className="mr-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
+              onClick={prevSlide}
+              disabled={currentSlide === 0}
+            >
+              {"<"}
+            </button>
+            <button
+              className="ml-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
+              onClick={nextSlide}
+              disabled={currentSlide >= imageUrls.length - 7}
+            >
+              {">"}
+            </button>
+          </div>
+        </div>
+        <div className="h-1/2 p-6 mt-4 border border-gray-300 bg-purple-600 bg-opacity-50 rounded-lg">
+          <h3 className="text-center">Whips</h3>
+          <div className="flex gap-4 mt-4">
+            {/* WHIPS assets/NFTs render here */}
+            {imageUrls
+              .slice(currentSlide + 4, currentSlide + 7)
+              .map((imageUrl, index) => (
+                <div key={index} className="card">
                   <img
-                    key={index}
                     src={imageUrl}
                     alt={`Image ${currentSlide + index + 5}`}
-                    className="w-1/3 object-contain"
+                    className="w-full h-full object-contain"
                   />
-                ))}
-            </div>
+                  <div className="asset-info">
+                    {/* Render the asset name/number */}
+                    {metadata[currentSlide + index + 4]?.name ||
+                      "Asset Name/Number"}
+                  </div>
+                </div>
+              ))}
+          </div>
+          {/* Carousel navigation */}
+          <div className="flex justify-center mt-4">
+            <button
+              className="mr-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
+              onClick={prevSlide}
+              disabled={currentSlide === 0}
+            >
+              {"<"}
+            </button>
+            <button
+              className="ml-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
+              onClick={nextSlide}
+              disabled={currentSlide >= imageUrls.length - 7}
+            >
+              {">"}
+            </button>
           </div>
         </div>
       </div>
-      {/* Carousel navigation */}
-      <div className="flex justify-center mt-4">
-        <button
-          className="mr-2 px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-          onClick={prevSlide}
-          disabled={currentSlide === 0}
-        >
-          {"<"}
-        </button>
-        <button
-          className="ml-2 px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-          onClick={nextSlide}
-          disabled={currentSlide >= imageUrls.length - 7}
-        >
-          {">"}
-        </button>
-      </div>
+    </div>
+  </div>
+</div>
+
     </div>
   );
 };
