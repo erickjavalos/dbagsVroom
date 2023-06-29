@@ -1,10 +1,20 @@
 // import { ReactComponent as Loader } from '../../assets/icon/loader.svg'
 import React, { useState, useEffect } from 'react';
-
+const styles = {
+  button: {
+    marginLeft: '20px',
+    fontSize: "20px",
+    backgroundColor: 'transparent',
+    border: 'none',
+    outline: 'none',
+    cursor: 'pointer',
+    fontFamily: 'architects daughter', // Set the font-family to "architects daughter"
+  }
+}
 
 const Button = ({ onSubmit, text, loading = false, disabled, walletConnected }) => {
   return (
-    <button className="submit-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={onSubmit} disabled={disabled}>
+    <button style={styles.button} onClick={onSubmit} disabled={disabled}>
       {!loading ? walletConnected ? walletConnected + " connected" : "Connect Wallet": 
         <svg
           className="inline-block align-middle"

@@ -11,7 +11,6 @@ import Login from "./pages/Login";
 import Authentication from "./components/Authentication/index.js";
 import Home from "./pages/Home";
 import Minting from "./pages/Minting";
-import Test from "./pages/Test";
 
 export default function App() {
   return (
@@ -21,7 +20,6 @@ export default function App() {
           <Route path="/Login" element={<Login />} />
           <Route path="/auth" element={<Authentication />} />
           <Route path="/Home" element={<Home />} />
-          <Route path="/testing" element={<Test />} />
           <Route path="/minting" element={<Minting />} />
         </Routes>
       </Router>

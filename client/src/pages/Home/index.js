@@ -30,7 +30,9 @@ const styles = {
     width: '100vw',
     height: '100vh',
     position: 'relative', // Added to make the position relative for absolute positioning of the header
+    fontFamily: 'architects daughter'
   }
+
 }
 
 
@@ -179,8 +181,11 @@ function Home() {
 
   return (
     <>
+       <div style={styles.container}>
+
+      <div className="flex flex-col">
+
       {/* ensure user is signed in */}
-      <div style={styles.container}>
         {Auth.loggedIn() ? (
           <>
             <Header
@@ -189,7 +194,7 @@ function Home() {
               logout={logout}
             />
 
-            {walletConnected !== null &&  (
+            {/* {walletConnected !== null &&  (
               <section className="bg-gray-200 p-4 flex justify-center items-center">
                 <div className="container mx-auto">
                   <button
@@ -200,7 +205,7 @@ function Home() {
                   </button>
                 </div>
               </section>
-            )}
+            )} */}
           </>
         ) : (
           <>
@@ -210,6 +215,7 @@ function Home() {
             />
           </>
         )}
+      </div>
       </div>
       
     </>
