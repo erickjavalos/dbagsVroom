@@ -9,6 +9,38 @@ import LoadingButton from '../../components/LoadingButton/'
 let nami = null;
 let eternl = null;
 
+
+const styles = {
+  header: {
+    position: 'absolute',
+    color: 'white',
+    top: 0,
+    right: 0,
+    padding: '20px',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    fontFamily: 'architects daughter', // Set the font-family to "architects daughter"
+  },
+  button: {
+    marginLeft: '20px',
+    fontSize: "20px",
+    backgroundColor: 'transparent',
+    border: 'none',
+    outline: 'none',
+    cursor: 'pointer',
+    fontFamily: 'architects daughter', // Set the font-family to "architects daughter"
+  },
+  dropdown: {
+    position: 'absolute',
+    top: 'calc(100% + 10px)',
+    right: 0,
+    backgroundColor: 'white',
+    padding: '10px',
+    borderRadius: '4px',
+  },
+}
+
 // header component
 function Header({ updateWalletConnected, loggedIn, logout }) {
   const [showLoader, setShowLoader] = useState(false)
@@ -16,6 +48,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
   const [namisInstalled, setNamisInstalled] = useState(true);
   const [eternlInstalled, setEternlInstalled] = useState(true);
   const [walletConnected, setWalletConnected] = useState(null);
+  
   // sets up which wallets we can enable and disable
   useEffect(() => {
     // verify if nami is installed
@@ -34,13 +67,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
 
     verifyWallets()
 
-  }, [])
-
-  const onSubmit = () => {
-    // setShowLoader(true)
-    // setTimeout(() => setShowLoader(false), 1000)
-  }
-
+  }, [])  
 
   const selectWallet = () => {
 
@@ -79,76 +106,119 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
     setShowLoader(false)
   };
 
+  // log mfer back in using discord
+  const login = () => {
+    window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth&response_type=token&scope=identify%20guild';
+
+
+  }
+
 
   return (
-    <header className="bg-gray-900 p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-white text-xl font-bold">Sample Minting Site</h1>
-        <div className="relative">
-          {loggedIn ? (
-            <>
-              <LoadingButton
-                text="Submit"
-                onSubmit={selectWallet}
-                loading={showLoader}
-                disabled={showLoader}
-                walletConnected={walletConnected}
+    <>
+      <div style={styles.header}>
+      {loggedIn ? (
+        <>
+          {console.log('connected wallet')}
+          
+            <button style={styles.button}>
+              Connect Mfer Wallet
+            </button>
 
-              />
-              {/* <button
-            onClick={selectWallet}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            {walletConnected ? walletConnected + " connected" : "Connect Wallet"}
-          </button> */}
-              <button
-                onClick={logout}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
-              >
+            <button 
+              style={styles.button}
+              onClick={logout}
+            >
                 Log Mfer Out
-              </button>
-              {/* drop down menu if wallets are detected */}
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 bg-white shadow-md rounded">
-                  {namisInstalled && (
-                    <button
-                      onClick={() => connectWallet('nami')}
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center"
-                    >
-                      <img src={namiImg} alt="Nami" className="w-10 h-10 mr-2" />
-                      <span className="flex items-center">
-                        Nami
-                      </span>
-                    </button>
-                  )}
-                  {eternlInstalled && (
-                    <button
-                      onClick={() => connectWallet('eternl')}
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center"
-                    >
-                      <img src={eternlImg} alt="eternl" className="w-10 h-10 mr-2" />
-                      <span className="flex items-center">
-                        Eternl
-                      </span>
-                    </button>
-                  )}
-                </div>
-              )}
-            </>
-          ) : (
-            <button
+            </button>
+        
+        </>
+      ) : (
+        <>
+          {console.log("log mfer back in")}
+          
+          <button 
+              style={styles.button}
               onClick={(e) => {
                 e.preventDefault();
-                window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fdiscord&response_type=token&scope=identify%20guilds';
+                window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth&response_type=token&scope=identify%20guilds'
               }}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
-              Log Mfer In
+                Log Mfer In
             </button>
-          )}
-        </div>
+        </>
+      )}
       </div>
-    </header>
+    </>
+    // <header className="bg-gray-900 p-4">
+    //   <div className="container mx-auto flex justify-between items-center">
+    //     <h1 className="text-white text-xl font-bold">Sample Minting Site</h1>
+    //     <div className="relative">
+    //       {loggedIn ? (
+    //         <>
+    //           <LoadingButton
+    //             text="Submit"
+    //             onSubmit={selectWallet}
+    //             loading={showLoader}
+    //             disabled={showLoader}
+    //             walletConnected={walletConnected}
+
+    //           />
+    //           {/* <button
+    //             onClick={logout}
+    //             className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+    //           >
+    //             Log Mfer Out
+    //           </button> */}
+
+    //           <button 
+    //             style={styles.button}
+    //             onClick={logout}
+    //           >
+    //             Log Mfer Out
+    //             </button>
+    //           {/* drop down menu if wallets are detected */}
+    //           {isDropdownOpen && (
+    //             <div className="absolute right-0 mt-2 bg-white shadow-md rounded">
+    //               {namisInstalled && (
+    //                 <button
+    //                   onClick={() => connectWallet('nami')}
+    //                   className="block w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center"
+    //                 >
+    //                   <img src={namiImg} alt="Nami" className="w-10 h-10 mr-2" />
+    //                   <span className="flex items-center">
+    //                     Nami
+    //                   </span>
+    //                 </button>
+    //               )}
+    //               {eternlInstalled && (
+    //                 <button
+    //                   onClick={() => connectWallet('eternl')}
+    //                   className="block w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center"
+    //                 >
+    //                   <img src={eternlImg} alt="eternl" className="w-10 h-10 mr-2" />
+    //                   <span className="flex items-center">
+    //                     Eternl
+    //                   </span>
+    //                 </button>
+    //               )}
+    //             </div>
+    //           )}
+    //         </>
+    //       ) : (
+    //         <button
+    //           onClick={(e) => {
+    //             e.preventDefault();
+    //             window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fdiscord&response_type=token&scope=identify%20guilds';
+    //           }}
+    //           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    //         >
+    //           Log Mfer In
+    //         </button>
+    //       )}
+    //     </div>
+    //   </div>
+    // </header>
 
   );
 }

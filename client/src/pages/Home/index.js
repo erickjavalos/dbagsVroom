@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { fromText, Lucid, Blockfrost } from "lucid-cardano";
 import Header from "../../components/Header";
 import Auth from "../../utils/auth";
+import backgroundImage from "../../assets/auto_assets/Background/Trippymferforest.png"
+
 
 // import nami
 
@@ -17,6 +19,20 @@ const lucid = await Lucid.new(
   ),
   "Preprod"
 );
+
+
+const styles = {
+  container: {
+    backgroundImage: `url(${backgroundImage})`,
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    width: '100vw',
+    height: '100vh',
+    position: 'relative', // Added to make the position relative for absolute positioning of the header
+  }
+}
+
 
 function Home() {
   const [walletConnected, setWalletConnected] = useState(null);
@@ -164,37 +180,38 @@ function Home() {
   return (
     <>
       {/* ensure user is signed in */}
-      {Auth.loggedIn() ? (
-        <>
-          <Header
-            updateWalletConnected={updateWalletConnected}
-            loggedIn={true}
-            logout={logout}
-          />
+      <div style={styles.container}>
+        {Auth.loggedIn() ? (
+          <>
+            <Header
+              updateWalletConnected={updateWalletConnected}
+              loggedIn={true}
+              logout={logout}
+            />
 
-          {walletConnected === null ? (
-            <h1>Wallet not connected</h1>
-          ) : (
-            <section className="bg-gray-200 p-4 flex justify-center items-center">
-              <div className="container mx-auto">
-                <button
-                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={processMintRequest}
-                >
-                  Mint
-                </button>
-              </div>
-            </section>
-          )}
-        </>
-      ) : (
-        <>
-          <Header
-            updateWalletConnected={updateWalletConnected}
-            loggedIn={false}
-          />
-        </>
-      )}
+            {walletConnected !== null &&  (
+              <section className="bg-gray-200 p-4 flex justify-center items-center">
+                <div className="container mx-auto">
+                  <button
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={processMintRequest}
+                  >
+                    Mint
+                  </button>
+                </div>
+              </section>
+            )}
+          </>
+        ) : (
+          <>
+            <Header
+              updateWalletConnected={updateWalletConnected}
+              loggedIn={false}
+            />
+          </>
+        )}
+      </div>
+      
     </>
   );
 }
