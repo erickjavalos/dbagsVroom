@@ -1,0 +1,26 @@
+{
+    "Dbag EG6 White": {
+        "xScale" : 90,
+        "yScale" : 90,
+        "xDbag"  : 670, 
+        "yDbag"  : 295
+    },
+    "Low Rider": {
+        "xScale" : 110,
+        "yScale" : 110,
+        "xDbag"  : 685, 
+        "yDbag"  : 270
+    },
+    "McMfer": {
+        "xScale" : 110,
+        "yScale" : 110,
+        "xDbag"  : 685, 
+        "yDbag"  : 263
+    },
+    "Mfentador": {
+        "xScale" : 100,
+        "yScale" : 100,
+        "xDbag"  : 672, 
+        "yDbag"  : 280
+    }
+}

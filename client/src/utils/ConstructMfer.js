@@ -1,27 +1,7 @@
 const Jimp = require('jimp');
+const Orientation = require("../data/OrientationConstants.json")
 
-
-// // const get
-// const main = async () => {
-//     const endpoint = 'http://localhost:3001/api/projectData/getSelectedMetaData'
-//     // get data sets
-//     const response = await fetch(endpoint, {
-//         method: "POST",
-//         headers,
-//         body: JSON.stringify({
-//             "dbagAssets": mfers,
-//             "autoAssets": autos
-//         })
-//     })
-
-//     // metadata for all 
-//     const metadata = await response.json()
-//     // generate image
-//     const dbagImage = await generateImage(metadata, mferSelected, autoSelected)
-
-// }
-
-// main()
+// console.log(Orientation)
 
 
 class ConstructMfer {
@@ -82,15 +62,19 @@ class ConstructMfer {
     
         // get file locatins of images
         let assetFileLocations = []
+        // for (let i = 0; i < this.AUTO_LAYERING_ORDER.length; i++) {
         for (let i = 0; i < this.AUTO_LAYERING_ORDER.length; i++) {
             const layer = this.AUTO_LAYERING_ORDER[i]
             if (layers[layer] !== undefined)
             {
-                console.log(layers[layer])
-                if (layers[layer] === "Captain's hat")
+                // console.log(layers[layer])
+                if (layers[layer].includes("Mfentador"))
                 {
-                    assetFileLocations.push(`../client/src/assets/auto_assets/${layer}/Captain_s hat.png`)
+                    assetFileLocations.push(`../client/src/assets/auto_assets/${layer}/Mfentador_backup.png`)
                 }
+                else if (layers[layer].includes("D8") && !layers[layer].includes("Mfer D8"))
+                    assetFileLocations.push(`../client/src/assets/auto_assets/${layer}/D8_backup.png`)
+
                 else
                 {
                     assetFileLocations.push(`../client/src/assets/auto_assets/${layer}/${layers[layer]}.png`)
@@ -99,26 +83,57 @@ class ConstructMfer {
         }
         // read in image using jimp
         const imagesJimp = assetFileLocations.map(fileLocation => Jimp.read(fileLocation))
-        // write the file to a location
-        const dbagOutput = 'imgs/auto.png';
+
+        let xScale = 110;
+        let yScale = 110;
+        let xDbag  = 670;
+        let yDbag  = 263;
+
+        // set scale depending which asset we have
+        if (autoMetaData.onchain_metadata.Car === "Dbag EG6 White")
+        {
+            xScale = Orientation[autoMetaData.onchain_metadata.Car].xScale
+            yScale = Orientation[autoMetaData.onchain_metadata.Car].yScale
+            xDbag = Orientation[autoMetaData.onchain_metadata.Car].xDbag
+            yDbag = Orientation[autoMetaData.onchain_metadata.Car].yDbag
+        }
+        // set correct properties for low rider
+        if (autoMetaData.onchain_metadata.Car.includes("Lowrider")){
+            xScale = Orientation["Low Rider"].xScale
+            yScale = Orientation["Low Rider"].yScale
+            xDbag = Orientation["Low Rider"].xDbag
+            yDbag = Orientation["Low Rider"].yDbag
+        }
+        // set correct properties for McMfer
+        if (autoMetaData.onchain_metadata.Car.includes("McMfer")){
+            xScale = Orientation["McMfer"].xScale
+            yScale = Orientation["McMfer"].yScale
+            xDbag = Orientation["McMfer"].xDbag
+            yDbag = Orientation["McMfer"].yDbag
+        }
+        if (autoMetaData.onchain_metadata.Car.includes("Mfentador")){
+            xScale = Orientation["Mfentador"].xScale
+            yScale = Orientation["Mfentador"].yScale
+            xDbag = Orientation["Mfentador"].xDbag
+            yDbag = Orientation["Mfentador"].yDbag
+        }
         // have the mfer drive the boat instead
-        dbagImage.scaleToFit(110,110)
+        dbagImage.scaleToFit(xScale,yScale)
         // dbagImage.flip(true, false)
         return Promise.all(imagesJimp)
             // load in dbags and generate image
             .then((images) => {
-                console.log(images[0].bitmap.width, images[0].bitmap.height)
                 // exhaust is missing
                 if (images.length === 2)
                 {
                     console.log(images[0].bitmap.height/2, images[0].bitmap.width/2)
-                    images[0].composite(dbagImage, 670, 257)
+                    images[0].composite(dbagImage, xDbag, yDbag)
                     images[0].composite(images[1], 0, 0 )
                 }
                 // whip has exhaust
                 else {
                     console.log(images[0].bitmap.height/2, images[0].bitmap.width/2)
-                    images[0].composite(dbagImage, 670, 257)
+                    images[0].composite(dbagImage, xDbag, yDbag)
                     images[0].composite(images[1], 0,0 )
                     images[0].composite(images[2], 0,0 )
     
