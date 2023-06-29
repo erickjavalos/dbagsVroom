@@ -11,10 +11,12 @@ let eternl = null;
 
 // header component
 function Header({ updateWalletConnected, loggedIn, logout }) {
-  const [showLoader, setShowLoader] = useState(false)
+  // displays wallet connectvity
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  // keep track of which wallets are installed in the browser
   const [namisInstalled, setNamisInstalled] = useState(true);
   const [eternlInstalled, setEternlInstalled] = useState(true);
+  // used to concatenate wallet name to header area
   const [walletConnected, setWalletConnected] = useState(null);
   
   // sets up which wallets we can enable and disable
@@ -38,13 +40,13 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
   }, [])  
 
   const connectWallet = async (option) => {
-    setShowLoader(true)
-    console.log(`connecting ${option}`)
     // instantiate nami wallet
     if (option === 'nami') {
       try {
         let isNamiConnected = await nami.enable()
+        // set variables
         setWalletConnected("nami")
+        // sets wallet to global variable in home for nami
         await updateWalletConnected(isNamiConnected)
 
 
@@ -57,30 +59,33 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
     else {
       try {
         let isEternlConnected = await eternl.enable()
+        // set variables
         setWalletConnected("eternl")
+        // sets wallet to global variable in home for eternl
         await updateWalletConnected(isEternlConnected)
       }
       catch (error) {
         console.log('User did not connect wallet')
-        updateWalletConnected("true")
       }
     }
+    // remove the dropdown menu of wallets since we tried connecting
     setDropdownOpen(!isDropdownOpen);
-    setShowLoader(false)
   };
 
-  // XOR drop down
+  // toggle dropdown when connect wallet button is pressed
   const dropDown = () => {
-    console.log("dropping down pressed")
     setDropdownOpen(!isDropdownOpen);
   }
 
   return (
     <>
       <div className="flex flex-col">
+      {/* verify user is logged in before allowing user to connect wallet */}
       {loggedIn ? (
           <>
+            {/* note: set these up backwards to allow it to render on the right hand side of page */}
             <div className="flex flex-row-reverse text-white text-lg m-2">
+              {/* log out button */}
               <div>
                 <button 
                   className='mx-2'
@@ -89,7 +94,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
                     Log Mfer Out
                 </button>
               </div>
-
+              {/* mfer wallet status */}
               <div>
                 <button 
                   className='mx-2'
@@ -104,16 +109,16 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
             {/* dropdown */}
             {isDropdownOpen && (
               <>
-                {console.log("drop")}
                 <div className="flex flex-row-reverse text-white">
                   <div className='flex flex-col mx-5'>
+                    {/* show option to connect to namie if installed */}
                     {namisInstalled && (
                       <>
                       <button
                         onClick={() => connectWallet('nami')}
                         className='flex flex-row'
-                        // className="block w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center"
                       >
+                        {/* add image and name */}
                         <img src={namiImg} alt="Nami" className="w-10 h-10 mr-2" />
                         <span className="flex items-center">
                           Nami
@@ -121,19 +126,19 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
                       </button>
                       </>
                     )}
+                    {/* show option to connect to eternl if installed */}
                     {eternlInstalled && (
                       <button
                         onClick={() => connectWallet('eternl')}
                         className='flex flex-row'
-                        // className="block w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center"
                       >
+                        {/* add image and name */}
                         <img src={eternlImg} alt="eternl" className="w-10 h-10 mr-2" />
                         <span className="flex items-center">
                           Eternl
                         </span>
                       </button>
                     )}
-
                   </div>
               
                 </div>
@@ -141,6 +146,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
               )}
           </>
       ) : (
+        // prompt user to log back in 
         <div className="flex flex-row-reverse text-white text-lg m-2">
           <div>
               <button 
