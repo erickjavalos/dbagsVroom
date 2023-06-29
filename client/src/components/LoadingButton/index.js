@@ -1,4 +1,6 @@
-import { ReactComponent as Loader } from '../../assets/icon/loader.svg'
+// import { ReactComponent as Loader } from '../../assets/icon/loader.svg'
+import React, { useState, useEffect } from 'react';
+
 
 const Button = ({ onSubmit, text, loading = false, disabled, walletConnected }) => {
   return (
