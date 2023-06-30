@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "../../components/Header";
 import Auth from "../../utils/auth";
+import BuildMfer from "../../components/BuildMfer";
 import backgroundImage from "../../assets/auto_assets/Background/Trippymferforest.png"
 
 
@@ -256,11 +257,7 @@ function Home() {
               loggedIn={true}
               logout={logout}
             />
-
-            
-            <div style={styles.containerStyle}>
-              <div style={styles.card} className="text-2xl">Buidl Mfer</div>
-            </div>
+            <BuildMfer/>
 
             {/* {walletConnected !== null &&  (
               <>
