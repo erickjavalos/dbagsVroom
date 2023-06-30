@@ -84,11 +84,11 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
       {loggedIn ? (
           <>
             {/* note: set these up backwards to allow it to render on the right hand side of page */}
-            <div className="flex flex-row-reverse text-white text-lg m-2">
+            <div className="flex flex-row-reverse text-white text-2xl m-2">
               {/* log out button */}
               <div>
                 <button 
-                  className='mx-2'
+                  className='mx-4'
                   onClick={logout}
                 >
                     Log Mfer Out
@@ -97,7 +97,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
               {/* mfer wallet status */}
               <div>
                 <button 
-                  className='mx-2'
+                  className='mx-4'
                   onClick={dropDown}
                 >
                     {walletConnected ? walletConnected + " connected" : "Connect Mfer Wallet"}
@@ -107,9 +107,10 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
             </div>
 
             {/* dropdown */}
+
+            <div className="flex flex-row-reverse text-white h-20">
             {isDropdownOpen && (
               <>
-                <div className="flex flex-row-reverse text-white">
                   <div className='flex flex-col mx-5'>
                     {/* show option to connect to namie if installed */}
                     {namisInstalled && (
@@ -140,10 +141,9 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
                       </button>
                     )}
                   </div>
-              
-                </div>
               </>
               )}
+            </div>
           </>
       ) : (
         // prompt user to log back in 
