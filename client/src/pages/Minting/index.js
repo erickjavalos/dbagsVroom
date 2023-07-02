@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Lucid, Blockfrost, CardanoWallet, Cardano } from "lucid-cardano";
 import blockfrostApiKey from "../../../config";
 import Header from "../../components/Header/index";
+import backgroundImage from "../../assets/auto_assets/Background/Trippymferforest.png";
 
 const Minting = () => {
   const [imageUrls, setImageUrls] = useState([]);
@@ -89,11 +90,18 @@ const Minting = () => {
     <div>
       {/* Header component*/}
       <Header />
-      <div className="flex justify-center items-center h-screen bg-green-900">
+      <div
+        className="flex justify-center items-center h-screen"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         <div className="w-2/3">
-          <div className="flex justify-center items-center h-2/3 bg-white bg-opacity-50 rounded-lg">
+          <div className="flex justify-center pt-28 pb-28 pl-20 pr-20 items-center h-2/3 bg-white bg-opacity-50 rounded-3xl">
             {" "}
-            {/* Change h-full to h-2/3 */}
             <div className="w-1/2 bg-purple-800 rounded-lg">
               <div className="h-2/3 flex flex-col justify-center items-center">
                 <div className="w-full h-2/3">
@@ -110,7 +118,7 @@ const Minting = () => {
               {/* Minting button */}
               <div className="flex justify-center items-center">
                 <button
-                  className="w-1/5 py-2 mt-4 bg-blue-400 text-white rounded hover:bg-blue-600"
+                  className="w-1/5 py-2 mt-4 bg-blue-400 text-white rounded-2xl hover:bg-blue-600"
                   onClick={handleMintButtonClick}
                 >
                   Mint
@@ -118,8 +126,12 @@ const Minting = () => {
               </div>
             </div>
             <div className="w-1/2 rounded-lg">
-              <div className="h-1/2 p-6 border border-gray-300 bg-purple-600 bg-opacity-50 rounded-lg">
-                <h3 className="text-center">Dbags</h3>
+              <div className="w-1/4 text-center text-white bg-blue-400 bg-opacity-70 rounded-lg">
+                Dbags
+              </div>
+              <div className="pb-6"></div>
+              <div className="h-1/2 p-6 bg-purple-600 bg-opacity-50 rounded-lg">
+                <div className="flex justify-center items-center mb-4"></div>
                 <div className="flex gap-4 mt-4">
                   {/* Dbags assets/NFTs render here */}
                   {imageUrls
@@ -157,8 +169,12 @@ const Minting = () => {
                   </button>
                 </div>
               </div>
-              <div className="h-1/2 p-6 mt-4 border border-gray-300 bg-purple-600 bg-opacity-50 rounded-lg">
-                <h3 className="text-center">Whips</h3>
+              <div className="pt-4"></div>
+              <div className="w-1/4 text-center text-white bg-blue-400 bg-opacity-70 rounded-lg">
+                Whips
+              </div>
+              <div className="h-1/2 p-6 mt-4 bg-purple-600 bg-opacity-50 rounded-lg">
+                <div className="flex justify-center items-center mb-4"></div>
                 <div className="flex gap-4 mt-4">
                   {/* WHIPS assets/NFTs render here */}
                   {imageUrls
