@@ -1,57 +1,61 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import RenderAssets from "../../components/RenderAssets";
 
-const styles = {
-  containerStyle: {
-    height: '100vh', // Set the container to fill the viewport
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'flex-start', // Align items to the top
-  },
-  card: {
-    backgroundColor: 'rgba(217, 217, 217, 0.5)',
-    color: 'white',
-    width: '90%',
-    height: '60%',
-    display: 'flex', // Enable flexbox layout
-    borderRadius: '20px', // Set border radius to create rounded edges
-    flexWrap: 'wrap', // Allow the columns to wrap to a new line
-  },
-  column: {
-    width: '50%', // Each column takes 50% of the card's width
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '15px',
-    boxSizing: 'border-box', // Include padding within the column's width calculation
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover', // Ensure the image fills the container
-    borderRadius: '20px', // Apply rounded corners to the images
-  },
+const style = {
+  // width: '100%',
 };
 
-const BuildMfer = () => {
+
+const BuildMfer = ({ assets }) => {
+  const [dbagAssets, setDbagAssets] = useState()
+  const [whipAssets, setWhipAssets] = useState()
+
+  useEffect(() => {
+    const dbagAssetsRendered = assets?.dbagAssets || [];
+    const whipAssetsRendered = assets?.autoAssets || [];
+    console.log('assets in build mfer use effect')
+    console.log(assets)
+    setDbagAssets(dbagAssetsRendered)
+    setWhipAssets(whipAssetsRendered)
+}, [assets]);
+
+  // console.log(assets?.dbagAssets || [])
   return (
-    <div style={styles.containerStyle}>
-      <div style={styles.card}>
-        <div style={styles.column}>
-          <img
-            src="https:/ipfs.io/ipfs/QmaWJEC6NCZdnc4E1CcKxHQ2iAuop72P2RMbpFix3geNDK"
-            alt="Image 1"
-            style={styles.image}
-          />
+    <>
+      {/* Container that holds assets and construction of assets*/}
+      <div className="flex flex-wrap justify-center align-center " style={style}>
+        {/* flex items here as reversed */}
+        <div className="flex flex-col text-white w-11/12 bg-[rgba(217,217,217,0.7)] rounded-lg">
+          {/* title of Header */}
+          <div className="text-2xl">
+            Buidl Mfer
+          </div>
+          {/* render assets */}
+          <div className="flex flex-row text-center justify-center p-1 mb-5">
+            <div className="flex flex-col w-2/4 justify-center items-center text-xl">
+              <RenderAssets
+                assets={dbagAssets}
+                name = "dbags"
+              />
+              <RenderAssets
+                assets={whipAssets}
+                name = "whips"
+              />
+            </div>
+            {/* end result of constructed image */}
+            <div className="w-2/4">
+              Test section 2
+              <div className="flex flex-row">
+                image section
+              </div>
+            </div> 
+
+          </div>
+
         </div>
-        <div style={styles.column}>
-          <img
-            src="https:/ipfs.io/ipfs/QmaWJEC6NCZdnc4E1CcKxHQ2iAuop72P2RMbpFix3geNDK"
-            alt="Image 2"
-            style={styles.image}
-          />
-        </div>
+
       </div>
-    </div>
+    </>
   );
 };
 

@@ -91,7 +91,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
                   className='mx-4'
                   onClick={logout}
                 >
-                    Log Mfer Out
+                    Log Out
                 </button>
               </div>
               {/* mfer wallet status */}
@@ -156,7 +156,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
                   window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth&response_type=token&scope=identify%20guilds'
                 }}
               >
-                  Log Mfer In
+                  Login
               </button>
             </div>
           </div>

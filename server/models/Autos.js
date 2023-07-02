@@ -27,8 +27,14 @@ const autosSchema = new Schema({
   mint_or_burn_count: {
     type: String,
   },
+  image: {
+    type: String,
+  },
   // metadata
   onchain_metadata: {
+    name: {
+      type: String,
+    },
     Car: {
       type: String,
     },
@@ -38,6 +44,9 @@ const autosSchema = new Schema({
     ExhaustFumes: {
       type: String,
     },
+    image: {
+      type: String,
+    }
   },
   onchain_metadata_standard: {
     type: String,

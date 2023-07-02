@@ -32,6 +32,8 @@ db.once('open', async () => {
     await Dbags.deleteMany({});
     await Autos.deleteMany({})
 
+    
+
     // load dbags and auto
     // await Dbags.create(dbagSeeds)
     await loadData(Dbags,dbagSeeds, "dbags")
