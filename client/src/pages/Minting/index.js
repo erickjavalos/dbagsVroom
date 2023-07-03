@@ -78,18 +78,21 @@ const Minting = () => {
     }
   };
 
+  // Slide the carousel to the right
   const nextSlide = () => {
     setCurrentSlide((prevSlide) => prevSlide + 1);
   };
 
+  // Slide the carousel to the left
   const prevSlide = () => {
     setCurrentSlide((prevSlide) => prevSlide - 1);
   };
 
   return (
     <div>
-      {/* Header component*/}
+      {/* Header component */}
       <Header />
+      {/* Background image */}
       <div
         className="flex justify-center items-center h-screen"
         style={{
@@ -101,7 +104,6 @@ const Minting = () => {
       >
         <div className="w-2/3">
           <div className="flex justify-center pt-28 pb-28 pl-20 pr-20 items-center h-2/3 bg-white bg-opacity-50 rounded-3xl">
-            {" "}
             <div className="w-1/2 bg-purple-800 rounded-lg">
               <div className="h-2/3 flex flex-col justify-center items-center">
                 <div className="w-full h-2/3">
@@ -126,7 +128,7 @@ const Minting = () => {
               </div>
             </div>
             <div className="w-1/2 rounded-lg">
-              <div className="w-1/4 text-center text-white bg-blue-400 bg-opacity-70 rounded-lg">
+              <div className="w-1/4 p-2 text-center text-white bg-blue-400 bg-opacity-70 rounded-lg">
                 Dbags
               </div>
               <div className="pb-6"></div>
@@ -154,14 +156,14 @@ const Minting = () => {
                 {/* Carousel navigation */}
                 <div className="flex justify-center mt-4">
                   <button
-                    className="mr-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
+                    className="mr-2 px-2 py-1 text-white"
                     onClick={prevSlide}
                     disabled={currentSlide === 0}
                   >
                     {"<"}
                   </button>
                   <button
-                    className="ml-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
+                    className="ml-2 px-2 py-1 text-white"
                     onClick={nextSlide}
                     disabled={currentSlide >= imageUrls.length - 7}
                   >
@@ -170,7 +172,7 @@ const Minting = () => {
                 </div>
               </div>
               <div className="pt-4"></div>
-              <div className="w-1/4 text-center text-white bg-blue-400 bg-opacity-70 rounded-lg">
+              <div className="w-1/4 p-2 text-center text-white bg-blue-400 bg-opacity-70 rounded-lg">
                 Whips
               </div>
               <div className="h-1/2 p-6 mt-4 bg-purple-600 bg-opacity-50 rounded-lg">
@@ -197,14 +199,14 @@ const Minting = () => {
                 {/* Carousel navigation */}
                 <div className="flex justify-center mt-4">
                   <button
-                    className="mr-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
+                    className="mr-2 px-2 py-1 text-white"
                     onClick={prevSlide}
                     disabled={currentSlide === 0}
                   >
                     {"<"}
                   </button>
                   <button
-                    className="ml-2 px-2 py-1 bg-blue-400 text-white rounded hover:bg-blue-600"
+                    className="ml-2 px-2 py-1 text-white"
                     onClick={nextSlide}
                     disabled={currentSlide >= imageUrls.length - 7}
                   >
