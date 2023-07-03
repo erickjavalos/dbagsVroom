@@ -127,12 +127,12 @@ const Minting = () => {
                 </button>
               </div>
             </div>
-            <div className="w-1/2 rounded-lg">
+            <div className="w-1/2 rounded-lg flex flex-col items-center">
               <div className="w-1/4 p-2 text-center text-white bg-blue-400 bg-opacity-70 rounded-lg">
                 Dbags
               </div>
-              <div className="pb-6"></div>
-              <div className="h-1/2 p-6 bg-purple-600 bg-opacity-50 rounded-lg">
+              <div className="pb-4"></div>
+              <div className="w-10/12 h-1/2 p-6 bg-purple-600 bg-opacity-50 rounded-lg">
                 <div className="flex justify-center items-center mb-4"></div>
                 <div className="flex gap-4 mt-4">
                   {/* Dbags assets/NFTs render here */}
@@ -175,7 +175,7 @@ const Minting = () => {
               <div className="w-1/4 p-2 text-center text-white bg-blue-400 bg-opacity-70 rounded-lg">
                 Whips
               </div>
-              <div className="h-1/2 p-6 mt-4 bg-purple-600 bg-opacity-50 rounded-lg">
+              <div className="w-10/12 h-1/2 p-6 mt-4 bg-purple-600 bg-opacity-50 rounded-lg">
                 <div className="flex justify-center items-center mb-4"></div>
                 <div className="flex gap-4 mt-4">
                   {/* WHIPS assets/NFTs render here */}
@@ -220,6 +220,9 @@ const Minting = () => {
       </div>
     </div>
   );
+  
+  
+  
 };
 
 export default Minting;
