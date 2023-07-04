@@ -65,7 +65,7 @@ function Home() {
   const getAssets = async () => {
     // TODO: Need to poll the blockchain here for all assets (O(N) look up time)
     const testdata = {
-      dbagAssets: ["dbagMfer1000"],
+      dbagAssets: ["dbagMfer1000", "dbagMfer1", "dbagMfer2", "dbagMfer5"],
       // autoAssets: [
       //   '446261674d666572734175746f436c75623039363537',
       //   '446261674d666572734175746f436c75623031333637',

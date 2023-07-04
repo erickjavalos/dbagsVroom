@@ -67,7 +67,6 @@ const RenderAssets = ({ assets, name }) => {
                                         <div key={asset._id} className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
                                             <img className="rounded-lg"
                                                 src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
-                                                onLoad={imageLoaded}
                                             >
                                             </img>
                                             {asset.onchain_metadata.name}
@@ -80,10 +79,11 @@ const RenderAssets = ({ assets, name }) => {
                                     {
                                         return (
                                             <div key={asset._id} className="flex flex-row items-center justify-center">
+                                                <div className="w-1/4 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
+                                                </div>
                                                 <div className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
                                                     <img className="rounded-lg"
                                                         src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
-                                                        onLoad={imageLoaded}
                                                     >
                                                     </img>
                                                     {asset.onchain_metadata.name}
@@ -91,13 +91,12 @@ const RenderAssets = ({ assets, name }) => {
                                                 <div className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
                                                     <img className="rounded-lg"
                                                         src={`https://ipfs.io/ipfs/${assetsWindow[1].onchain_metadata.image.split("ipfs://")[1]}`}
-                                                        onLoad={imageLoaded}
                                                     >
                                                     </img>
                                                     {assetsWindow[1].onchain_metadata.name}
                                                 </div>
 
-                                                <div className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
+                                                <div className="w-1/4 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
                                                 </div>
     
                                             </div>
@@ -115,7 +114,6 @@ const RenderAssets = ({ assets, name }) => {
                                             <div key={asset._id} className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
                                                 <img className="rounded-lg"
                                                     src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
-                                                    onLoad={imageLoaded}
                                                 >
                                                 </img>
                                                 {asset.onchain_metadata.name}
