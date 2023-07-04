@@ -30,7 +30,7 @@ const BuildMfer = ({ assets }) => {
             buidl mfer
           </div>
           {/* render assets */}
-          <div className="flex flex-row text-center justify-center p-1 mb-5">
+          <div className="flex flex-row text-center justify-center p-5 m-5">
             <div className="flex flex-col w-2/4 justify-center items-center text-xl">
               <RenderAssets
                 assets={dbagAssets}
