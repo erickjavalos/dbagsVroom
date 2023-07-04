@@ -34,7 +34,7 @@ const styles = {
     height: '60%',
     // margin: '0 auto',
     padding: '15px',
-    boxSizing: 'border-box',  
+    boxSizing: 'border-box',
     borderRadius: '20px', // Set border radius to create rounded edges
 
   }
@@ -61,7 +61,9 @@ function Home() {
   const getAssets = async () => {
     // TODO: Need to poll the blockchain here for all assets (O(N) look up time)
     const testdata = {
-      dbagAssets: ["dbagMfer1", "dbagMfer2", "dbagMfer6969"],
+      dbagAssets: ["dbagMfer1000", "dbagMfer2000", "dbagMfer696", "dbagMfer400", 
+      , "dbagMfer500", "dbagMfer600","dbagMfer100", "dbagMfer20", 
+      , "dbagMfer4000", "dbagMfer400", "dbagMfer30"],
       autoAssets: [
         '446261674d666572734175746f436c75623039363537',
         '446261674d666572734175746f436c75623031333637',
@@ -250,38 +252,37 @@ function Home() {
 
   return (
     <>
-       <div style={styles.container}>
+      <div style={styles.container}>
+        <div className="flex flex-col">
 
-      <div className="flex flex-col">
-
-      {/* ensure user is signed in */}
-        {Auth.loggedIn() ? (
-          <>
-            {/* Display header */}
-            <Header
-              updateWalletConnected={updateWalletConnected}
-              loggedIn={true}
-              logout={logout}
-            />
-            {/* display building methodology */}
-            {walletConnected && (
+          {/* ensure user is signed in */}
+          {Auth.loggedIn() ? (
+            <>
+              {/* Display header */}
+              <Header
+                updateWalletConnected={updateWalletConnected}
+                loggedIn={true}
+                logout={logout}
+              />
+              {/* display building methodology */}
+              {/* {walletConnected && ( */}
               <BuildMfer
                 assets={assets}
               />
-            )} 
-          </>
-        ) : (
-          <>
-            {/* diaplay header */}
-            <Header
-              updateWalletConnected={updateWalletConnected}
-              loggedIn={false}
-            />
-          </>
-        )}
+              {/* )}  */}
+            </>
+          ) : (
+            <>
+              {/* diaplay header */}
+              <Header
+                updateWalletConnected={updateWalletConnected}
+                loggedIn={false}
+              />
+            </>
+          )}
+        </div>
       </div>
-      </div>
-      
+
     </>
   );
 }

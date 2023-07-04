@@ -91,7 +91,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
                   className='mx-4'
                   onClick={logout}
                 >
-                    Log Out
+                    log mfer out
                 </button>
               </div>
               {/* mfer wallet status */}
@@ -100,7 +100,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
                   className='mx-4'
                   onClick={dropDown}
                 >
-                    {walletConnected ? walletConnected + " connected" : "Connect Mfer Wallet"}
+                    {walletConnected ? walletConnected + " connected" : "connect mfer wallet"}
                 </button>
                 
               </div>
@@ -147,7 +147,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
           </>
       ) : (
         // prompt user to log back in 
-        <div className="flex flex-row-reverse text-white text-lg m-2">
+        <div className="flex flex-row-reverse text-white text-2xl m-2">
           <div>
               <button 
                 className='mx-2'
@@ -156,7 +156,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
                   window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth&response_type=token&scope=identify%20guilds'
                 }}
               >
-                  Login
+                  log mfer in
               </button>
             </div>
           </div>

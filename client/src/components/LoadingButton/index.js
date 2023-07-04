@@ -28,7 +28,7 @@ const Button = ({ onSubmit, text, loading = false, disabled, walletConnected }) 
             stroke="white"
           />
         </svg>
-      }
+     }
     </button>
   )
 }

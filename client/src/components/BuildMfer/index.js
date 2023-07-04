@@ -19,7 +19,6 @@ const BuildMfer = ({ assets }) => {
     setWhipAssets(whipAssetsRendered)
 }, [assets]);
 
-  // console.log(assets?.dbagAssets || [])
   return (
     <>
       {/* Container that holds assets and construction of assets*/}
@@ -27,8 +26,8 @@ const BuildMfer = ({ assets }) => {
         {/* flex items here as reversed */}
         <div className="flex flex-col text-white w-11/12 bg-[rgba(217,217,217,0.7)] rounded-lg">
           {/* title of Header */}
-          <div className="text-2xl">
-            Buidl Mfer
+          <div className="text-2xl m-2">
+            buidl mfer
           </div>
           {/* render assets */}
           <div className="flex flex-row text-center justify-center p-1 mb-5">
