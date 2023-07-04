@@ -265,11 +265,11 @@ function Home() {
                 logout={logout}
               />
               {/* display building methodology */}
-              {/* {walletConnected && ( */}
+              {walletConnected && (
               <BuildMfer
                 assets={assets}
               />
-              {/* )}  */}
+              )}
             </>
           ) : (
             <>
