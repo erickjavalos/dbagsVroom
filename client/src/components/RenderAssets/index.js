@@ -39,7 +39,6 @@ const RenderAssets = ({ assets, name }) => {
         setInput(e.target.value)
     }
     const searchAsset = () => {
-        console.log(input)
         let found = false
         for (let i = 0; i < assetMeta.length; i++) {
             if (input === assetMeta[i].onchain_metadata.name) {
@@ -69,7 +68,7 @@ const RenderAssets = ({ assets, name }) => {
                             {/* filter */}
                             <input
                                 type="search"
-                                className={`bg-[rgba(123,105,171,0.6)] rounded-lg relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border border-solid bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-white outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-white focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary`}
+                                className={`bg-[rgba(123,105,171,0.6)] rounded-lg relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-white outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-white focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none  dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary`}
                                 placeholder={`Search ${assetMeta.length} ${name}`}
                                 aria-label="Search"
                                 aria-describedby="button-addon1"

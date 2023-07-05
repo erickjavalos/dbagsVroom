@@ -13,8 +13,7 @@ const BuildMfer = ({ assets }) => {
   useEffect(() => {
     const dbagAssetsRendered = assets?.dbagAssets || [];
     const whipAssetsRendered = assets?.autoAssets || [];
-    console.log('assets in build mfer use effect')
-    console.log(assets)
+    
     setDbagAssets(dbagAssetsRendered)
     setWhipAssets(whipAssetsRendered)
 }, [assets]);
