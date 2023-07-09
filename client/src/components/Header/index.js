@@ -79,12 +79,12 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
 
   return (
     <>
-      <div className="flex flex-col">
+      <div className="flex flex-col text-white bg-[rgba(0,0,0,0.95)] mb-4">
       {/* verify user is logged in before allowing user to connect wallet */}
       {loggedIn ? (
           <>
             {/* note: set these up backwards to allow it to render on the right hand side of page */}
-            <div className="flex flex-row-reverse text-white text-2xl m-2">
+            <div className="flex flex-row-reverse text-2xl m-2">
               {/* log out button */}
               <div>
                 <button 
@@ -108,7 +108,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
 
             {/* dropdown */}
 
-            <div className="flex flex-row-reverse text-white h-20">
+            <div className="flex flex-row-reverse">
             {isDropdownOpen && (
               <>
                   <div className='flex flex-col mx-5'>
@@ -147,7 +147,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
           </>
       ) : (
         // prompt user to log back in 
-        <div className="flex flex-row-reverse text-white text-2xl m-2">
+        <div className="flex flex-row-reverse text-2xl m-2">
           <div>
               <button 
                 className='mx-2'

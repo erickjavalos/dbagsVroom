@@ -20,9 +20,9 @@ const BuildMfer = ({ assets }) => {
     <>
       {/* Container that holds assets and construction of assets*/}
       
-      <div className="flex flex-wrap justify-center align-center " >
+      <div className="flex flex-wrap justify-center align-center m-8 " >
         {/* flex items here as reversed */}
-        <div className="flex flex-col text-white w-11/12 bg-[rgba(217,217,217,0.7)] rounded-lg">
+        <div className="flex flex-col text-white w-11/12 bg-[rgba(63,65,59,0.9)] rounded-lg">
           {/* title of Header */}
           {/* render assets */}
           <div className="flex flex-row text-center justify-center p-5 m-5">
