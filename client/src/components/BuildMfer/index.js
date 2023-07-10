@@ -7,37 +7,57 @@ import RenderResult from "../../components/RenderResult";
 const BuildMfer = ({ assets }) => {
   const [dbagAssets, setDbagAssets] = useState()
   const [whipAssets, setWhipAssets] = useState()
+  const [dbagSelected, setDbagSelected] = useState(false)
+  const [whipSelected, setWhipSelected] = useState(false)
 
   useEffect(() => {
     const dbagAssetsRendered = assets?.dbagAssets || [];
     const whipAssetsRendered = assets?.autoAssets || [];
-    
+
     setDbagAssets(dbagAssetsRendered)
     setWhipAssets(whipAssetsRendered)
-}, [assets]);
+
+  }, [assets]);
+
+  const setDbag = (asset) => {
+    console.log(asset)
+    setDbagSelected(asset)
+  }
+
+  const setWhip = (asset) => {
+    console.log(asset)
+    setWhipSelected(asset)
+  }
 
   return (
     <>
       {/* Container that holds assets and construction of assets*/}
-      
+
       <div className="flex flex-wrap justify-center align-center m-8 " >
         {/* flex items here as reversed */}
-        <div className="flex flex-col text-white w-11/12 bg-[rgba(63,65,59,0.9)] rounded-lg">
+        <div className="flex flex-col text-white w-11/12 bg-[rgba(63,65,59,0.75)] rounded-lg">
           {/* title of Header */}
           {/* render assets */}
           <div className="flex flex-row text-center justify-center p-5 m-5">
-            <div className="flex flex-col w-2/4 justify-center items-center text-xl">
+            <div className="flex flex-col w-2/4 text-xl">
               <RenderAssets
                 assets={dbagAssets}
-                name = "dbags"
+                name="dbags"
+                assetSelected={dbagSelected}
+                setAssetSelected={setDbag}
               />
               <RenderAssets
                 assets={whipAssets}
-                name = "whips"
+                name="whips"
+                assetSelected={whipSelected}
+                setAssetSelected={setWhip}
               />
             </div>
-            
-            <RenderResult />
+
+            <RenderResult
+              dbag={dbagSelected}
+              whip={whipSelected}
+            />
           </div>
 
         </div>

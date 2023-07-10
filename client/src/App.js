@@ -11,6 +11,7 @@ import Login from "./pages/Login";
 import Authentication from "./components/Authentication/index.js";
 import Home from "./pages/Home";
 import Minting from "./pages/Minting";
+import './App.css'
 
 export default function App() {
   return (

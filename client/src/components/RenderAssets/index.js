@@ -11,11 +11,12 @@ import React, { useState, useEffect } from 'react';
 // name: <String> project name
 // 
 
-const RenderAssets = ({ assets, name }) => {
+const RenderAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
     const [assetMeta, setAssetMeta] = useState([])
     const [currentSlide, setCurrentSlide] = useState(0)
     const [input, setInput] = useState('')
     const [highLightRed, setHighLightRed] = useState(false)
+    // const [assetSelected, setAssetSelected] = useState(false)
 
     // set values based on assets we recieve
     useEffect(() => {
@@ -52,6 +53,13 @@ const RenderAssets = ({ assets, name }) => {
             setHighLightRed(true)
         }
     }
+
+
+    const handleClick = (asset) => {
+        console.log('setting asset')
+        setAssetSelected(asset)
+    }
+
     return (
         <>
             {/* header name of assets */}
@@ -60,17 +68,15 @@ const RenderAssets = ({ assets, name }) => {
                 // render assets
                 <>
                     {/* add left arrow */}
-
-
-                    <div className="flex flex-col justify-center items-center">
+                    <div className="flex flex-col items-center">
                         <div className="justify-center items-center w-2/5 bg-[rgb(96,107,171)] text-2xl rounded-lg m-2">
                             {name}
                         </div>
-                        <div className="flex flex-row w-11/12 mb-1">
+                        <div className="flex flex-row justify-center items-center w-11/12 mb-1">
                             {/* filter */}
                             <input
                                 type="search"
-                                className={`bg-[rgba(96,107,171,0.65)] rounded-lg relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-white outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-white focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none  dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary`}
+                                className={`bg-[rgba(96,107,171,1)] rounded-lg relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-white outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-white focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none  dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary`}
                                 placeholder={`Search ${assetMeta.length} ${name}`}
                                 aria-label="Search"
                                 aria-describedby="button-addon1"
@@ -94,14 +100,13 @@ const RenderAssets = ({ assets, name }) => {
 
 
                         </div>
-                        <div className="flex flex-row w-11/12 mb-5 bg-[rgba(202,195,172,1)] text-sm items-center justify-center p-2 rounded-lg">
+                        <div className="flex flex-row w-11/12 bg-[rgba(202,195,172,1)] text-sm items-center justify-center p-2 rounded-lg">
                             {/* left arrow (<<) */}
-                            {console.log(!(currentSlide) * 3 === 0)}
                             {(currentSlide) * 3 === 0 ?
                                 <>
                                     <div
                                         className='m-2 px-2 py-1'>
-                                        
+
                                     </div>
                                 </> :
                                 // show arrow normally
@@ -122,8 +127,12 @@ const RenderAssets = ({ assets, name }) => {
                                     const assetsWindow = assetMeta.slice(currentSlide * 3, currentSlide * 3 + 3)
                                     // express images normally
                                     if (assetsWindow.length === 3) {
+                                        console.log('')
                                         return (
-                                            <div key={asset._id} className="w-1/2  m-2 rounded-lg bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)] cursor-pointer">
+                                            <div key={asset._id}
+                                                className="w-1/2  m-2 rounded-lg bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)] cursor-pointer"
+                                                onClick={(e) => handleClick(asset)}
+                                            >
                                                 <img className="rounded-t-lg"
                                                     src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
                                                 >
@@ -139,14 +148,21 @@ const RenderAssets = ({ assets, name }) => {
                                                 <div key={asset._id} className="flex flex-row items-center justify-center">
                                                     <div className="w-1/4 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
                                                     </div>
-                                                    <div className="w-1/2  m-2 rounded-lg bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)] cursor-pointer">
+
+                                                    <div
+                                                        className="w-1/2  m-2 rounded-lg bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)] cursor-pointer"
+                                                        onClick={(e) => handleClick(asset)}
+                                                    >
                                                         <img className="rounded-t-lg"
                                                             src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
                                                         >
                                                         </img>
                                                         {asset.onchain_metadata.name}
                                                     </div>
-                                                    <div className="w-1/2 m-2 rounded-lg bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)]">
+                                                    <div
+                                                        className="w-1/2 m-2 rounded-lg bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)] cursor-pointer"
+                                                        onClick={(e) => handleClick(assetsWindow[1])}
+                                                    >
                                                         <img className="rounded-t-lg"
                                                             src={`https://ipfs.io/ipfs/${assetsWindow[1].onchain_metadata.image.split("ipfs://")[1]}`}
                                                         >
@@ -165,11 +181,15 @@ const RenderAssets = ({ assets, name }) => {
                                     // render for one asset left in window
                                     else {
                                         return (
-                                            <div key="1" className="flex flex-row w-11/12 items-center justify-center">
+                                            <div key={asset._id} className="flex flex-row items-center justify-center">
 
-                                                <div key={1} className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
+                                                <div className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
                                                 </div>
-                                                <div key={asset._id} className="w-1/2 m-2 rounded-lg bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)] cursor-pointer">
+
+                                                <div
+                                                    className="w-1/2 m-2 rounded-lg bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)] cursor-pointer"
+                                                    onClick={(e) => handleClick(asset)}
+                                                >
                                                     <img className="rounded-t-lg"
                                                         src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
                                                     >
@@ -177,7 +197,7 @@ const RenderAssets = ({ assets, name }) => {
                                                     {asset.onchain_metadata.name}
                                                 </div>
 
-                                                <div key={2} className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
+                                                <div className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
                                                 </div>
                                             </div>
                                         )
@@ -198,11 +218,25 @@ const RenderAssets = ({ assets, name }) => {
                                     </button>
                                 </>}
 
-
                         </div>
 
-
+                        <div className="flex flex-row w-11/12 text-sm p-2 rounded-lg">
+                            {!assetSelected &&
+                                <>
+                                    <div>* select your {name.slice(0, -1)}</div>
+                                </>
+                            }
+                        </div>
                     </div>
+                    {/* <div className="flex flex-col w-11/12">
+
+                        {!dbagSelected &&
+                            <>
+                                    <div>* select {name.slice(0, -1)}</div>
+                            </>
+                        }
+
+                    </div> */}
                     {/* add right arrow */}
                 </>
             ) : (

@@ -79,7 +79,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
 
   return (
     <>
-      <div className="flex flex-col text-white bg-[rgba(0,0,0,0.95)] mb-4">
+      <div className="flex flex-col text-white mb-4">
       {/* verify user is logged in before allowing user to connect wallet */}
       {loggedIn ? (
           <>
@@ -91,7 +91,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
                   className='mx-4'
                   onClick={logout}
                 >
-                    log mfer out
+                    log out mfer
                 </button>
               </div>
               {/* mfer wallet status */}
@@ -111,7 +111,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
             <div className="flex flex-row-reverse">
             {isDropdownOpen && (
               <>
-                  <div className='flex flex-col mx-5'>
+                  <div className='flex flex-col mx-2 bg-black p-1'>
                     {/* show option to connect to namie if installed */}
                     {namisInstalled && (
                       <>
@@ -127,6 +127,8 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
                       </button>
                       </>
                     )}
+                    </div>
+                  <div className='flex flex-col mx-1 bg-black p-1'>
                     {/* show option to connect to eternl if installed */}
                     {eternlInstalled && (
                       <button
@@ -156,7 +158,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
                   window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth&response_type=token&scope=identify%20guilds'
                 }}
               >
-                  log mfer in
+                  log in mfer
               </button>
             </div>
           </div>
