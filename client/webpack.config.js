@@ -53,7 +53,7 @@ module.exports = {
                 loader: 'url-loader',
                 options: {
                     limit: 1000,
-                    name : 'assets/img/[name].[ext]'
+                    name : 'assets/img/[name].[contenthash].[ext]'
                 }
             }
         ]

@@ -19,13 +19,16 @@ const BuildMfer = ({ assets }) => {
 
   }, [assets]);
 
+  useEffect(()=>{
+    // render change in dbag or auto
+    
+  }, [dbagSelected, whipSelected])
+
   const setDbag = (asset) => {
-    console.log(asset)
     setDbagSelected(asset)
   }
 
   const setWhip = (asset) => {
-    console.log(asset)
     setWhipSelected(asset)
   }
 

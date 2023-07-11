@@ -96,7 +96,7 @@ const main = async () => {
     // generate image
     const constructMfer = new ConstructMfer(metadata, mfers, whips)
     // generate an image with the mfer that was selected and the auto selected as well
-    for (let i = 0; i < whips.length; i++){
+    for (let i = 0; i < 1; i++){
         const img = await constructMfer.generateImage(mferSelected,whips[i])
         img.writeAsync(`./imgs/${i+1}.png`)
     }

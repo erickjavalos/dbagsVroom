@@ -56,7 +56,6 @@ const RenderAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
 
 
     const handleClick = (asset) => {
-        console.log('setting asset')
         setAssetSelected(asset)
     }
 
@@ -127,7 +126,6 @@ const RenderAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
                                     const assetsWindow = assetMeta.slice(currentSlide * 3, currentSlide * 3 + 3)
                                     // express images normally
                                     if (assetsWindow.length === 3) {
-                                        console.log('')
                                         return (
                                             <div key={asset._id}
                                                 className="w-1/2  m-2 rounded-lg bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)] cursor-pointer"
