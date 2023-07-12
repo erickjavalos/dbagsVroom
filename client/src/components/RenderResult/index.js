@@ -18,6 +18,17 @@ const RenderResult = ({ dbag, whip }) => {
     const [auto, setAuto] = useState();
     const canvas = useRef(null);
 
+
+    const loadImage = async (src) => {
+        return new Promise((resolve, reject) => {
+            let img = new Image()
+            img.onload = () => resolve(img)
+            img.onerror = reject
+            img.src = src
+        })
+    }
+
+
     useEffect(async () => {
         if (canvas.current) {
             if (dbag && whip) {
@@ -41,7 +52,7 @@ const RenderResult = ({ dbag, whip }) => {
                 let onloadedTotal = 0
                 let totalLayers = 0;
                 for (let i = 0; i < DBAG_LAYERING_ORDER.length; i++) {
-                // for (let i = 0; i < 1; i++) {
+                    // for (let i = 0; i < 1; i++) {
                     const layer = DBAG_LAYERING_ORDER[i]
                     let fileLocation = ''
                     if (layer === "BodyType" && layers[layer] === "") {
@@ -55,39 +66,22 @@ const RenderResult = ({ dbag, whip }) => {
                         }
                         else {
                             fileLocation = `${layer}/${layers[layer]}.png`
-                        totalLayers += 1
+                            totalLayers += 1
                         }
                     }
                     // create image and append 
                     if (fileLocation !== '') {
-                        console.log(`../../assets/mfers_assets/${layer}/${fileLocation}`)
-                        const dbagImage = new Image()
-                        dbagImage.src = await importImage('mfers_assets', `${fileLocation}`)
-                        dbagImage.onload = () => {
-                            onloadedTotal += 1
-                            context.drawImage(dbagImage, 0, 0, 3000,3000);
-
-                        }
-                        
-                        imageArray.push(dbagImage)
+                        // add image and wait till its loaded
+                        const importedImage = await loadImage(await importImage('mfers_assets', `${fileLocation}`))
+                        imageArray.push(importedImage)
                     }
                 }
-                // console.log(imageArray)
-                let numLoaded = 0;
-                // for (let i =0; i< imageArray.length; i++)
-                // {
-                //     console.log(imageArray[i])
-                //     // increase counter to ensure images are loaded, we need all images in arr to load
-                //     imageArray[i].onload = () => 
-                //     {
-                //         numLoaded++;
-                //         console.log(numLoaded)
-                //         console.log(imageArray.length)
-                //     }
-                // }
 
-
-
+                // all images should be loaded now
+                for (let i =0; i< imageArray.length; i++)
+                {
+                    context.drawImage(imageArray[i], 0, 0, 3000, 3000);
+                }
             }
             else {
                 const context = canvas.current.getContext('2d');
@@ -100,9 +94,6 @@ const RenderResult = ({ dbag, whip }) => {
 
     // updates the dbag and whip assets
     useEffect(() => {
-        // console.log("update!");
-        // dbag && console.log(dbag.onchain_metadata.name);
-        // whip && console.log(whip.onchain_metadata.name);
         setMfer(dbag);
         setAuto(whip);
     }, [dbag, whip]);
