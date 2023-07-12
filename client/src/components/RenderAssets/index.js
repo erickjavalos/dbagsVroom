@@ -16,6 +16,7 @@ const RenderAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
     const [currentSlide, setCurrentSlide] = useState(0)
     const [input, setInput] = useState('')
     const [highLightRed, setHighLightRed] = useState(false)
+    const [assetSelectedHere, setAssetSelectedHere] = useState('')
     // const [assetSelected, setAssetSelected] = useState(false)
 
     // set values based on assets we recieve
@@ -56,6 +57,7 @@ const RenderAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
 
 
     const handleClick = (asset) => {
+        setAssetSelectedHere(asset.onchain_metadata.name)
         setAssetSelected(asset)
     }
 
@@ -128,7 +130,7 @@ const RenderAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
                                     if (assetsWindow.length === 3) {
                                         return (
                                             <div key={asset._id}
-                                                className="w-1/2  m-2 rounded-lg bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)] cursor-pointer"
+                                                className={`w-1/2  m-2 rounded-lg ${asset.onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(0,0,0,0.3)]'}   active:bg-[rgb(151,196,109,1)]  cursor-pointer`}
                                                 onClick={(e) => handleClick(asset)}
                                             >
                                                 <img className="rounded-t-lg"
@@ -148,7 +150,7 @@ const RenderAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
                                                     </div>
 
                                                     <div
-                                                        className="w-1/2  m-2 rounded-lg bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)] cursor-pointer"
+                                                        className={`w-1/2  m-2 rounded-lg ${asset.onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(0,0,0,0.3)]'}   active:bg-[rgb(151,196,109,1)]  cursor-pointer`}
                                                         onClick={(e) => handleClick(asset)}
                                                     >
                                                         <img className="rounded-t-lg"
@@ -158,7 +160,7 @@ const RenderAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
                                                         {asset.onchain_metadata.name}
                                                     </div>
                                                     <div
-                                                        className="w-1/2 m-2 rounded-lg bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)] cursor-pointer"
+                                                        className={`w-1/2  m-2 rounded-lg ${assetsWindow[1].onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(0,0,0,0.3)]'}   active:bg-[rgb(151,196,109,1)]  cursor-pointer`}
                                                         onClick={(e) => handleClick(assetsWindow[1])}
                                                     >
                                                         <img className="rounded-t-lg"
@@ -185,7 +187,7 @@ const RenderAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
                                                 </div>
 
                                                 <div
-                                                    className="w-1/2 m-2 rounded-lg bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)] cursor-pointer"
+                                                    className={`w-1/2 m-2 rounded-lg ${asset.onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(0,0,0,0.3)]'}   active:bg-[rgb(151,196,109,1)] cursor-pointer`}
                                                     onClick={(e) => handleClick(asset)}
                                                 >
                                                     <img className="rounded-t-lg"
