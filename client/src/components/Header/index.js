@@ -79,7 +79,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
 
   return (
     <>
-      <div className="flex flex-col text-white mb-4">
+      <div className="flex flex-col text-white  mb-4">
       {/* verify user is logged in before allowing user to connect wallet */}
       {loggedIn ? (
           <>

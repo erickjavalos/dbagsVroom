@@ -63,21 +63,28 @@ const RenderResult = ({ dbag, whip }) => {
                         console.log(`../../assets/mfers_assets/${layer}/${fileLocation}`)
                         const dbagImage = new Image()
                         dbagImage.src = await importImage('mfers_assets', `${fileLocation}`)
-                        console.log(dbagImage)
-
                         dbagImage.onload = () => {
                             onloadedTotal += 1
                             context.drawImage(dbagImage, 0, 0, 3000,3000);
 
                         }
-                        // let response = await import(`../assets/mfers_assets/${fileLocation}`)
-                        // const img_imported = response.default
-                        // console.log(img_imported)
-                        // let img = new Image()
-                        // img.src = `./assets/mfer_assets/${fileLocation}`
-                        // imageArray.push(img)
+                        
+                        imageArray.push(dbagImage)
                     }
                 }
+                // console.log(imageArray)
+                let numLoaded = 0;
+                // for (let i =0; i< imageArray.length; i++)
+                // {
+                //     console.log(imageArray[i])
+                //     // increase counter to ensure images are loaded, we need all images in arr to load
+                //     imageArray[i].onload = () => 
+                //     {
+                //         numLoaded++;
+                //         console.log(numLoaded)
+                //         console.log(imageArray.length)
+                //     }
+                // }
 
 
 
