@@ -45,6 +45,6 @@ db.once('open', async () => {
     process.exit(1);
   }
 
-  console.log('all done!');
+  console.log('ALL DONE MFER!');
   process.exit(0);
 });
