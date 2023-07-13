@@ -8,4 +8,8 @@ mongoose.connect(
   }
 );
 
-module.exports = mongoose.connect;
+const db = mongoose.connection;
+
+module.exports = {
+  db,
+};

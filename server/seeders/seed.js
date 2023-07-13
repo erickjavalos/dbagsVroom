@@ -1,4 +1,4 @@
-const db = require('../config/connection');
+const { db } = require('../config/connection');
 const { Dbags } = require('../models');
 const { Autos } = require('../models');
 const dbagSeeds = require('./dbagSeeds.json');
