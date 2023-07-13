@@ -2,7 +2,7 @@ const express = require('express');
 const { ApolloServer } = require('apollo-server-express');
 const path = require('path');
 const { typeDefs, resolvers } = require('../server/schema');
-const { mongooseConnect } = require('../server/config/connection');
+const { db } = require('../server/config/connection'); // Update import statement
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -48,7 +48,7 @@ const startServer = async () => {
       res.send(responseText);
     });
 
-    await connect();
+    await db; // Wait for the database connection
 
     app.listen(PORT, () => {
       console.log(`API server running on port ${PORT}!`);
