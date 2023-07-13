@@ -49,13 +49,14 @@ class ConstructMfer {
         // import background image
         const background = await this.loadImage(await this.importImage('auto_assets', `${'Background'}/${whip.onchain_metadata.Background}.png`))
         // append the background
-        context.drawImage(background, 0, 0);
         // get dbag images
         const dbagImages = await this.getDbagImages(dbag)
         // get whip images
         const whipImages = await this.getWhipAssets(whip)
 
-        this.drawMfer(whip, dbagImages,whipImages, context)
+        context.drawImage(background, 0, 0);
+
+        await this.drawMfer(whip, dbagImages,whipImages, context)
 
         
         
