@@ -1,87 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { async } from 'regenerator-runtime';
+import ConstructMfer from '../../utils/ConstructMfer';
 
 const RenderResult = ({ dbag, whip }) => {
-    const DBAG_LAYERING_ORDER = [
-        // "Background",
-        "BodyType",
-        "Eyes",
-        "HeadPhones",
-        "HeadItems",
-        "Mouth",
-        "MouthItems",
-        "Clothes",
-        "Special"
-    ]
-
     const [mfer, setMfer] = useState();
     const [auto, setAuto] = useState();
     const canvas = useRef(null);
 
-
-    const loadImage = async (src) => {
-        return new Promise((resolve, reject) => {
-            let img = new Image()
-            img.onload = () => resolve(img)
-            img.onerror = reject
-            img.src = src
-        })
-    }
-
-
     useEffect(async () => {
         if (canvas.current) {
             if (dbag && whip) {
-
-                const context = canvas.current.getContext('2d');
-                context.fillRect(0, 0, canvas.current.width, canvas.current.height);
-                // import background image
-                const background = new Image();
-                background.src = await importImage('auto_assets', `${'Background'}/${whip.onchain_metadata.Background}.png`)
-                // append the background
-                // background.onload = () => {
-                // context.drawImage(background, 0, 0);
-                // };
-
-                //import dbags 
-                console.log(dbag)
-                const layers = dbag.onchain_metadata
-                console.log(layers)
-
-                let imageArray = []
-                let onloadedTotal = 0
-                let totalLayers = 0;
-                for (let i = 0; i < DBAG_LAYERING_ORDER.length; i++) {
-                    // for (let i = 0; i < 1; i++) {
-                    const layer = DBAG_LAYERING_ORDER[i]
-                    let fileLocation = ''
-                    if (layer === "BodyType" && layers[layer] === "") {
-                        fileLocation = `${layer}/Black.png`
-                        totalLayers += 1
-                    }
-                    else if (layers[layer] !== "") {
-                        if (layers[layer] === "Captain's hat") {
-                            fileLocation = `${layer}/Captain_s hat.png`
-                            totalLayers += 1
-                        }
-                        else {
-                            fileLocation = `${layer}/${layers[layer]}.png`
-                            totalLayers += 1
-                        }
-                    }
-                    // create image and append 
-                    if (fileLocation !== '') {
-                        // add image and wait till its loaded
-                        const importedImage = await loadImage(await importImage('mfers_assets', `${fileLocation}`))
-                        imageArray.push(importedImage)
-                    }
-                }
-
-                // all images should be loaded now
-                for (let i =0; i< imageArray.length; i++)
-                {
-                    context.drawImage(imageArray[i], 0, 0, 3000, 3000);
-                }
+                // build the mfer + whip
+                const constructMfer = new ConstructMfer()
+                constructMfer.generateDbagImage(canvas,dbag, whip)
+                
             }
             else {
                 const context = canvas.current.getContext('2d');
@@ -98,16 +29,11 @@ const RenderResult = ({ dbag, whip }) => {
         setAuto(whip);
     }, [dbag, whip]);
 
-    const importImage = async (collection, asset) => {
-        let response = await import(`../../assets/${collection}/${asset}`)
-        return response.default
-    }
-
     return (
         <>
             <div className="flex flex-col w-2/4">
                 <div className='flex flex-col h-5/6 mt-11  justify-center rounded-lg'>
-                    <canvas className='rounded-lg' ref={canvas} width={3000} height={3000} />
+                    <canvas className='rounded-lg' ref={canvas} width={1500} height={500} />
                     <div className='m-2'>
                         {!mfer && <h1>* select your mfer</h1>}
                         {!auto && <h1>* select your whip</h1>}

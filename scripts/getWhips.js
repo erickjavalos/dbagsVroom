@@ -31,6 +31,7 @@ fs.readdir(directoryPath, function (err, files) {
         const autoMeta = metadata.autoAssets
         const assets = []
 
+        console.log(cars.length)
         cars.forEach((car) => {
             try {
                 autoMeta.forEach((data) => {
