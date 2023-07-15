@@ -59,7 +59,6 @@ class ConstructMfer {
         await this.drawMfer(whip, dbagImages,whipImages, context)
 
         
-        
     }
 
     importImage = async (collection, asset) => {
