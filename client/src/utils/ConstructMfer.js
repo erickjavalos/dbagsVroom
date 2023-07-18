@@ -44,7 +44,6 @@ class ConstructMfer {
     generateDbagImage = async (canvas, dbag, whip) => {
 
         const context = canvas.current.getContext('2d');
-        context.fillRect(0, 0, canvas.current.width, canvas.current.height);
 
         // import background image
         const background = await this.loadImage(await this.importImage('auto_assets', `${'Background'}/${whip.onchain_metadata.Background}.png`))
@@ -54,6 +53,7 @@ class ConstructMfer {
         // get whip images
         const whipImages = await this.getWhipAssets(whip)
 
+        context.fillRect(0, 0, canvas.current.width, canvas.current.height);
         context.drawImage(background, 0, 0);
 
         await this.drawMfer(whip, dbagImages,whipImages, context)
