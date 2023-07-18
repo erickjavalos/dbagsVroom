@@ -5,7 +5,7 @@ const { typeDefs, resolvers } = require("../server/schema");
 const { db } = require("../server/config/connection"); // Update import statement
 const jwt = require("jsonwebtoken");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const app = express();
 
 // Access the secret key from the environment variable
