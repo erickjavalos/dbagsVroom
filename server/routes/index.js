@@ -1,11 +1,11 @@
 // // import libraries
-// const path = require('path')
-// const router = require('express').Router();
+const path = require('path')
+const router = require('express').Router();
 // // import helper files
-// const apiRoutes =  require("./api")
+const apiRoutes =  require("./api")
 
 // // API routes
-// router.use('/api', apiRoutes);
+router.use('/api', apiRoutes);
 
 // // export router
-// module.exports = router;
+module.exports = router;

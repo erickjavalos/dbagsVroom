@@ -3,6 +3,7 @@ const { ApolloServer } = require("apollo-server-express");
 const path = require("path");
 const { typeDefs, resolvers } = require("../server/schema");
 const { db } = require("../server/config/connection"); // Update import statement
+const routes = require('./routes/')
 const jwt = require("jsonwebtoken");
 
 const PORT = process.env.PORT || 3001;
@@ -74,6 +75,8 @@ const startServer = async () => {
       responseText += "<small>Requested at: " + req.requestTime + "</small>";
       res.send(responseText);
     });
+
+    app.use(routes);
 
     await db; // Wait for the database connection
 
