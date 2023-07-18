@@ -37,13 +37,16 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@apollo/client": "^3.5.8",
     "@babel/plugin-transform-runtime": "^7.15.8",
     "@babel/runtime": "^7.15.4",
     "@emurgo/cip14-js": "^3.0.1",
     "@headlessui/react": "^1.4.1",
+    "apollo": "^2.34.0",
     "autoprefixer": "^10.3.4",
     "buffer": "^6.0.3",
     "fs-extra": "^10.0.0",
+    "graphql": "^15.4.0",
     "html-webpack-plugin": "^5.5.0",
     "lodash.clonedeep": "^4.5.0",
     "lucid-cardano": "^0.10.6",

@@ -58,7 +58,7 @@ function Home() {
     const assetsData = await getAssets();
     // set assets state to render in the front end
     setAssets(assetsData);
-    console.log(assetsData);
+    // console.log(assetsData);
     // submit get request to backend
     setWalletConnected(wallet);
     console.log("wallet was set");
@@ -137,17 +137,17 @@ function Home() {
       ]
     };
     
-    const assets = await fetch("/api/projectData/getSelectedMetaData", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(testdata),
-    });
+    // const assets = await fetch("/api/projectData/getSelectedMetaData", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(testdata),
+    // });
 
-    const data = await assets.json();
+    // const data = await assets.json();
 
-    return data;
+    return testdata;
   };
 
   const processMintRequest = async () => {
