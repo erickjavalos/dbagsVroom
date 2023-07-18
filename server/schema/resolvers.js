@@ -20,7 +20,12 @@ const resolvers = {
       const asset = await Dbags.findById(id).exec();
       return asset;
     },
-    getAllAssets: async () => {
+    getAllAutoAssets: async () => {
+      const assets = await Autos.find().exec();
+      return assets;
+    },
+
+    getAllDbagAssets: async () => {
       const assets = await Dbags.find().exec();
       return assets;
     },
