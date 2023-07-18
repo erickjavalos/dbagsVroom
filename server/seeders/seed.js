@@ -1,4 +1,4 @@
-const db = require('../config/connection');
+const { db } = require('../config/connection');
 const { Dbags } = require('../models');
 const { Autos } = require('../models');
 const dbagSeeds = require('./dbagSeeds.json');
@@ -45,6 +45,6 @@ db.once('open', async () => {
     process.exit(1);
   }
 
-  console.log('all done!');
+  console.log('ALL DONE MFER!');
   process.exit(0);
 });

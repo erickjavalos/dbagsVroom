@@ -1,48 +1,66 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
 
-import Auth from '../../utils/auth';
-import auth from '../../utils/auth';
-
+import Auth from "../../utils/auth";
 
 const Authentication = () => {
-    // const [accessToken, setAccessToken] = useState("");
-    const [expiration, setExpiration] = useState("");
+  useEffect(() => {
+    const verifyHash = async () => {
+      const query = window.location.hash;
+      if (query) {
+        // Discord hash verification
+        const params = query.split("&");
+        let hash = "";
 
-    useEffect(() => {
-        // get has returned from discord
-        console.log('authentication hit')
-        const query = window.location.hash;
-        // verify if query exists 
-        if (query) {
-            // split query into array of params
-            const params = query.split("&");
-            // get access token and expiration from params
-            let accessToken = ""
-            let expiration = ""
-            // loop through params and find access tokens and expiration time 
-            for (const param of params) {
-                const [key, value] = param.split("=");
-                if (key === "access_token") {
-                    accessToken = value
-                }
-                if (key === "expires_in")
-                {
-                    expiration = value
-                }
-            }
-            // authenticate and store access token and expiration time in local storage
-            Auth.login(accessToken, Date.now()/1000 + parseInt(expiration))
-
+        for (const param of params) {
+          const [key, value] = param.split("=");
+          if (key === "hash") {
+            hash = value;
+            break;
+          }
         }
-        }, [])
 
-        // }, [window.location.search])
+        try {
+          // Send verification request to backend
+          const response = await axios.post("/api/verify", { hash });
+          const { username, email, token } = response.data;
 
-    return (
-        <>         
-        </>
-    );
-}
+          // Store user information and JWT in local storage
+          localStorage.setItem("username", username);
+          localStorage.setItem("email", email);
+          localStorage.setItem("jwtToken", token);
+
+          const decodedToken = jwt_decode(token);
+          console.log(decodedToken);
+
+          // Perform other actions after successful verification and JWT storage
+        } catch (error) {
+          // Handle verification error
+          console.error(error);
+        }
+      } else {
+        // Check if access token and expiration exist in URL search parameters
+        const accessToken = new URLSearchParams(window.location.search).get(
+          "access_token"
+        );
+        const expiresIn = new URLSearchParams(window.location.search).get(
+          "expires_in"
+        );
+
+        if (accessToken && expiresIn) {
+          const expiration = Date.now() / 1000 + parseInt(expiresIn);
+          // Authenticate and store access token and expiration in local storage
+          Auth.login(accessToken, expiration);
+        }
+      }
+    };
+
+    verifyHash();
+  }, []);
+
+  return <></>;
+};
 
 export default Authentication;
