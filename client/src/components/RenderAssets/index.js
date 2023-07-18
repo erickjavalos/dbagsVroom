@@ -30,8 +30,6 @@ const RenderAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
             setAssetMeta([])
         }
         else {
-            console.log("rendered Assets")
-            // console.log(assets)
             setAssetMeta(assets)
         }
     }, [assets]);
