@@ -267,6 +267,7 @@ function Home() {
               {walletConnected && (
               <BuildMfer
                 assets={assets}
+                walletConnected={walletConnected}
               />
               )}
             </>
