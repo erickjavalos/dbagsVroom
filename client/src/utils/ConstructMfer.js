@@ -56,9 +56,9 @@ class ConstructMfer {
         context.fillRect(0, 0, canvas.current.width, canvas.current.height);
         context.drawImage(background, 0, 0);
 
-        await this.drawMfer(whip, dbagImages,whipImages, context)
+        await this.drawMfer(whip, dbagImages, whipImages, context)
 
-        
+
     }
 
     importImage = async (collection, asset) => {
@@ -95,30 +95,19 @@ class ConstructMfer {
         return imageArray
 
     }
-    
+
     getWhipAssets = async (whip) => {
         // get whip assets
         let autoArray = []
         const layers = whip.onchain_metadata
         for (let i = 1; i < this.AUTO_LAYERING_ORDER.length; i++) {
-            // for (let i = 0; i < 1; i++) {
             const layer = this.AUTO_LAYERING_ORDER[i]
             let fileLocation = ''
-            if (layers[layer] !== undefined) {
-                // console.log(layers[layer])
-                // if (layers[layer].includes("Mfentador")) {
-                //     fileLocation = `${layer}/Mfentador_backup.png`
-                // }
-                // else if (layers[layer].includes("D8") && !layers[layer].includes("Mfer D8"))
-                //     fileLocation = `${layer}/D8_backup.png`
-
-                // else {
-                    fileLocation = `${layer}/${layers[layer]}.png`
-                // }
+            if (layers[layer] !== undefined && layers[layer] !== null) {
+                fileLocation = `${layer}/${layers[layer]}.png`
             }
             // create image and append 
             if (fileLocation !== '') {
-                console.log(fileLocation)
                 // add image and wait till its loaded
                 const importedImage = await this.loadImage(await this.importImage('auto_assets', `${fileLocation}`))
                 autoArray.push(importedImage)
@@ -127,7 +116,7 @@ class ConstructMfer {
         return autoArray
     }
 
-    drawMfer = async (whip, dbagImages, whipImages, context ) => {
+    drawMfer = async (whip, dbagImages, whipImages, context) => {
         // set default scales 
         let xScale = 110;
         let yScale = 110;
@@ -213,7 +202,7 @@ class ConstructMfer {
                 //     assetFileLocations.push(`../client/src/assets/auto_assets/${layer}/D8_backup.png`)
 
                 // else {
-                    assetFileLocations.push(`../client/src/assets/auto_assets/${layer}/${layers[layer]}.png`)
+                assetFileLocations.push(`../client/src/assets/auto_assets/${layer}/${layers[layer]}.png`)
                 // }
             }
         }

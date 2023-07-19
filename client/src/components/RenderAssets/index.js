@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useQuery, gql } from '@apollo/client';
 
+
+// query for graphql
 
 // Render Assets
 //
@@ -12,6 +15,7 @@ import React, { useState, useEffect } from 'react';
 // 
 
 const RenderAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
+
     const [assetMeta, setAssetMeta] = useState([])
     const [currentSlide, setCurrentSlide] = useState(0)
     const [input, setInput] = useState('')

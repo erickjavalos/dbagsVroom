@@ -16,6 +16,25 @@ const resolvers = {
         autoAssets: autoAssetsData,
       };
     },
+    getDbagMetaData: async (parent, { assets }) => {
+      const dbagAssetsData = await Dbags.find({
+        'onchain_metadata.name': { $in: assets },
+      }).exec();
+      console.log(assets)
+
+      return dbagAssetsData
+    },
+
+    getAutoMetaData: async (parent, { assets }) => {
+      console.log(assets)
+      const autoAssetsData = await Autos.find({
+        asset_name: { $in: assets },
+      }).exec();
+
+      console.log(autoAssetsData)
+      return autoAssetsData
+    },
+
     getAsset: async (parent, { id }) => {
       const asset = await Dbags.findById(id).exec();
       return asset;
