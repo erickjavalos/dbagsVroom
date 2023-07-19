@@ -1,14 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useMutation } from '@apollo/client';
+
 import ConstructMfer from '../../utils/ConstructMfer';
 
 import NamiWalletApi, { Cardano } from "../../nami-js";
 import blockfrostApiKey from "../../../config.js";
+
+import {MINT} from "../../utils/mutations"
 let nami;
+
 
 
 const RenderResult = ({ dbag, whip, walletConnected }) => {
     const [mfer, setMfer] = useState();
     const [auto, setAuto] = useState();
+    const [mint, { error, data }] = useMutation(MINT);
+
     const canvas = useRef(null);
     
 
@@ -38,7 +45,11 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
 
     const processMintRequest = async () => {
         // get hashed metadata
-        console.log("gettin address");
+        // console.log("gettin address");
+        console.log("assets selected")
+        console.log(mfer, auto)
+
+        // test
         // instantiate serialization lib that helps decode blockchain data
         const S = await Cardano();
         // initialize nami wallet helper class
@@ -55,6 +66,8 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
             "Content-Type": "application/json",
           },
         });
+
+        
     
         // extract data
         const data = await mint.json();

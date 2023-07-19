@@ -40,7 +40,7 @@ const styles = {
 
 
 function Home() {
-
+  
   const [walletConnected, setWalletConnected] = useState(null);
   const [assets, setAssets] = useState([]);
 

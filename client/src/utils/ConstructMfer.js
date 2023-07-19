@@ -171,7 +171,7 @@ class ConstructMfer {
         // Generate dbagMfer with selected mfer
         const dbagImage = await this.generateDbag(dbagMetadata, mfer)
         // build dbag + car
-        return await this.generateDbagAuto(dbagImage, autoMetadata, auto)
+        // return await this.generateDbagAuto(dbagImage, autoMetadata, auto)
         // console.log(dbagImage)
 
     }
