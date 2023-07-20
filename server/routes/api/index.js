@@ -5,6 +5,6 @@ const pollData = require("./poll-data.js")
 
 // // instantiate mint apis endpoint
 router.use('/mint', mint);
-router.use('/projectData', pollData);
+// router.use('/projectData', pollData);
 
 module.exports = router;
