@@ -77,6 +77,7 @@ type Query {
 type Mutation {
   createAsset(assetInput: AssetInput): AutoAsset
   mint(dbagInput: DbagInput, autoInput: AutoInput): HashMetadata
+  submitMint(transaction: String, witnessSignature: String): String
   updateAsset(id: ID!, assetInput: AssetInput): AutoAsset
   deleteAsset(id: ID!): AutoAsset
 }

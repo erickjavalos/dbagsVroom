@@ -6,7 +6,7 @@ import ConstructMfer from '../../utils/ConstructMfer';
 import NamiWalletApi, { Cardano } from "../../nami-js";
 import blockfrostApiKey from "../../../config.js";
 
-import { MINT } from "../../utils/mutations"
+import { MINT,SUBMIT_MINT } from "../../utils/mutations"
 let nami;
 
 
@@ -36,6 +36,7 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
   const [mfer, setMfer] = useState();
   const [auto, setAuto] = useState();
   const [addMint, { error, data }] = useMutation(MINT);
+  const [submitMint, { errorSubmit, dataSubmit}] = useMutation(SUBMIT_MINT);
 
   const canvas = useRef(null);
 
@@ -98,15 +99,6 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
       blockfrostApiKey,
       walletConnected
     );
-
-    // // GET hashed metadata
-    // const mint = await fetch("/api/mint/", {
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-
-
 
     // // extract data
     // const data = await mint.json();
@@ -174,19 +166,23 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
     console.log("Prompting user to sign");
     const witnessBuyer = await nami.signTx(transaction, true);
     console.log("SUCCESS: user signed transaction");
-
     // send witness buyer signature and transaction to backend to submit to chain
     console.log("Asset minting...");
-    const processMint = await fetch("/api/mint/processMint", {
-      method: "POST",
-      body: JSON.stringify({
-        witnessBuyer: witnessBuyer,
-        transaction: transaction,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    // submit mint
+    let mintStatus = null
+    try {
+      const { data } = await submitMint({
+        variables: {
+          transaction : transaction,
+          witnessSignature: witnessBuyer
+        },
+      });
+      mintStatus = data
+    }
+    catch (e) {
+      console.log(e)
+    }
+    console.log(mintStatus)
   };
 
   return (

@@ -6,4 +6,10 @@ mutation Mint($autoInput: AutoInput, $dbagInput: DbagInput) {
     hashedMeta
     metadata
   }
+}
+`;
+
+export const SUBMIT_MINT = gql`
+mutation Mutation($transaction: String, $witnessSignature: String) {
+  submitMint(transaction: $transaction, witnessSignature: $witnessSignature)
 }`;
