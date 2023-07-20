@@ -161,11 +161,21 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
       multiSig: true,
     });
     console.log("SUCCESS: transaction built!");
+    
 
     // prompt user to sign and retreive signature hash
     console.log("Prompting user to sign");
     const witnessBuyer = await nami.signTx(transaction, true);
     console.log("SUCCESS: user signed transaction");
+
+
+
+    console.log("TEST")
+    console.log("transaction")
+    console.log(transaction)
+
+    console.log("signature")
+    console.log(witnessBuyer)
     // send witness buyer signature and transaction to backend to submit to chain
     console.log("Asset minting...");
     // submit mint
