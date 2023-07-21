@@ -76,6 +76,14 @@ const startServer = async () => {
       res.send(responseText);
     });
 
+    app.get("/auth", function (req, res) {
+      var responseText = "Hi Family!<br>";
+      responseText += "<small>Requested at: " + req.requestTime + "</small>";
+      var redirectUrl = 'http://localhost:3000/Home';
+
+      return res.redirect(301, redirectUrl);
+    });
+
     app.use(routes);
 
     await db; // Wait for the database connection

@@ -45,8 +45,13 @@ function Home() {
   const [assets, setAssets] = useState([]);
 
   useEffect(async () => {
-    const assetsData = await getAssets();
-    setAssets(assetsData);
+    // window.location.assign('/home');
+    const query = window.location.hash;
+    if (query) {
+      // window.location.assign('/home');
+      history.pushState("", document.title, window.location.pathname
+                                                       + window.location.search);
+    }
   }, [])
   // Function to update walletConnected in the App component
   const updateWalletConnected = async (wallet) => {

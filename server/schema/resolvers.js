@@ -168,6 +168,7 @@ const resolvers = {
         networkId: 0,
         metadata: metadata
       })
+      console.log(txHash)
       return txHash
     },
 
