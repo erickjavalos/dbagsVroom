@@ -9,6 +9,8 @@ const Authentication = () => {
   useEffect(() => {
     const verifyHash = async () => {
       const query = window.location.hash;
+
+      console.log('hit')
       if (query) {
         console.log('hit')
         const params = query.split("&");

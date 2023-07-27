@@ -155,7 +155,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
                 className='mx-2'
                 onClick={(e) => {
                   e.preventDefault();
-                  window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth&response_type=code&scope=identify%20guilds%20email'
+                  window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth&response_type=code&scope=identify%20email%20guilds'
                 }}
               >
                   log in mfer

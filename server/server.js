@@ -6,11 +6,20 @@ const { db } = require("../server/config/connection"); // Update import statemen
 const routes = require('./routes/')
 const jwt = require("jsonwebtoken");
 
+// TEST
+const fetch = require('node-fetch');
+
 const PORT = process.env.PORT || 3001;
 const app = express();
 
 // Access the secret key from the environment variable
 const jwtSecretKey = process.env.JWT_SECRET;
+
+const client_id = '1106720134615289937';
+const client_secret = '-Ds34Uve2kuqW2keDeVVCT5u606DT9WN';
+const redirect_uri = 'http://localhost:3000/home';
+const authorization_code = 'RML6okBr39QVgq2m6UdWWt3GxgBuEU';
+const scopes = 'identity';
 
 // Create a new instance of ApolloServer with the GraphQL schema
 const server = new ApolloServer({
@@ -76,15 +85,55 @@ const startServer = async () => {
       res.send(responseText);
     });
 
-    app.get("/auth", function (req, res) {
-      var responseText = "Hi Family!<br>";
-      responseText += "<small>Requested at: " + req.requestTime + "</small>";
-      var redirectUrl = 'http://localhost:3000/Home';
+    // sets up authorization for us to use
+    app.get("/auth", async function (req, res) {
+      const discordCode = req.query?.code || false
+      console.log('/auth')
+      console.log(discordCode)
+      // check if user is in dbags discord
+      // get user information
+      if (discordCode) {
+        var redirectUrl = 'http://localhost:3001/auth';
 
-      return res.redirect(301, redirectUrl);
+        // res.status(200).json('hello')
+        const payload = new URLSearchParams();
+        payload.append('client_id', client_id);
+        payload.append('client_secret', client_secret);
+        payload.append('grant_type', 'authorization_code');
+        payload.append('code', discordCode);
+        payload.append('redirect_uri', redirectUrl);
+        // payload.append('scope', scopes);
+        // grab secrets
+        let url = `https://discord.com/api/v10/oauth2/token`;
+
+        const response = await fetch(url, {
+          method: 'POST',
+          body: payload,
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        });
+    
+        const data = await response.json();
+        console.log(data)
+
+        // return fetch(url, {
+        //   method: "POST",
+        // })
+        //   .then((res) => res.json())
+        //   .then((data) => {
+        //     return data;
+        //   });
+        // return res.redirect(301, redirectUrl);
+        res.status(200).json({...data, "code": discordCode})
+      }
+      else {
+        res.status(400).json('User did not authenticate')
+      }
+
     });
 
-    app.use(routes);
+    // app.use(routes);
 
     await db; // Wait for the database connection
 

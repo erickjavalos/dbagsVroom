@@ -35,8 +35,9 @@ class AuthService {
   }
 
   login(idToken,expiration) {
-    localStorage.setItem("expiration", expiration)
-    localStorage.setItem('id_token', idToken);
+    console.log("trying to login")
+    // localStorage.setItem("expiration", expiration)
+    // localStorage.setItem('id_token', idToken);
     window.location.assign('/home');
   }
 
