@@ -74,78 +74,66 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
   };
 
   return (
-    <div className="flex flex-col bg-black text-white mb-4 relative">
-      {/* Image in the top left corner */}
-      <div className="container mx-auto flex items-center justify-between px-4">
-      <div className="flex items-center">
-          <img src={Mfer} alt="Logo" className="w-16 h-16 mr-2" />
-        </div>        
-        {/* verify user is logged in before allowing the user to connect wallet */}
-        {loggedIn ? (
-          <>
-            <div className="flex flex-row-reverse text-2xl m-2">
-              {/* log out button */}
-              <div>
-                <button className="mx-4" onClick={logout}>
-                  log out mfer
+<div className="flex flex-col bg-black text-white mb-4 relative">
+  {/* Image in the top left corner */}
+  <div className="container mx-auto flex items-center justify-between px-4">
+    <div className="flex items-center">
+      <img src={Mfer} alt="Logo" className="w-16 h-16 mr-2" />
+    </div>
+    {/* Buttons on the right */}
+    <div className="flex items-center">
+      {/* Verify user is logged in before allowing the user to connect the wallet */}
+      {loggedIn ? (
+        <>
+          {/* Log out button */}
+          <button className="mx-2" onClick={logout}>
+            log out mfer
+          </button>
+
+          {/* Mfer wallet status */}
+          <button className="mx-2" onClick={dropDown}>
+            {walletConnected ? walletConnected + ' connected' : 'connect mfer wallet'}
+          </button>
+
+          {/* Dropdown */}
+          {isDropdownOpen && (
+            <div className="absolute top-full right-0 bg-black p-2 mt-1 z-10 flex flex-col mx-1">
+              {/* Show an option to connect to Namie if installed */}
+              {namisInstalled && (
+                <button onClick={() => connectWallet('nami')} className="flex flex-row">
+                  {/* Add image and name */}
+                  <img src={namiImg} alt="Nami" className="w-10 h-10 mr-2" />
+                  <span className="flex items-center">Nami</span>
                 </button>
-              </div>
-              {/* mfer wallet status */}
-              <div>
-                <button className="mx-4" onClick={dropDown}>
-                  {walletConnected ? walletConnected + ' connected' : 'connect mfer wallet'}
+              )}
+
+              {/* Show an option to connect to Eternl if installed */}
+              {eternlInstalled && (
+                <button onClick={() => connectWallet('eternl')} className="flex flex-row">
+                  {/* Add image and name */}
+                  <img src={eternlImg} alt="eternl" className="w-10 h-10 mr-2" />
+                  <span className="flex items-center">Eternl</span>
                 </button>
-              </div>
-            </div>
-            {/* dropdown */}
-            <div className="flex flex-row-reverse">
-              {isDropdownOpen && (
-                <>
-                  <div className="absolute top-full right-0 bg-black p-2 mt-1 z-10">
-                    {/* show an option to connect to namie if installed */}
-                    {namisInstalled && (
-                      <>
-                        <button onClick={() => connectWallet('nami')} className="flex flex-row">
-                          {/* add image and name */}
-                          <img src={namiImg} alt="Nami" className="w-10 h-10 mr-2" />
-                          <span className="flex items-center">Nami</span>
-                        </button>
-                      </>
-                    )}
-                  </div>
-                  <div className="flex flex-col mx-1 bg-black p-1">
-                    {/* show an option to connect to eternl if installed */}
-                    {eternlInstalled && (
-                      <button onClick={() => connectWallet('eternl')} className="flex flex-row">
-                        {/* add image and name */}
-                        <img src={eternlImg} alt="eternl" className="w-10 h-10 mr-2" />
-                        <span className="flex items-center">Eternl</span>
-                      </button>
-                    )}
-                  </div>
-                </>
               )}
             </div>
-          </>
-        ) : (
-          // prompt the user to log back in
-          <div className="flex flex-row-reverse text-2xl m-2">
-            <div>
-              <button
-                className="mx-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.location.href =
-                    'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth&response_type=token&scope=identify%20guilds';
-                }}
-              >
-                log in mfer
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+          )}
+        </>
+      ) : (
+        // Prompt the user to log back in
+        <button
+          className="mx-2"
+          onClick={(e) => {
+            e.preventDefault();
+            window.location.href =
+              'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth&response_type=token&scope=identify%20guilds';
+          }}
+        >
+          log in mfer
+        </button>
+      )}
     </div>
+  </div>
+</div>
   );
 }
 
