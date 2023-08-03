@@ -1,10 +1,12 @@
 const { Dbags, Autos } = require('../server/../models');
 const { getAuthToken, getUserInfo, checkUserInGuild, signToken } = require('../utils/auth');
 const { AuthenticationError } = require('apollo-server-express');
+const { Profile } = require('../models');
 
 // nami wallet 
 var NamiWalletApi = require('../nami-node-js/nami').NamiWalletApi
 const dotenv = require('dotenv');
+const { lte } = require('semver');
 dotenv.config();
 
 // instantiate blockfrost api
@@ -80,22 +82,28 @@ const resolvers = {
     login: async (parent, { code }) => {
       // extract token from mutation
       const Auth = await getAuthToken(code)
-      console.log(Auth)
       // verify auth token was returned 
       if (!Auth?.error) {
         // Verify Discord presence
         const userInfo = await getUserInfo(Auth)
+        console.log(userInfo)
         if (userInfo) {
           // verify user is in discord user
           if (checkUserInGuild(userInfo.guilds)) {
-            // extract data 
+            // extract data from api
             const discordId = userInfo.me.id
             const username = userInfo.me.username;
             const email = userInfo.me.email
-
-            // check if user exists in database
-            const token = signToken(discordId, username, email);
-            // TODO: create the user object here with data gathered from userinfo
+            // search for profile based on discordID (unique)
+            let profile = await Profile.findOne({ discordId });
+            // add user to database and authenticate if they do not exist
+            if (!profile) {
+              // create profile
+              profile = await Profile.create({ username, discordId, email });
+            }
+            // create jwt with profile from db
+            const token = signToken(profile);
+            // return jwt
             return {
               token: token
             }

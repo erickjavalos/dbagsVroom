@@ -34,7 +34,7 @@ module.exports = {
     return req;
     
   },
-  signToken: function (discordId, username, email ) {
+  signToken: function ({discordId, username, email} ) {
     const payload = { discordId, username, email };
     return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
   },

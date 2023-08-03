@@ -1,8 +1,14 @@
 const { db } = require('../config/connection');
-const { Dbags } = require('../models');
+// models
 const { Autos } = require('../models');
-const dbagSeeds = require('./dbagSeeds.json');
+const { Dbags } = require('../models');
+const { Profile } = require('../models');
+// seed data
 const autoSeeds = require('./autoSeeds.json');
+const dbagSeeds = require('./dbagSeeds.json');
+const profileSeeds = require('./profileSeeds.json');
+
+
 
 
 
@@ -31,15 +37,15 @@ db.once('open', async () => {
     // delete dbags and auto entries from db
     await Dbags.deleteMany({});
     await Autos.deleteMany({})
-
+    await Profile.deleteMany({});
     
 
     // load dbags and auto
     // await Dbags.create(dbagSeeds)
     await loadData(Dbags,dbagSeeds, "dbags")
     await loadData(Autos,autoSeeds, "autos")
-    
-    
+    await Profile.create(profileSeeds);
+
   } catch (err) {
     console.error(err);
     process.exit(1);
