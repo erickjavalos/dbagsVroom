@@ -86,7 +86,6 @@ const resolvers = {
       if (!Auth?.error) {
         // Verify Discord presence
         const userInfo = await getUserInfo(Auth)
-        console.log(userInfo)
         if (userInfo) {
           // verify user is in discord user
           if (checkUserInGuild(userInfo.guilds)) {
