@@ -1,5 +1,8 @@
-const { async } = require('regenerator-runtime');
 const { Dbags, Autos } = require('../server/../models');
+const { getAuthToken, getUserInfo, checkUserInGuild } = require('../utils/auth');
+const { AuthenticationError } = require('apollo-server-express');
+
+
 
 // nami wallet 
 var NamiWalletApi = require('../nami-node-js/nami').NamiWalletApi
@@ -96,6 +99,36 @@ const resolvers = {
       const createdAsset = await newAsset.save();
 
       return createdAsset;
+    },
+
+    login : async (parent, {code}) => {
+      // extract token from mutation
+      const Auth = await getAuthToken(code)
+      // verify auth token was returned 
+      if (!Auth?.error) {
+        // Verify Discord presence
+        const userInfo = await getUserInfo(Auth)
+        if (userInfo) {
+          // verify user is in discord user
+          if (checkUserInGuild(userInfo.guilds))
+          {
+            // TODO: create the user object here with data gathered from userinfo
+            return {
+              token: "1234"
+            }
+          }
+          else {
+            console.log("User not in guilds!")
+            throw new AuthenticationError('user not in guilds');
+
+          }
+        }
+      }
+      // token has already been used! or hacker using fake query parameter...
+      else {
+        // TODO: Reroute to /info page
+        throw new AuthenticationError('Error in Authentication code provided!');
+      }
     },
 
     // instantiate mint with dbag and auto selected

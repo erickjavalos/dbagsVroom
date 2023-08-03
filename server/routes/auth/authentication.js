@@ -1,40 +1,18 @@
 const router = require('express').Router();
 const fs = require('fs')
 const dotenv = require('dotenv');
+const jwt = require("jsonwebtoken");
+const { getAuthToken } = require('../../utils/auth');
+
 dotenv.config();
 
 // instantiate nami class and set wallet private key for wallet to use
 const DBAGS_GUILD_ID = '954195328062590987'
-const client_id = '1106720134615289937';
-const client_secret = '-Ds34Uve2kuqW2keDeVVCT5u606DT9WN';
-const redirectUrl = 'http://localhost:3001/auth';
 
-const getAuthToken = async (discordCode) => {
-  // create payload 
-  const payload = new URLSearchParams();
-  // append
-  payload.append('client_id', client_id);
-  payload.append('client_secret', client_secret);
-  payload.append('grant_type', 'authorization_code');
-  payload.append('code', discordCode);
-  payload.append('redirect_uri', redirectUrl);
-  // grab secrets
-  let url = `https://discord.com/api/v10/oauth2/token`;
 
-  const response = await fetch(url, {
-    method: 'POST',
-    body: payload,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-  });
-
-  return await response.json()
-
-}
 
 const getUserInfo = async (Auth) => {
-  console.log(Auth.access_token)
+  // console.log(Auth.access_token)
   try {
     // endpoints to verify user and discord
     const meEndpoint = 'https://discord.com/api/users/@me';
@@ -73,7 +51,6 @@ const checkUserInGuild = (guilds) => {
   return false
 }
 // /auth
-// instantiate mint process from server
 router.get('/', async (req, res) => {
   const discordCode = req.query?.code || false
   // get user information
@@ -89,11 +66,13 @@ router.get('/', async (req, res) => {
         if (checkUserInGuild(userInfo.guilds))
         {
           // TODO: create the user object here with data gathered from userinfo
-          res.status(200).json({ ...Auth, "code": discordCode })
+          res.status(200).json('User exists in guild')
         }
         else {
           console.log("user not in guilds")
+          const access_token = Auth.access_token
           // TODO: Reroute to /info page
+          const token = jwt.sign({ access_token }, jwtSecretKey, { expiresIn: "1h" });
           res.status(400).json("user not in guilds")
         }
       }
@@ -109,6 +88,37 @@ router.get('/', async (req, res) => {
     // TODO: Reroute to /info page
     res.status(400).json('User did not authenticate')
   }
+});
+
+
+router.get('/testDiscord', (req, res) => {
+  res.redirect([
+    'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fauth%2Fauthorize&response_type=code&scope=guilds%20identify%20email'
+  ].join(''));
+});
+
+router.get('/authorize', async (req, res) => {
+  const code = req.query.code;
+  const Auth = await getAuthToken(code)
+  console.log(code, Auth)
+  const userInfo = await getUserInfo(Auth)
+
+  console.log(userInfo)
+  res.json(userInfo)
+})
+
+  // const cred = btoa(`${cfg.id}:${cfg.secret}`);
+//   post(`https://discordapp.com/api/oauth2/token?grant_type=authorization_code&code=${code}`)
+//     .set('Authorization', `Basic ${cred}`)
+//     .then(response => res.redirect(`/guilds?token=${response.body.access_token}`))
+//     .catch(console.error);
+// });
+
+router.get('/guilds', (req, res) => {
+  // get('https://discordapp.com/api/v6/users/@me/guilds')
+  //   .set('Authorization', `Bearer ${req.query.token}`)
+  //   .then(response => res.json(response.body))
+  //   .catch(console.error);
 });
 
 module.exports = router;

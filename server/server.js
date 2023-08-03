@@ -3,11 +3,10 @@ const { ApolloServer } = require("apollo-server-express");
 const path = require("path");
 const { typeDefs, resolvers } = require("../server/schema");
 const { db } = require("../server/config/connection"); // Update import statement
-const routes = require('./routes/')
+// const routes = require('./routes/')
 const jwt = require("jsonwebtoken");
+const { authMiddleware } = require('./utils/auth');
 
-// TEST
-const fetch = require('node-fetch');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -19,6 +18,7 @@ const jwtSecretKey = process.env.JWT_SECRET;
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: authMiddleware
 });
 
 // Start the server and connect to MongoDB
@@ -41,29 +41,6 @@ const startServer = async () => {
       res.sendFile(path.join(__dirname, "../client/build/index.html"));
     });
 
-    // Discord hash verification and JWT generation endpoint
-    app.post("/api/verify", async (req, res) => {
-      const { hash } = req.body;
-
-      try {
-        // Perform the necessary validation or verification for the hash
-        // You can use the hash to query the database or perform any other required checks
-
-        // Assuming verification is successful, retrieve user information from your data source
-        const username = "John Doe";
-        const email = "johndoe@example.com";
-
-        // Generate a JWT for the user
-        const token = jwt.sign({ hash }, jwtSecretKey, { expiresIn: "1h" });
-
-        // Send the user information and JWT back to the frontend
-        res.json({ username, email, token });
-      } catch (error) {
-        console.error("Error retrieving user:", error);
-        res.status(500).json({ error: "Server error" });
-      }
-    });
-
     // Additional middleware
     const requestTime = function (req, res, next) {
       req.requestTime = Date.now();
@@ -72,20 +49,7 @@ const startServer = async () => {
 
     app.use(requestTime);
 
-    // Additional route
-    app.get("/additional", function (req, res) {
-      var responseText = "Hi Family!<br>";
-      responseText += "<small>Requested at: " + req.requestTime + "</small>";
-      res.send(responseText);
-    });
-
-    // sets up authorization for us to use
-    // app.get("/auth", async function (req, res) {
-     
-
-    // });
-
-    app.use(routes);
+    // app.use(routes);
 
     await db; // Wait for the database connection
 

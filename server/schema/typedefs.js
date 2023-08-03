@@ -74,8 +74,13 @@ type Query {
   getAllDbagAssets: [DbagAsset]
 }
 
+type Auth {
+  token: ID!
+}
+
 type Mutation {
   createAsset(assetInput: AssetInput): AutoAsset
+  login(code: String): Auth
   mint(dbagInput: DbagInput, autoInput: AutoInput): HashMetadata
   submitMint(transaction: String, witnessSignature: String): String
   updateAsset(id: ID!, assetInput: AssetInput): AutoAsset

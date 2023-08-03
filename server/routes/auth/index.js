@@ -1,6 +1,6 @@
 const router = require('express').Router();
 // // helper files
-const auth = require("./auth.js")
+const auth = require("./authentication.js")
 
 // // instantiate mint apis endpoint
 router.use('/',auth)
