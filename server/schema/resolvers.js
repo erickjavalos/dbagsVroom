@@ -1,5 +1,5 @@
 const { Dbags, Autos } = require('../server/../models');
-const { getAuthToken, getUserInfo, checkUserInGuild } = require('../utils/auth');
+const { getAuthToken, getUserInfo, checkUserInGuild, signToken } = require('../utils/auth');
 const { AuthenticationError } = require('apollo-server-express');
 
 
@@ -110,23 +110,28 @@ const resolvers = {
         const userInfo = await getUserInfo(Auth)
         if (userInfo) {
           // verify user is in discord user
-          if (checkUserInGuild(userInfo.guilds))
-          {
+          if (checkUserInGuild(userInfo.guilds)){
+            // extract data 
+            const discordId = userInfo.me.id
+            const username = userInfo.me.username;
+            const email = userInfo.me.email
+
+            // check if user exists in database
+            const token = signToken(discordId, username, email);
             // TODO: create the user object here with data gathered from userinfo
             return {
-              token: "1234"
+              token: token
             }
           }
           else {
-            console.log("User not in guilds!")
-            throw new AuthenticationError('user not in guilds');
-
+            throw new AuthenticationError('User not in guilds');
           }
         }
       }
       // token has already been used! or hacker using fake query parameter...
       else {
         // TODO: Reroute to /info page
+        console.log(Auth)
         throw new AuthenticationError('Error in Authentication code provided!');
       }
     },

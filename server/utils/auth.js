@@ -5,11 +5,11 @@ const secret = process.env.SECRET;
 const expiration = '2h';
 
 
-// GLOBAL 
-const DBAGS_GUILD_ID = '954195328062590987'
-const client_id = '1106720134615289937';
-const client_secret = '-Ds34Uve2kuqW2keDeVVCT5u606DT9WN';
-const redirectUrl = 'http://localhost:3000/auth';
+// TODO: declare in .env 
+const DBAGS_GUILD_ID = process.env.DBAGS_GUILD_ID;
+const client_id = process.env.CLIENT_ID;
+const client_secret = process.env.CLIENT_SECRET;
+const redirectUrl = process.env.REDIRECT_URI;
 
 
 module.exports = {
@@ -33,10 +33,14 @@ module.exports = {
 
     return req;
   },
-  signToken: function ({ email, username, _id }) {
-    const payload = { email, username, _id };
+  signToken: function (discordId, username, email ) {
+    const payload = { discordId, username, email };
     return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
   },
+
+  // *********************************************
+  // Helper functions for authentication
+  // *********************************************
 
   getAuthToken: async (discordCode) => {
     // create payload 
@@ -89,6 +93,7 @@ module.exports = {
       return 0;
     }
   },
+
   checkUserInGuild:  (guilds) => {
     for (let i = 0; i < guilds.length; i++) {
       // compare with dbags guild id

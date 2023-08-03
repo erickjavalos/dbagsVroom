@@ -49,8 +49,6 @@ const startServer = async () => {
 
     app.use(requestTime);
 
-    // app.use(routes);
-
     await db; // Wait for the database connection
 
     app.listen(PORT, () => {

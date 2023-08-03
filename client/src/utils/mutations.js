@@ -13,3 +13,10 @@ export const SUBMIT_MINT = gql`
 mutation Mutation($transaction: String, $witnessSignature: String) {
   submitMint(transaction: $transaction, witnessSignature: $witnessSignature)
 }`;
+
+export const LOGIN_USER = gql`
+mutation Mutation($code: String) {
+  login(code: $code) {
+    token
+  }
+}`
