@@ -25,6 +25,9 @@ function Home() {
   
   const [walletConnected, setWalletConnected] = useState(null);
   const [assets, setAssets] = useState([]);
+
+  const queryParams = new URLSearchParams(window.location.search)
+
   
   // Function to update walletConnected in the App component
   const updateWalletConnected = async (wallet) => {

@@ -41,7 +41,7 @@ const Authentication = () => {
           Auth.login(data.login.token);
         } catch (e) {
           console.error(e);
-          window.location.assign('/join');
+          // window.location.assign('/join');
         }
       }
 

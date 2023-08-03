@@ -32,6 +32,7 @@ module.exports = {
     }
 
     return req;
+    
   },
   signToken: function (discordId, username, email ) {
     const payload = { discordId, username, email };

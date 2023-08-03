@@ -64,14 +64,8 @@ type SelectedMetaData {
 }
 
 type Query {
-  getSelectedMetaData(dbagAssets: [String], autoAssets: [String]): SelectedMetaData
   getDbagMetaData(assets: [String]): [DbagAsset]
   getAutoMetaData(assets: [String]): [AutoAsset]
-
-
-  getAsset(id: ID!): AutoAsset
-  getAllAutoAssets: [AutoAsset]
-  getAllDbagAssets: [DbagAsset]
 }
 
 type Auth {
