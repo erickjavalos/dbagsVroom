@@ -17,25 +17,7 @@ const styles = {
     height: '100vh',
     // position: 'relative', // Added to make the position relative for absolute positioning of the header
     fontFamily: 'architects daughter'
-  },
-  containerStyle: {
-    height: '100vh', // Set the container to fill the viewport
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'flex-start', // Align items to the top
-  },
-  card: {
-    backgroundColor: 'rgba(217, 217, 217, 0.5)',
-    color: 'white',
-    width: '90%',
-    height: '60%',
-    // margin: '0 auto',
-    padding: '15px',
-    boxSizing: 'border-box',
-    borderRadius: '20px', // Set border radius to create rounded edges
-
   }
-
 }
 
 

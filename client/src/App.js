@@ -8,10 +8,12 @@ import {
 
 
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import Login from "./pages/Login";
 import Authentication from "./components/Authentication/index.js";
 import Home from "./pages/Home";
+import Join from "./pages/Join";
+import Login from "./pages/Login";
 import Minting from "./pages/Minting";
+
 import './App.css'
 
 
@@ -28,9 +30,10 @@ export default function App() {
       <ApolloProvider client={client}>
         <Router>
           <Routes>
-            <Route path="/Login" element={<Login />} />
             <Route path="/auth" element={<Authentication />} />
-            <Route path="/Home" element={<Home />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/join" element={<Join />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/minting" element={<Minting />} />
           </Routes>
         </Router>
