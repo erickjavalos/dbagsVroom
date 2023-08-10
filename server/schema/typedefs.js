@@ -75,7 +75,7 @@ type Auth {
 type Mutation {
   createAsset(assetInput: AssetInput): AutoAsset
   login(code: String): Auth
-  mint(dbagInput: DbagInput, autoInput: AutoInput): HashMetadata
+  mint(dbagInput: DbagInput, autoInput: AutoInput, address: String): HashMetadata
   submitMint(transaction: String, witnessSignature: String): String
   updateAsset(id: ID!, assetInput: AssetInput): AutoAsset
   deleteAsset(id: ID!): AutoAsset

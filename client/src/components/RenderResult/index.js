@@ -6,7 +6,7 @@ import ConstructMfer from '../../utils/ConstructMfer';
 import NamiWalletApi, { Cardano } from "../../nami-js";
 import blockfrostApiKey from "../../../config.js";
 
-import { MINT,SUBMIT_MINT } from "../../utils/mutations"
+import { MINT, SUBMIT_MINT } from "../../utils/mutations"
 let nami;
 
 
@@ -36,7 +36,7 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
   const [mfer, setMfer] = useState();
   const [auto, setAuto] = useState();
   const [addMint, { error, data }] = useMutation(MINT);
-  const [submitMint, { errorSubmit, dataSubmit}] = useMutation(SUBMIT_MINT);
+  const [submitMint, { errorSubmit, dataSubmit }] = useMutation(SUBMIT_MINT);
 
   const canvas = useRef(null);
 
@@ -47,7 +47,6 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
         // build the mfer + whip
         const constructMfer = new ConstructMfer()
         constructMfer.generateDbagImage(canvas, dbag, whip)
-
       }
       else {
         const context = canvas.current.getContext('2d');
@@ -66,30 +65,7 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
 
 
   const processMintRequest = async () => {
-    // get hashed metadata
-    // console.log("gettin address");
-    console.log("assets selected")
-    console.log(mfer)
-    console.log(mfer.__typename)
 
-    // reconstruct mfer without typename from graphql
-    const dbag = removeTypename(mfer);
-    const whip = removeTypename(auto)
-
-    // mint selected assets
-    let mintData = null
-    try {
-      const { data } = await addMint({
-        variables: {
-          dbagInput : dbag,
-          autoInput: whip
-        },
-      });
-      mintData = data
-    }
-    catch (e) {
-      console.log(e)
-    }
     // instantiate serialization lib that helps decode blockchain data
     const S = await Cardano();
     // initialize nami wallet helper class
@@ -99,11 +75,35 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
       blockfrostApiKey,
       walletConnected
     );
+    // get hashed metadata
+    // reconstruct mfer without typename from graphql
+    const dbag = removeTypename(mfer);
+    const whip = removeTypename(auto)
+    // mint selected assets
+    let hashedMeta = null;
+    let metadata = null;
 
-    // // extract data
-    // const data = await mint.json();
-    // // extract hashed metadata
-    const hashedMeta = mintData.mint.hashedMeta;
+    try {
+      const { data } = await addMint({
+        variables: {
+          dbagInput: dbag,
+          autoInput: whip,
+          address: await nami.getAddress()
+        },
+      });
+      // extract hashed metadata
+      hashedMeta = data.mint.hashedMeta;
+      metadata = JSON.parse(data.mint.metadata);
+    }
+    // return normally
+    catch (e) {
+      console.log(e)
+      console.log("issue with mint")
+      return
+    }
+    console.log("metadata")
+    console.log(metadata)
+
     // extract payment address
     let paymentAddress = await nami.getAddress(); // nami wallet address
 
@@ -149,50 +149,40 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
       },
     };
 
-    console.log("building transaction...");
-    // combine and build transaction
-    let transaction = await nami.transaction({
-      PaymentAddress: paymentAddress,
-      recipients: recipients,
-      metadata: dummyMetadata,
-      metadataHash: hashedMeta,
-      addMetadata: false,
-      utxosRaw: await nami.getUtxosHex(),
-      multiSig: true,
-    });
-    console.log("SUCCESS: transaction built!");
-    
-
-    // prompt user to sign and retreive signature hash
-    console.log("Prompting user to sign");
-    const witnessBuyer = await nami.signTx(transaction, true);
-    console.log("SUCCESS: user signed transaction");
-
-
-
-    console.log("TEST")
-    console.log("transaction")
-    console.log(transaction)
-
-    console.log("signature")
-    console.log(witnessBuyer)
-    // send witness buyer signature and transaction to backend to submit to chain
-    console.log("Asset minting...");
-    // submit mint
-    let mintStatus = null
+    let transaction = null
+    try {
+      // combine and build transaction
+      transaction = await nami.transaction({
+        PaymentAddress: paymentAddress,
+        recipients: recipients,
+        metadata: dummyMetadata,
+        metadataHash: hashedMeta,
+        addMetadata: false,
+        utxosRaw: await nami.getUtxosHex(),
+        multiSig: true,
+      });
+      // prompting user for signature
+      const witnessBuyer = await nami.signTx(transaction, true);
+    }
+    // do not proceed if issues occur and update database state
+    catch (e) {
+      // update database
+      console.log("not signed, or error occured")
+      return
+    }
+    // submit mint and signature to backend to process
     try {
       const { data } = await submitMint({
         variables: {
-          transaction : transaction,
+          transaction: transaction,
           witnessSignature: witnessBuyer
         },
       });
-      mintStatus = data
+      console.log(data)
     }
     catch (e) {
       console.log(e)
     }
-    console.log(mintStatus)
   };
 
   return (

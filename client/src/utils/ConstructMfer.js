@@ -47,7 +47,6 @@ class ConstructMfer {
 
         // import background image
         const background = await this.loadImage(await this.importImage('auto_assets', `${'Background'}/${whip.onchain_metadata.Background}.png`))
-        // append the background
         // get dbag images
         const dbagImages = await this.getDbagImages(dbag)
         // get whip images
@@ -164,27 +163,16 @@ class ConstructMfer {
     }
 
     generateImage = async (mfer, auto) => {
-        // extract metadata from post request
-        // parse dbags and autos 
-        const dbagMetadata = this.metadata.dbagAssets
-        const autoMetadata = this.metadata.autoAssets
         // Generate dbagMfer with selected mfer
-        const dbagImage = await this.generateDbag(dbagMetadata, mfer)
+        const dbagImage = await this.generateDbag(mfer)
         // build dbag + car
-        // return await this.generateDbagAuto(dbagImage, autoMetadata, auto)
-        // console.log(dbagImage)
+        return await this.generateDbagAuto(dbagImage, auto)
 
     }
 
-    generateDbagAuto = async (dbagImage, metadata, auto) => {
-        // search for metadata
-        let autoMetaData = null;
-        for (let i = 0; i < metadata.length; i++) {
-            // compare on actual metadata
-            if (metadata[i].asset_name === auto) {
-                autoMetaData = metadata[i]
-            }
-        }
+    generateDbagAuto = async (dbagImage, auto) => {
+      
+        const autoMetaData = auto;
         // get all layers
         const layers = autoMetaData.onchain_metadata
 
@@ -193,17 +181,9 @@ class ConstructMfer {
         // for (let i = 0; i < this.AUTO_LAYERING_ORDER.length; i++) {
         for (let i = 0; i < this.AUTO_LAYERING_ORDER.length; i++) {
             const layer = this.AUTO_LAYERING_ORDER[i]
-            if (layers[layer] !== undefined) {
-                // console.log(layers[layer])
-                // if (layers[layer].includes("Mfentador")) {
-                //     assetFileLocations.push(`../client/src/assets/auto_assets/${layer}/Mfentador_backup.png`)
-                // }
-                // else if (layers[layer].includes("D8") && !layers[layer].includes("Mfer D8"))
-                //     assetFileLocations.push(`../client/src/assets/auto_assets/${layer}/D8_backup.png`)
-
-                // else {
+            if (layers[layer] !== undefined && layers[layer] !== null) {
+                // append asset
                 assetFileLocations.push(`../client/src/assets/auto_assets/${layer}/${layers[layer]}.png`)
-                // }
             }
         }
         // read in image using jimp
@@ -269,17 +249,8 @@ class ConstructMfer {
             });
     }
     // generate dbag 
-    generateDbag = async (dbagMetadata, mfer) => {
-        // search for metadata
-        let mferMetaData = null;
-        for (let i = 0; i < dbagMetadata.length; i++) {
-            // compare on actual metadata
-            if (dbagMetadata[i].onchain_metadata.name === mfer) {
-                mferMetaData = dbagMetadata[i]
-            }
-        }
-        // return all layers 
-        const layers = mferMetaData.onchain_metadata
+    generateDbag = async (mfer) => {
+        const layers = mfer.onchain_metadata
 
         // get file locatins of images
         let assetFileLocations = []
@@ -299,7 +270,7 @@ class ConstructMfer {
         }
         // read in image using jimp
         const imagesJimp = assetFileLocations.map(fileLocation => Jimp.read(fileLocation))
-        // return promise
+        // return promise of images combined
         return Promise.all(imagesJimp)
             // load in dbags and generate image
             .then((images) => {

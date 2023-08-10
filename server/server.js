@@ -4,7 +4,6 @@ const path = require("path");
 const { typeDefs, resolvers } = require("../server/schema");
 const { db } = require("../server/config/connection"); // Update import statement
 // const routes = require('./routes/')
-const jwt = require("jsonwebtoken");
 const { authMiddleware } = require('./utils/auth');
 
 

@@ -1,12 +1,16 @@
-const { Dbags, Autos } = require('../server/../models');
-const { getAuthToken, getUserInfo, checkUserInGuild, signToken } = require('../utils/auth');
 const { AuthenticationError } = require('apollo-server-express');
+const { GraphQLError } = require('graphql')
+const { Dbags, Autos, Mint } = require('../server/../models');
 const { Profile } = require('../models');
+const { getAuthToken, getUserInfo, checkUserInGuild, signToken } = require('../utils/auth');
+const { checkMint, changeState, uploadIPFS, updateMetadata } = require('../utils/mint');
+const ConstructMfer = require('../utils/ConstructMfer');
+const fetch = require('node-fetch');
 
-// nami wallet 
+
+
 var NamiWalletApi = require('../nami-node-js/nami').NamiWalletApi
 const dotenv = require('dotenv');
-const { lte } = require('semver');
 dotenv.config();
 
 // instantiate blockfrost api
@@ -121,49 +125,97 @@ const resolvers = {
     },
 
     // instantiate mint with dbag and auto selected
-    // 1. Verify assets exist in wallet and asset has not been minted
+    // 1. Verify asset hasnt been minted
     // 2. Generate image
     // 3. Upload image to ipfs
     // 4. get back ipfs hash and append to metadata
     // 5. hash the metadata and send it to the front end (optional, also return the regular metadata)
     mint: async (parent, { dbagInput, autoInput }, context) => {
-      if (context.user) {
 
 
-        // (TODO) 1. Verify mint with dbag and auto selected
-        let assetsExist = true
-        if (assetsExist) {
+      // initialize helper class to construct image
+      const constructMfer = new ConstructMfer()
+      // TODO:::::: add context.user logic and updating of database when endpoint is hit to log addresses of users 
+      // if (context.user) {
+      // (TODO) 1. Verify mint with dbag and auto selected
+      // update address of user that authenticated with discord 
+      // const profile = await Profile.findOneAndUpdate(
+      //   { discordId: context.user.discordId },
+      //   { $addToSet: { addresses: address } },
+      //   { new: true }
+      // )
 
-          // 2. Generate image
-        }
-
-        const metadata =
-        {
-          "721":
+      let assetMinted = await checkMint(Mint, autoInput);
+      if (assetMinted) {
+        // 2. Generate image
+        const img = await constructMfer.generateImage(dbagInput, autoInput)
+        // 3. Upload image to ipfs and retrieve data
+        const ipfsHash = await uploadIPFS(img, dbagInput, autoInput)
+        if (ipfsHash) {
+          const assetNumber = autoInput.onchain_metadata.name.split("Dbag Mfers Auto Club ")[1]
+          // 4. construct metadata
+          const metadata =
           {
-            "e68bb3aa673e54c0e7873a7f00d575bd5af1b544600a4b59d8193cf8": // policyId
+            "721":
             {
-              "MyNFT": // NFTName
+              "e68bb3aa673e54c0e7873a7f00d575bd5af1b544600a4b59d8193cf8": // policyId
               {
-                "name": "MyNFT",
-                "description": "This is a test NFT",
-                "image": "ipfs://QmUb8fW7qm1zCLhiKLcFH9yTCZ3hpsuKdkTgKmC8iFhxV8"
+                [`dbagxauto${assetNumber}`]: // dynamic get from db
+                {
+                  "Name": `dbagxauto${assetNumber}`, // dynamic
+                  "Dbag": `${dbagInput.onchain_metadata.name}`,
+                  "Auto": `${autoInput.onchain_metadata.name}`,
+                  "image": `ipfs://${ipfsHash}`,
+                  "Collection": "Mfers Auto Club: Customizable NFTs",
+                  "Twitter": "https://twitter.com/dbagmfers",
+                  "Website": "https://www.dbagmfers.fun/"
+                }
               }
+            }
+          }
+          // hash the metadata for user to sign
+          const metaDataHash = nami.hashMetadata(metadata)
+
+          const updatedMetadata = await updateMetadata(Mint, autoInput, metadata)
+          // ensure that metadata was updated in the database
+          if (updatedMetadata) {
+            return {
+              hashedMeta: metaDataHash,
+              metadata: JSON.stringify(metadata)
+            }
+          }
+          // give error that the metadata wasnt saved in the database for this car asset
+          else{
+            throw new GraphQLError('Failed to save metadata in database'), {
+              extensions: {
+                code: 'FORBIDDEN'
+              }
+            }
+          }
+
+        }
+        // didnt upload image to ipfs, dont proceed with mint
+        else {
+          throw new GraphQLError('Failed to upload to ipfs'), {
+            extensions: {
+              code: 'FORBIDDEN'
             }
           }
         }
 
-        // hash the metadata for user to sign
-        const metaDataHash = nami.hashMetadata(metadata)
-        // 
-        return {
-          hashedMeta: metaDataHash,
-          metadata: JSON.stringify(metadata)
-        }
       }
-      throw new AuthenticationError('You need to be logged in!');
+      else {
+        throw new GraphQLError('Asset has already been minted', {
+          extensions: {
+            code: 'FORBIDDEN',
+          },
+        });
+      }
+      // }
+      // throw new AuthenticationError('You need to be logged in!');
 
     },
+
 
     submitMint: async (parent, { transaction, witnessSignature }, context) => {
       // verify user is signed in
@@ -197,6 +249,8 @@ const resolvers = {
           metadata: metadata
         })
         console.log(`Asset minted: ${txHash}`)
+        // change state
+        const stateChanged = await changeState(Mint)
         return txHash
       }
       throw new AuthenticationError('You need to be logged in!');
