@@ -101,29 +101,30 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
       console.log("issue with mint")
       return
     }
-    console.log("metadata")
-    console.log(metadata)
-
+    // extract asset name 
+    const assetName = Object.keys(metadata["721"]["91d319c0fc8c557244d2ac5c2d1c0cbeaeb40a13804f122a51705da1"])[0];
     // extract payment address
     let paymentAddress = await nami.getAddress(); // nami wallet address
 
     // ********************************************
     // Build Transaction
     // ********************************************
-
+    
     // build recipients
     let recipients = [
+      // Seller Wallet, NFT price 10ADA
       {
         address:
           "addr_test1qrnns8ctrctt5ga9g990nc4d7pt0k25gaj0mnlda320ejmprlzyh4mr2psnrgh6ht6kaw860j5rhv44x4mt4csl987zslcr4p6",
         amount: "10",
-      }, // Seller Wallet, NFT price 10ADA
+      }, 
+       // NFTs to be minted to
       {
         address: paymentAddress,
         amount: "0",
         mintedAssets: [
           {
-            assetName: "Test1",
+            assetName: assetName,
             quantity: "1",
             policyId:
               "91d319c0fc8c557244d2ac5c2d1c0cbeaeb40a13804f122a51705da1",
@@ -131,31 +132,16 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
               "8201828200581c98d6a076c31a9d248ec8fe5459682f2ec2623cf376ad0c1c5a61237b82051a02d518fb",
           },
         ],
-      }, // NFTs to be minted
-    ]; // list of recipients
-    // build fake metadata to help estimate gas fees (use maximum packet size to be safe)
-    let dummyMetadata = {
-      721: {
-        // policyId
-        "36aa169af7dc9bb5a566987191221f2d7a92aab211350f7119fc1541": {
-          // NFTName
-          Test1: {
-            name: "sfgsdfgdfsg",
-            description: "gsdffsgdfsgdfsgdfsg",
-            image:
-              "isdgdfsgafsgdfdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfgdfgdfsgdfsgdfsgdfsg",
-          },
-        },
       },
-    };
-
-    let transaction = null
+    ]; 
+    
+    // build transaction 
     try {
       // combine and build transaction
-      transaction = await nami.transaction({
+      const transaction = await nami.transaction({
         PaymentAddress: paymentAddress,
         recipients: recipients,
-        metadata: dummyMetadata,
+        metadata: metadata,
         metadataHash: hashedMeta,
         addMetadata: false,
         utxosRaw: await nami.getUtxosHex(),
@@ -163,26 +149,24 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
       });
       // prompting user for signature
       const witnessBuyer = await nami.signTx(transaction, true);
+      // submit metadata to the backend 
+      const { data } = await submitMint({
+        variables: {
+          transaction: transaction,
+          witnessSignature: witnessBuyer,
+          metadata: JSON.stringify(metadata)
+        },
+      });
+      console.log(data)
     }
     // do not proceed if issues occur and update database state
     catch (e) {
       // update database
       console.log("not signed, or error occured")
+      console.log(e)
       return
     }
-    // submit mint and signature to backend to process
-    try {
-      const { data } = await submitMint({
-        variables: {
-          transaction: transaction,
-          witnessSignature: witnessBuyer
-        },
-      });
-      console.log(data)
-    }
-    catch (e) {
-      console.log(e)
-    }
+    
   };
 
   return (

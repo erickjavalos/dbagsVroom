@@ -56,6 +56,34 @@ class NamiWalletApi {
     }
 
  
+    async createLockingPolicyScriptHexKey( yourHexKey, slot) {
+        const hexKeyBuffer = HexToBuffer(yourHexKey)
+        const paymentKeyHash = S.Ed25519KeyHash.from_bytes(Buffer.from(hexKeyBuffer, "hex"))
+        const nativeScripts = S.NativeScripts.new();
+        const script = S.ScriptPubkey.new(paymentKeyHash);
+        const nativeScript = S.NativeScript.new_script_pubkey(script);
+        const lockScript = S.NativeScript.new_timelock_expiry(
+            S.TimelockExpiry.new(slot)
+        );
+        nativeScripts.add(nativeScript);
+        nativeScripts.add(lockScript);
+        const finalScript = S.NativeScript.new_script_all(
+            S.ScriptAll.new(nativeScripts)
+        );
+
+        const policyId = Buffer.from(
+            S.ScriptHash.from_bytes(
+                finalScript.hash().to_bytes()
+            ).to_bytes(),
+            "hex"
+        ).toString("hex");
+        return {
+            id: policyId,
+            script: Buffer.from(finalScript.to_bytes()).toString("hex"),
+            paymentKeyHash: Buffer.from(paymentKeyHash.to_bytes(), "hex").toString("hex"),
+            slot
+        };
+    }
 
     async createLockingPolicyScript( networkId, expirationTime) {
         var now = new Date()

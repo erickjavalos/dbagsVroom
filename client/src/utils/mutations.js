@@ -10,8 +10,8 @@ mutation Mint($autoInput: AutoInput, $dbagInput: DbagInput, $address: String) {
 `;
 
 export const SUBMIT_MINT = gql`
-mutation Mutation($transaction: String, $witnessSignature: String) {
-  submitMint(transaction: $transaction, witnessSignature: $witnessSignature)
+mutation Mutation($transaction: String, $witnessSignature: String, $metadata: String) {
+  submitMint(transaction: $transaction, witnessSignature: $witnessSignature, metadata: $metadata)
 }`;
 
 export const LOGIN_USER = gql`

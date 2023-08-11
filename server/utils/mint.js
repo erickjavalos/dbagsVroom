@@ -3,6 +3,7 @@ const { Readable } = require("stream");
 const FormData = require("form-data");
 const axios = require("axios");
 
+const fs = require('fs')
 module.exports = {
   checkMint: async function (Mint, whipAsset) {
     // extract whip name
@@ -43,13 +44,17 @@ module.exports = {
     }
   },
   uploadIPFS: async function (img, dbag, auto) {
-    console.log(img)
+    // extract buffer from the image to pass into pinata
+    const buff = await img.getBufferAsync("image/png"); 
     try {
-      const stream = Readable.from(img.bitmap.data);
+      // ensure buffer is readable for pinata
+      const stream = Readable.from(buff);
       const data = new FormData();
+      // append form data
       data.append('file', stream, {
         filepath: `${dbag.onchain_metadata.name}_${auto.onchain_metadata.name}.png`
       })
+      // post request to pinata
       const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", data, {
         maxBodyLength: "Infinity",
         headers: {

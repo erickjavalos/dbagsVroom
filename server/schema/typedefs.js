@@ -76,7 +76,7 @@ type Mutation {
   createAsset(assetInput: AssetInput): AutoAsset
   login(code: String): Auth
   mint(dbagInput: DbagInput, autoInput: AutoInput, address: String): HashMetadata
-  submitMint(transaction: String, witnessSignature: String): String
+  submitMint(transaction: String, witnessSignature: String, metadata: String): String
   updateAsset(id: ID!, assetInput: AssetInput): AutoAsset
   deleteAsset(id: ID!): AutoAsset
 }

@@ -151,6 +151,7 @@ const resolvers = {
         const img = await constructMfer.generateImage(dbagInput, autoInput)
         // 3. Upload image to ipfs and retrieve data
         const ipfsHash = await uploadIPFS(img, dbagInput, autoInput)
+        // verify ipfs hash was returned
         if (ipfsHash) {
           const assetNumber = autoInput.onchain_metadata.name.split("Dbag Mfers Auto Club ")[1]
           // 4. construct metadata
@@ -158,7 +159,7 @@ const resolvers = {
           {
             "721":
             {
-              "e68bb3aa673e54c0e7873a7f00d575bd5af1b544600a4b59d8193cf8": // policyId
+              "91d319c0fc8c557244d2ac5c2d1c0cbeaeb40a13804f122a51705da1": // policyId
               {
                 [`dbagxauto${assetNumber}`]: // dynamic get from db
                 {
@@ -185,7 +186,7 @@ const resolvers = {
             }
           }
           // give error that the metadata wasnt saved in the database for this car asset
-          else{
+          else {
             throw new GraphQLError('Failed to save metadata in database'), {
               extensions: {
                 code: 'FORBIDDEN'
@@ -217,7 +218,9 @@ const resolvers = {
     },
 
 
-    submitMint: async (parent, { transaction, witnessSignature }, context) => {
+    submitMint: async (parent, { transaction, witnessSignature, metadata }, context) => {
+      console.log("metadata")
+      console.log(metadata)
       // verify user is signed in
       if (context.user) {
         // sign transaction (MUST CHECK IF INPUTS AND OUTPUTS ARE CORRECT)
@@ -225,32 +228,16 @@ const resolvers = {
         // combine witnesses/signatures
         let witnesses = [witnessSignature, witnessMinting]
 
-        // reinitialize metadata (FIX LATER)
-        const metadata =
-        {
-          "721":
-          {
-            "e68bb3aa673e54c0e7873a7f00d575bd5af1b544600a4b59d8193cf8": // policyId
-            {
-              "MyNFT": // NFTName
-              {
-                "name": "MyNFT",
-                "description": "This is a test NFT",
-                "image": "ipfs://QmUb8fW7qm1zCLhiKLcFH9yTCZ3hpsuKdkTgKmC8iFhxV8"
-              }
-            }
-          }
-        }
         // submit transaction to blockchain
         let txHash = await nami.submitTx({
           transactionRaw: transaction,
           witnesses: witnesses,
           networkId: 0,
-          metadata: metadata
+          metadata: JSON.parse(metadata)
         })
         console.log(`Asset minted: ${txHash}`)
         // change state
-        const stateChanged = await changeState(Mint)
+        // const stateChanged = await changeState(Mint)
         return txHash
       }
       throw new AuthenticationError('You need to be logged in!');
@@ -276,5 +263,4 @@ const resolvers = {
 };
 
 module.exports = resolvers;
-
 
