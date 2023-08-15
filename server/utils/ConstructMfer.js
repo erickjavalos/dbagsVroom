@@ -163,7 +163,6 @@ class ConstructMfer {
 
     generateImage = async (mfer, auto) => {
         // Generate dbagMfer with selected mfer
-        console.log(__dirname)
         const dbagImage = await this.generateDbag(mfer)
         // build dbag + car
         return await this.generateDbagAuto(dbagImage, auto)
@@ -229,13 +228,11 @@ class ConstructMfer {
             .then((images) => {
                 // exhaust is missing
                 if (images.length === 2) {
-                    console.log(images[0].bitmap.height / 2, images[0].bitmap.width / 2)
                     images[0].composite(dbagImage, xDbag, yDbag)
                     images[0].composite(images[1], 0, 0)
                 }
                 // whip has exhaust
                 else {
-                    console.log(images[0].bitmap.height / 2, images[0].bitmap.width / 2)
                     images[0].composite(dbagImage, xDbag, yDbag)
                     images[0].composite(images[1], 0, 0)
                     images[0].composite(images[2], 0, 0)

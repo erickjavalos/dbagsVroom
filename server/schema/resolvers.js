@@ -151,7 +151,9 @@ const resolvers = {
         // 2. Generate image
         const img = await constructMfer.generateImage(dbagInput, autoInput)
         // 3. Upload image to ipfs and retrieve data
+        console.log("uplaoding ipfs hash")
         const ipfsHash = await uploadIPFS(img, dbagInput, autoInput)
+        console.log("uploaded ipfs hash")
         // verify ipfs hash was returned
         if (ipfsHash) {
           const assetNumber = autoInput.onchain_metadata.name.split("Dbag Mfers Auto Club ")[1]
@@ -179,6 +181,7 @@ const resolvers = {
           const metaDataHash = nami.hashMetadata(metadata)
           // update metadata
           const updatedMetadata = await updateMetadata(Mint, autoInput, metadata)
+          console.log("updated metadata")
           // ensure that metadata was updated in the database
           if (updatedMetadata) {
             return {
@@ -220,32 +223,33 @@ const resolvers = {
 
 
     submitMint: async (parent, { transaction, witnessSignature, autoInput }, context) => {
-      console.log("submit mint")
-      console.log(autoInput)
       // verify user is signed in
       // if (context.user) {
         // verify transaction is legit
         // console.log("submit mint")
-        // let [inputs, outputs, metadataTransaction, fee] = await nami.decodeTransaction(
-        //   transaction,
-        //   0
-        // )
-        // // extract payment from outputs 
-        // const paymentOutput = outputs?.find(
-        //   (output) => output.address === paymentWallet
-        // )
+        let [inputs, outputs, metadataTransaction, fee] = await nami.decodeTransaction(
+          transaction,
+          0
+        )
+        // extract payment from outputs 
+        const paymentOutput = outputs?.find(
+          (output) => output.address === paymentWallet
+        )
 
-        // if (!paymentOutput) {
-        //   throw new GraphQLError('payment address is not defined'), {
-        //     extensions: {
-        //       code: 'ERROR'
-        //     }
-        //   }
-        // }
+        if (!paymentOutput) {
+          throw new GraphQLError('payment address is not defined'), {
+            extensions: {
+              code: 'ERROR'
+            }
+          }
+        }
+        
+        console.log(inputs)
+        console.log("")
+        console.log(outputs)
 
         // extract metadata from backend database
         const metadata = await getMetadata(Mint, autoInput)
-        console.log(metadata)
 
         let witnessMinting = await nami.signTxCBOR(transaction, "e077a6a58c4ee9d49aecd7186f38a4a0b47cadee90ac1ad45dcffd5cf60951cc")
         // combine witnesses/signatures

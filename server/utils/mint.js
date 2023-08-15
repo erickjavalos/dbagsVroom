@@ -90,7 +90,6 @@ module.exports = {
 
   getMetadata: async function (Mint, whipAsset) {
     const whipName = whipAsset?.onchain_metadata.name || null
-    console.log(whipAsset)
     // verify that whipname is called
     if (whipName) {
       // find and update state of whip asset
