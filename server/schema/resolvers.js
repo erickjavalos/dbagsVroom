@@ -3,10 +3,11 @@ const { GraphQLError } = require('graphql')
 const { Dbags, Autos, Mint } = require('../server/../models');
 const { Profile } = require('../models');
 const { getAuthToken, getUserInfo, checkUserInGuild, signToken } = require('../utils/auth');
-const { checkMint, changeState, uploadIPFS, updateMetadata } = require('../utils/mint');
+const { checkMint, getMetadata, updateMetadata, uploadIPFS } = require('../utils/mint');
 const ConstructMfer = require('../utils/ConstructMfer');
 const fetch = require('node-fetch');
 
+const paymentWallet = "addr_test1qrnns8ctrctt5ga9g990nc4d7pt0k25gaj0mnlda320ejmprlzyh4mr2psnrgh6ht6kaw860j5rhv44x4mt4csl987zslcr4p6"
 
 
 var NamiWalletApi = require('../nami-node-js/nami').NamiWalletApi
@@ -176,13 +177,13 @@ const resolvers = {
           }
           // hash the metadata for user to sign
           const metaDataHash = nami.hashMetadata(metadata)
-
+          // update metadata
           const updatedMetadata = await updateMetadata(Mint, autoInput, metadata)
           // ensure that metadata was updated in the database
           if (updatedMetadata) {
             return {
               hashedMeta: metaDataHash,
-              metadata: JSON.stringify(metadata)
+              assetName: `dbagxauto${assetNumber}`
             }
           }
           // give error that the metadata wasnt saved in the database for this car asset
@@ -218,12 +219,34 @@ const resolvers = {
     },
 
 
-    submitMint: async (parent, { transaction, witnessSignature, metadata }, context) => {
-      console.log("metadata")
-      console.log(metadata)
+    submitMint: async (parent, { transaction, witnessSignature, autoInput }, context) => {
+      console.log("submit mint")
+      console.log(autoInput)
       // verify user is signed in
-      if (context.user) {
-        // sign transaction (MUST CHECK IF INPUTS AND OUTPUTS ARE CORRECT)
+      // if (context.user) {
+        // verify transaction is legit
+        // console.log("submit mint")
+        // let [inputs, outputs, metadataTransaction, fee] = await nami.decodeTransaction(
+        //   transaction,
+        //   0
+        // )
+        // // extract payment from outputs 
+        // const paymentOutput = outputs?.find(
+        //   (output) => output.address === paymentWallet
+        // )
+
+        // if (!paymentOutput) {
+        //   throw new GraphQLError('payment address is not defined'), {
+        //     extensions: {
+        //       code: 'ERROR'
+        //     }
+        //   }
+        // }
+
+        // extract metadata from backend database
+        const metadata = await getMetadata(Mint, autoInput)
+        console.log(metadata)
+
         let witnessMinting = await nami.signTxCBOR(transaction, "e077a6a58c4ee9d49aecd7186f38a4a0b47cadee90ac1ad45dcffd5cf60951cc")
         // combine witnesses/signatures
         let witnesses = [witnessSignature, witnessMinting]
@@ -235,12 +258,13 @@ const resolvers = {
           networkId: 0,
           metadata: JSON.parse(metadata)
         })
+        // console.log(txHash)
         console.log(`Asset minted: ${txHash}`)
         // change state
         // const stateChanged = await changeState(Mint)
         return txHash
-      }
-      throw new AuthenticationError('You need to be logged in!');
+      // }
+      // throw new AuthenticationError('You need to be logged in!');
 
     },
 

@@ -81,7 +81,7 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
     const whip = removeTypename(auto)
     // mint selected assets
     let hashedMeta = null;
-    let metadata = null;
+    let assetName = null;
 
     try {
       const { data } = await addMint({
@@ -93,7 +93,7 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
       });
       // extract hashed metadata
       hashedMeta = data.mint.hashedMeta;
-      metadata = JSON.parse(data.mint.metadata);
+      assetName = data.mint.assetName
     }
     // return normally
     catch (e) {
@@ -102,23 +102,20 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
       return
     }
     // extract asset name 
-    const assetName = Object.keys(metadata["721"]["91d319c0fc8c557244d2ac5c2d1c0cbeaeb40a13804f122a51705da1"])[0];
+    // const assetName = Object.keys(metadata["721"]["91d319c0fc8c557244d2ac5c2d1c0cbeaeb40a13804f122a51705da1"])[0];
     // extract payment address
     let paymentAddress = await nami.getAddress(); // nami wallet address
 
     // ********************************************
     // Build Transaction
     // ********************************************
-    
-    // build recipients
+
     let recipients = [
-      // Seller Wallet, NFT price 10ADA
       {
         address:
           "addr_test1qrnns8ctrctt5ga9g990nc4d7pt0k25gaj0mnlda320ejmprlzyh4mr2psnrgh6ht6kaw860j5rhv44x4mt4csl987zslcr4p6",
         amount: "10",
-      }, 
-       // NFTs to be minted to
+      }, // Seller Wallet, NFT price 10ADA
       {
         address: paymentAddress,
         amount: "0",
@@ -132,16 +129,34 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
               "8201828200581c98d6a076c31a9d248ec8fe5459682f2ec2623cf376ad0c1c5a61237b82051a02d518fb",
           },
         ],
+      }, // NFTs to be minted
+    ]; // list of recipients
+    // build fake metadata to help estimate gas fees (use maximum packet size to be safe)
+    let dummyMetadata = {
+      721: {
+        // policyId
+        "36aa169af7dc9bb5a566987191221f2d7a92aab211350f7119fc1541": {
+          // NFTName
+          assetName: {
+            name : `dbagxauto000000000`, // dynamic
+            Dbag: "asdfasdfasdfasdfasdfasdfasdfasdfasd",
+            Auto: "asdfasdfasdfasdfasdfasdfasdfasdfasd",
+            image: "isdgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfgdfgdfsgdfsfsgdfsg",
+            Collection: "asdfasdfasdfasdfasdfasdfasdfasdf",
+            Twitter: "asdfasdfasdfasdfasdfasdfasdfasdfasd",
+            Website: "asdfasdfasdfasdfasdfasdfasdfasdfasd"
+          },
+        },
       },
-    ]; 
-    
+    };
+
     // build transaction 
     try {
       // combine and build transaction
       const transaction = await nami.transaction({
         PaymentAddress: paymentAddress,
         recipients: recipients,
-        metadata: metadata,
+        metadata: dummyMetadata,
         metadataHash: hashedMeta,
         addMetadata: false,
         utxosRaw: await nami.getUtxosHex(),
@@ -154,7 +169,7 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
         variables: {
           transaction: transaction,
           witnessSignature: witnessBuyer,
-          metadata: JSON.stringify(metadata)
+          autoInput: whip
         },
       });
       console.log(data)
@@ -166,7 +181,7 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
       console.log(e)
       return
     }
-    
+
   };
 
   return (

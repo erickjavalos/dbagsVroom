@@ -10,9 +10,6 @@ const dbagSeeds = require('./dbagSeeds.json');
 const profileSeeds = require('./profileSeeds.json');
 
 
-
-
-
 const loadData = async (model, data, str) => {
   // load dbags into db
   let cnt = 0

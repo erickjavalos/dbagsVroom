@@ -45,7 +45,7 @@ module.exports = {
   },
   uploadIPFS: async function (img, dbag, auto) {
     // extract buffer from the image to pass into pinata
-    const buff = await img.getBufferAsync("image/png"); 
+    const buff = await img.getBufferAsync("image/png");
     try {
       // ensure buffer is readable for pinata
       const stream = Readable.from(buff);
@@ -70,9 +70,9 @@ module.exports = {
       return null
     }
   },
-  updateMetadata: async function(Mint, whipAsset, metadata) {
+  updateMetadata: async function (Mint, whipAsset, metadata) {
     const whipName = whipAsset?.onchain_metadata.name || null
-
+    // verify that whipname is called
     if (whipName) {
       // find and update state of whip asset
       try {
@@ -86,5 +86,22 @@ module.exports = {
       }
     }
 
+  },
+
+  getMetadata: async function (Mint, whipAsset) {
+    const whipName = whipAsset?.onchain_metadata.name || null
+    console.log(whipAsset)
+    // verify that whipname is called
+    if (whipName) {
+      // find and update state of whip asset
+      try {
+        const data = await Mint.findOne({ name: whipName }, 'metadata');
+        // return data
+        return data.metadata
+      } 
+      catch (error) {
+        return false
+      }
+    }
   }
 };

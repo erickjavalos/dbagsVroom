@@ -55,7 +55,7 @@ type DbagMetadata {
 
 type HashMetadata {
   hashedMeta: String
-  metadata: String
+  assetName: String
 }
 
 type SelectedMetaData {
@@ -75,8 +75,8 @@ type Auth {
 type Mutation {
   createAsset(assetInput: AssetInput): AutoAsset
   login(code: String): Auth
-  mint(dbagInput: DbagInput, autoInput: AutoInput, address: String): HashMetadata
-  submitMint(transaction: String, witnessSignature: String, metadata: String): String
+  mint(dbagInput: DbagInput, autoInput: AutoInput): HashMetadata
+  submitMint(transaction: String, witnessSignature: String, autoInput: AutoInput): String
   updateAsset(id: ID!, assetInput: AssetInput): AutoAsset
   deleteAsset(id: ID!): AutoAsset
 }
