@@ -3,11 +3,12 @@ const { GraphQLError } = require('graphql')
 const { Dbags, Autos, Mint } = require('../server/../models');
 const { Profile } = require('../models');
 const { getAuthToken, getUserInfo, checkUserInGuild, signToken } = require('../utils/auth');
-const { checkMint, getMetadata, updateMetadata, uploadIPFS } = require('../utils/mint');
+const { checkMint, getMetadata, updateMetadata, uploadIPFS, changeState, txHashExists } = require('../utils/mint');
 const ConstructMfer = require('../utils/ConstructMfer');
 const fetch = require('node-fetch');
 
 const paymentWallet = "addr_test1qrnns8ctrctt5ga9g990nc4d7pt0k25gaj0mnlda320ejmprlzyh4mr2psnrgh6ht6kaw860j5rhv44x4mt4csl987zslcr4p6"
+const mintCost = 10;
 
 
 var NamiWalletApi = require('../nami-node-js/nami').NamiWalletApi
@@ -150,6 +151,7 @@ const resolvers = {
       if (assetMinted) {
         // 2. Generate image
         const img = await constructMfer.generateImage(dbagInput, autoInput)
+        img.writeAsync(`./imgs/test.png`)
         // 3. Upload image to ipfs and retrieve data
         console.log("uplaoding ipfs hash")
         const ipfsHash = await uploadIPFS(img, dbagInput, autoInput)
@@ -166,7 +168,7 @@ const resolvers = {
               {
                 [`dbagxauto${assetNumber}`]: // dynamic get from db
                 {
-                  "Name": `dbagxauto${assetNumber}`, // dynamic
+                  "Name": `DbagxAuto${assetNumber}`, // dynamic
                   "Dbag": `${dbagInput.onchain_metadata.name}`,
                   "Auto": `${autoInput.onchain_metadata.name}`,
                   "image": `ipfs://${ipfsHash}`,
@@ -223,10 +225,18 @@ const resolvers = {
 
 
     submitMint: async (parent, { transaction, witnessSignature, autoInput }, context) => {
+      // console.log(transaction)
+      // console.log()
+      // console.log(witnessSignature)
       // verify user is signed in
       // if (context.user) {
-        // verify transaction is legit
-        // console.log("submit mint")
+      // verify transaction is legit
+      // console.log("submit mint")
+      // verify no txHash in database
+      let hashExists = await txHashExists(Mint, autoInput)
+      // continue mint if hash doesnt exist, means it wasnt already minted
+      if (!hashExists) {
+
         let [inputs, outputs, metadataTransaction, fee] = await nami.decodeTransaction(
           transaction,
           0
@@ -235,18 +245,26 @@ const resolvers = {
         const paymentOutput = outputs?.find(
           (output) => output.address === paymentWallet
         )
-
+        // verify payment address is valid
         if (!paymentOutput) {
-          throw new GraphQLError('payment address is not defined'), {
+          throw new GraphQLError('payment address is invalid'), {
             extensions: {
               code: 'ERROR'
             }
           }
         }
-        
-        console.log(inputs)
-        console.log("")
-        console.log(outputs)
+        // verify payment amount is valid
+        const ada = paymentOutput?.amount / 1000000 // convert lovelace to ada
+        const rounded = Math.round(ada * 1000) / 1000 // round to 3 decimals
+        const amountValid = rounded === mintCost
+        // verify amount is valid
+        if (!amountValid) {
+          throw new GraphQLError('cost is invalid'), {
+            extensions: {
+              code: 'ERROR'
+            }
+          }
+        }
 
         // extract metadata from backend database
         const metadata = await getMetadata(Mint, autoInput)
@@ -265,8 +283,24 @@ const resolvers = {
         // console.log(txHash)
         console.log(`Asset minted: ${txHash}`)
         // change state
-        // const stateChanged = await changeState(Mint)
-        return txHash
+        const stateChanged = await changeState(Mint, autoInput, "MINTED", txHash)
+        return stateChanged ? txHash : () => {
+          throw new GraphQLError('payment address is not defined'), {
+            extensions: {
+              code: 'ERROR'
+            }
+          }
+        }
+        // return "false"
+      }
+      // asset has already been minted
+      else {
+        throw new GraphQLError('asset has been minted'), {
+          extensions: {
+            code: 'ERROR'
+          }
+        }
+      }
       // }
       // throw new AuthenticationError('You need to be logged in!');
 

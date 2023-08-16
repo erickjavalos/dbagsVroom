@@ -4,7 +4,6 @@ const fs = require('fs')
 
 class ConstructMfer {
     constructor(metadata) {
-        console.log('construction constructor')
         this.metadata = metadata
 
         // layering orders for dbags and auto assets
@@ -163,8 +162,11 @@ class ConstructMfer {
 
     generateImage = async (mfer, auto) => {
         // Generate dbagMfer with selected mfer
+        console.log("generating dbag")
         const dbagImage = await this.generateDbag(mfer)
+        console.log('generated dbag')
         // build dbag + car
+        console.log("combining car and mfer")
         return await this.generateDbagAuto(dbagImage, auto)
 
     }

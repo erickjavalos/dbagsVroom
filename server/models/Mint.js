@@ -15,6 +15,11 @@ const mintSchema = new Schema({
     metadata: {
         type: String,
         trim: true
+    },
+    txHash:
+    {
+        type: String,
+        trim: true
     }
 });
 

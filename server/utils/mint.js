@@ -24,17 +24,24 @@ module.exports = {
       return false
     }
   },
-  changeState: async function (Mint, whipAsset, state) {
+  changeState: async function (Mint, whipAsset, state, txHash) {
 
     const whipName = whipAsset?.onchain_metadata.name || null
     console.log('updating state...')
+    console.log(whipAsset)
+    console.log(whipName)
 
     if (whipName) {
       // find and update state of whip asset
       try {
         const result = await Mint.updateOne(
           { name: whipName }, // Filter to find the document to update
-          { $set: { state: state } } // Set the new value for the state field
+          { $set: 
+            { 
+              state: state,
+              txHash: txHash 
+            } 
+          } // Set the new value for the state field
         );
         console.log("asset state updated....")
         return true
@@ -51,9 +58,11 @@ module.exports = {
       const stream = Readable.from(buff);
       const data = new FormData();
       // append form data
+      console.log("image added to data buffer")
       data.append('file', stream, {
         filepath: `${dbag.onchain_metadata.name}_${auto.onchain_metadata.name}.png`
       })
+      console.log("submitted post request")
       // post request to pinata
       const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", data, {
         maxBodyLength: "Infinity",
@@ -62,6 +71,7 @@ module.exports = {
           Authorization: `Bearer ${process.env.PINATA_JWT}`
         }
       });
+      console.log("response with ipfs was given")
 
       return res.data.IpfsHash;
 
@@ -100,6 +110,25 @@ module.exports = {
       } 
       catch (error) {
         return false
+      }
+    }
+  },
+  txHashExists: async function (Mint, whipAsset){
+    const whipName = whipAsset?.onchain_metadata.name || null
+    // verify that whipname is called
+    if (whipName) {
+      // find and update state of whip asset
+      try {
+        const data = await Mint.findOne({ name: whipName }, 'txHash');
+        // return data
+        if (!data.txHash)
+        {
+          return false
+        }
+        return true
+      } 
+      catch (error) {
+        return true
       }
     }
   }
