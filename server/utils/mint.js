@@ -27,9 +27,6 @@ module.exports = {
   changeState: async function (Mint, whipAsset, state, txHash) {
 
     const whipName = whipAsset?.onchain_metadata.name || null
-    console.log('updating state...')
-    console.log(whipAsset)
-    console.log(whipName)
 
     if (whipName) {
       // find and update state of whip asset
@@ -58,11 +55,9 @@ module.exports = {
       const stream = Readable.from(buff);
       const data = new FormData();
       // append form data
-      console.log("image added to data buffer")
       data.append('file', stream, {
         filepath: `${dbag.onchain_metadata.name}_${auto.onchain_metadata.name}.png`
       })
-      console.log("submitted post request")
       // post request to pinata
       const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", data, {
         maxBodyLength: "Infinity",
@@ -71,7 +66,6 @@ module.exports = {
           Authorization: `Bearer ${process.env.PINATA_JWT}`
         }
       });
-      console.log("response with ipfs was given")
 
       return res.data.IpfsHash;
 

@@ -151,11 +151,9 @@ const resolvers = {
       if (assetMinted) {
         // 2. Generate image
         const img = await constructMfer.generateImage(dbagInput, autoInput)
-        img.writeAsync(`./imgs/test.png`)
+        // img.writeAsync(`./imgs/test.png`)
         // 3. Upload image to ipfs and retrieve data
-        console.log("uplaoding ipfs hash")
         const ipfsHash = await uploadIPFS(img, dbagInput, autoInput)
-        console.log("uploaded ipfs hash")
         // verify ipfs hash was returned
         if (ipfsHash) {
           const assetNumber = autoInput.onchain_metadata.name.split("Dbag Mfers Auto Club ")[1]
@@ -183,7 +181,6 @@ const resolvers = {
           const metaDataHash = nami.hashMetadata(metadata)
           // update metadata
           const updatedMetadata = await updateMetadata(Mint, autoInput, metadata)
-          console.log("updated metadata")
           // ensure that metadata was updated in the database
           if (updatedMetadata) {
             return {
@@ -247,6 +244,7 @@ const resolvers = {
         )
         // verify payment address is valid
         if (!paymentOutput) {
+          console.log(`payment address is invalid ${autoInput.onchain_metadata.name}`)
           throw new GraphQLError('payment address is invalid'), {
             extensions: {
               code: 'ERROR'
@@ -272,6 +270,7 @@ const resolvers = {
         let witnessMinting = await nami.signTxCBOR(transaction, "e077a6a58c4ee9d49aecd7186f38a4a0b47cadee90ac1ad45dcffd5cf60951cc")
         // combine witnesses/signatures
         let witnesses = [witnessSignature, witnessMinting]
+        
 
         // submit transaction to blockchain
         let txHash = await nami.submitTx({
@@ -281,10 +280,35 @@ const resolvers = {
           metadata: JSON.parse(metadata)
         })
         // console.log(txHash)
+        if (txHash?.error)
+        {
+          console.log(`Tx Error: ${txHash.error}`)
+          console.log(txHash)
+          console.log("metadata: ")
+          const json = JSON.stringify(JSON.parse(metadata))
+
+          console.log(json)
+          console.log('transaction')
+          console.log(transaction)
+
+          throw new GraphQLError('Issue with tx error'), {
+            extensions: {
+              code: 'ERROR'
+            }
+          }
+        }
+
         console.log(`Asset minted: ${txHash}`)
         // change state
         const stateChanged = await changeState(Mint, autoInput, "MINTED", txHash)
+
+        // delay for utxos to catchup
+        console.log("waiting....")
+        await new Promise(r => setTimeout(r, 10000));
+        console.log("done...")
+
         return stateChanged ? txHash : () => {
+          console.log("state didnt change")
           throw new GraphQLError('payment address is not defined'), {
             extensions: {
               code: 'ERROR'
