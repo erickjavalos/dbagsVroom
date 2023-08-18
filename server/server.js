@@ -49,13 +49,13 @@ const startServer = async () => {
     app.use(requestTime);
 
     await db; // Wait for the database connection
+    db.once('open', () => {
+      app.listen(PORT, () => {
+        console.log(`API server running on port ${PORT}!`);
+      });
+    })
 
-    app.listen(PORT, () => {
-      console.log(`API server running on port ${PORT}!`);
-      console.log(
-        `GraphQL server running at http://localhost:${PORT}${server.graphqlPath}`
-      );
-    });
+
   } catch (error) {
     console.error("Error starting server:", error);
   }
