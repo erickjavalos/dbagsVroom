@@ -94,6 +94,26 @@ router.post('/submitMintDbags', async (req, res) => {
           networkId: 0,
           metadata: JSON.parse(metadata)
         })
+        
+        // update state in the database
+        const formattedMeta = JSON.parse(metadata)
+        const assets = formattedMeta['721']['91d319c0fc8c557244d2ac5c2d1c0cbeaeb40a13804f122a51705da1']
+
+        const names = Object.keys(assets)
+
+        // Define the query to search for documents with a name value in the specified array
+        const query = { "onchain_metadata.name": { $in: names } };
+
+        // Define the update operation to add the minted field with value "true"
+        const update = { $set: { "minted": "true" } };
+
+        // Define the options for the update operation
+        const options = { multi: true };
+
+        // Execute the update operation
+        const result = await DbagsMint.updateMany(query, update, options);
+        console.log(result)
+        
         res.status(200).json(txHash)
 
     }
