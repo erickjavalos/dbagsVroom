@@ -571,6 +571,7 @@ class NamiWalletApi {
 
 
     hashMetadata(metadata) {
+        console.log("hashing...")
         let aux = S.AuxiliaryData.new()
 
 
