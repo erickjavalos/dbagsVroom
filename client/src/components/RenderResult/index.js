@@ -124,9 +124,9 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
             assetName: assetName,
             quantity: "1",
             policyId:
-              "91d319c0fc8c557244d2ac5c2d1c0cbeaeb40a13804f122a51705da1",
+              "cbee942c033ace397faca24b6481f1c7a99cdc5b8005ccd25fe2ac64",
             policyScript:
-              "8201828200581c98d6a076c31a9d248ec8fe5459682f2ec2623cf376ad0c1c5a61237b82051a02d518fb",
+              "8201828200581c99aa9e80028ce41a3ae7199674b49e705a9cc826167f8406672b263e82051a0411e679",
           },
         ],
       }, // NFTs to be minted
@@ -135,7 +135,7 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
     let dummyMetadata = {
       721: {
         // policyId
-        "36aa169af7dc9bb5a566987191221f2d7a92aab211350f7119fc1541": {
+        "cbee942c033ace397faca24b6481f1c7a99cdc5b8005ccd25fe2ac64": {
           // NFTName
           assetName: {
             name : `dbagxauto000000000`, // dynamic

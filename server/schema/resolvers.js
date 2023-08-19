@@ -162,7 +162,7 @@ const resolvers = {
           {
             "721":
             {
-              "91d319c0fc8c557244d2ac5c2d1c0cbeaeb40a13804f122a51705da1": // policyId
+              [`${process.env.POLICY_ID}`]: // policyId
               {
                 [`dbagxauto${assetNumber}`]: // dynamic get from db
                 {
@@ -267,8 +267,8 @@ const resolvers = {
         // extract metadata from backend database
         const metadata = await getMetadata(Mint, autoInput)
 
-        let witnessMinting = await nami.signTxCBOR(transaction, "e077a6a58c4ee9d49aecd7186f38a4a0b47cadee90ac1ad45dcffd5cf60951cc")
-        // combine witnesses/signatures
+        // signing cbor comes from cborHex of signing key from policy. removes the 5820 from the string
+        let witnessMinting = await nami.signTxCBOR(transaction, process.env.POLICY_SIGNING_CBOR)
         let witnesses = [witnessSignature, witnessMinting]
         
 
