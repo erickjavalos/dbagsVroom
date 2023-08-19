@@ -12,8 +12,9 @@ var nami =  new NamiWalletApi( blockfrostApiKey)
 
 const start = async () => {
 
-    var hexAddr = "f470e462b6dc09191242076fb2cb25d62e825101c42d8f89931d8d0f"
-    var slot = 99867116
+    // comes from policy.script keyHash
+    var hexAddr = "745fdd03338d480d578cddf40c166a31fadd6df03677d9ece40a1ad9"
+    var slot = 99867162
     let policy = await nami.createLockingPolicyScriptHexKey(hexAddr, slot)
 
     console.log(policy)

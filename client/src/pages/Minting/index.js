@@ -5,7 +5,6 @@ import Header from "../../components/Header";
 import backgroundImage from "../../images/background_auto.png"
 import NamiWalletApi, { Cardano } from "../../nami-js";
 
-
 let nami;
 
 const styles = {
@@ -64,6 +63,9 @@ const Minting = () => {
       // deconstruct data
       const data = await response.json()
 
+      console.log(`got back data`)
+      console.log(data)
+
       // extract parameters
       const hashedMetadata = data.metaDataHash;
       // DANGEROUS IN PRODUCTION
@@ -71,7 +73,7 @@ const Minting = () => {
       // get address
       let paymentAddress = await nami.getAddress(); // nami wallet address
       // extract minted assets
-      const entries = Object.entries(metadata["721"]["91d319c0fc8c557244d2ac5c2d1c0cbeaeb40a13804f122a51705da1"]);
+      const entries = Object.entries(metadata["721"]["ecb41dc4214459af7e74b40116704b5aed34d4deda785e59a7cf8c53"]);
       // console.log(entries)
       let mintedAssets = []
       entries.forEach((asset) => {
@@ -81,9 +83,9 @@ const Minting = () => {
             assetName: asset[0],
             quantity: "1",
             policyId:
-              "91d319c0fc8c557244d2ac5c2d1c0cbeaeb40a13804f122a51705da1",
+              "ecb41dc4214459af7e74b40116704b5aed34d4deda785e59a7cf8c53",
             policyScript:
-              "8201828200581c98d6a076c31a9d248ec8fe5459682f2ec2623cf376ad0c1c5a61237b82051a02d518fb",
+              "8201828200581cf470e462b6dc09191242076fb2cb25d62e825101c42d8f89931d8d0f82051a05f3d9ec",
 
           }
         )
@@ -92,26 +94,15 @@ const Minting = () => {
       let recipients = [
         {
           address:
-            "addr_test1qrnns8ctrctt5ga9g990nc4d7pt0k25gaj0mnlda320ejmprlzyh4mr2psnrgh6ht6kaw860j5rhv44x4mt4csl987zslcr4p6",
-          amount: "1",
+            "addr_test1qqyretpvwl6hy9jtcj3l8fru66k2r2ff25tnf4zktyxu0flmk9yfxfh2c4pfes04jwnw9p7htz36erfa6aym4jtpvc8qzvtklj",
+          amount: "10",
         }, // Seller Wallet, NFT price 10ADA
         {
           address: paymentAddress,
           amount: "0",
-          // mintedAssets: [
-          //   {
-          //     assetName: assetName,
-          //     quantity: "1",
-          //     policyId:
-          //       "91d319c0fc8c557244d2ac5c2d1c0cbeaeb40a13804f122a51705da1",
-          //     policyScript:
-          //       "8201828200581c98d6a076c31a9d248ec8fe5459682f2ec2623cf376ad0c1c5a61237b82051a02d518fb",
-          //   },
-          // ],
           mintedAssets: mintedAssets
         }, // NFTs to be minted
       ]; // list of recipients
-
       // build transaction 
       try {
         // combine and build transaction
@@ -127,8 +118,6 @@ const Minting = () => {
         // prompting user for signature
         const witnessBuyer = await nami.signTx(transaction, true);
         // submit metadata to the backend 
-        console.log(witnessBuyer)
-        console.log(transaction)
 
         // submit post request to mint
         try {
@@ -149,7 +138,131 @@ const Minting = () => {
 
           })
           const data = await response.json()
-          console.log(data)
+          console.log(`minted ${data}`)
+        }
+        catch (error) {
+          console.log(error)
+        }
+
+
+        // const { data } = await submitMint({
+        //   variables: {
+        //     transaction: transaction,
+        //     witnessSignature: witnessBuyer,
+        //     autoInput: whip
+        //   },
+        // });
+      }
+      // do not proceed if issues occur and update database state
+      catch (e) {
+        // update database
+        console.log("not signed, or error occured")
+        console.log(e)
+        return
+      }
+
+    }
+    catch (error) {
+      console.log(error)
+    }
+
+  }
+
+
+  const processWhipsRequest = async () => {
+    const S = await Cardano();
+
+    nami = new NamiWalletApi(
+      S,
+      window.cardano,
+      blockfrostApiKey,
+      walletConnected
+    );
+
+    const url = 'api/startMintWhips'; // replace with your API URL
+
+    try {
+      // get 10 assets from backend
+      const response = await fetch(url)
+      // deconstruct data
+      const data = await response.json()
+
+      console.log(`got back data`)
+      console.log(data)
+
+      // extract parameters
+      const hashedMetadata = data.metaDataHash;
+      // DANGEROUS IN PRODUCTION
+      const metadata = data.metadata
+      // get address
+      let paymentAddress = await nami.getAddress(); // nami wallet address
+      // extract minted assets
+      const entries = Object.entries(metadata["721"]["a89d6c96713c57190c98cae3d26a85e1528bc9ec22fb85d5e21e0ab7"]);
+      // console.log(entries)
+      let mintedAssets = []
+      entries.forEach((asset) => {
+        console.log(asset[0])
+        mintedAssets.push(
+          {
+            assetName: asset[0],
+            quantity: "1",
+            policyId:
+              "a89d6c96713c57190c98cae3d26a85e1528bc9ec22fb85d5e21e0ab7",
+            policyScript:
+              "8201828200581c745fdd03338d480d578cddf40c166a31fadd6df03677d9ece40a1ad982051a05f3da1a",
+
+          }
+        )
+      })
+
+      let recipients = [
+        {
+          address:
+            "addr_test1qqyretpvwl6hy9jtcj3l8fru66k2r2ff25tnf4zktyxu0flmk9yfxfh2c4pfes04jwnw9p7htz36erfa6aym4jtpvc8qzvtklj",
+          amount: "10",
+        }, // Seller Wallet, NFT price 10ADA
+        {
+          address: paymentAddress,
+          amount: "0",
+          mintedAssets: mintedAssets
+        }, // NFTs to be minted
+      ]; // list of recipients
+      // build transaction 
+      try {
+        // combine and build transaction
+        const transaction = await nami.transaction({
+          PaymentAddress: paymentAddress,
+          recipients: recipients,
+          metadata: metadata,
+          metadataHash: hashedMetadata,
+          addMetadata: false,
+          utxosRaw: await nami.getUtxosHex(),
+          multiSig: true,
+        });
+        // prompting user for signature
+        const witnessBuyer = await nami.signTx(transaction, true);
+        // submit metadata to the backend 
+
+        // submit post request to mint
+        try {
+          const mintURL = "/api/submitMintWhips"
+          // construct payload to push to server
+          const payload = {
+            witnessBuyer: witnessBuyer,
+            transaction: transaction,
+            metadata: JSON.stringify(metadata)
+          }
+          const response = await fetch(mintURL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+
+
+          })
+          const data = await response.json()
+          console.log(`minted ${data}`)
         }
         catch (error) {
           console.log(error)
@@ -196,10 +309,17 @@ const Minting = () => {
               <div className="flex flex-row text-center justify-center p-5 m-5">
                 <div className="flex flex-col w-1/16 text-xl">
                   <button type="submit"
-                    className="mx-1 text-white bg-[rgb(151,196,109,0.8)] hover:bg-[rgb(151,196,109,1)] rounded-lg text-lg px-4 py-2"
+                    className="m-5 text-white bg-[rgb(151,196,109,0.8)] hover:bg-[rgb(151,196,109,1)] rounded-lg text-lg px-4 py-2"
                     onClick={processMintRequest}
                   >
-                    mint 10 assets
+                    mint 10 dbags
+                  </button>
+
+                  <button type="submit"
+                    className="m-5 text-white bg-[rgb(151,196,109,0.8)] hover:bg-[rgb(151,196,109,1)] rounded-lg text-lg px-4 py-2"
+                    onClick={processWhipsRequest}
+                  >
+                    mint 10 whips
                   </button>
                 </div>
               </div>
