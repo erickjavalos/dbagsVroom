@@ -7,6 +7,8 @@ var NamiWalletApi = require('../../nami-node-js/nami').NamiWalletApi
 const dotenv = require('dotenv');
 dotenv.config();
 
+const dbagsPolicyID = "ecb41dc4214459af7e74b40116704b5aed34d4deda785e59a7cf8c53"
+
 // instantiate blockfrost api
 let blockfrostApiKey = {
     0: process.env.BLOCKFROST_PREPROD, // testnet
@@ -37,6 +39,8 @@ router.get('/startMintDbags', async (req, res) => {
     try {
         // get unminted from database
         const dbags = await DbagsMint.find({ minted: "FALSE" }).limit(10);
+        console.log('found dbags')
+        console.log(dbags)
         // iterate through each dbag and construct metadata
         // console.log(dbags)
         const assets = {}
@@ -48,14 +52,13 @@ router.get('/startMintDbags', async (req, res) => {
         {
             "721":
             {
-                "91d319c0fc8c557244d2ac5c2d1c0cbeaeb40a13804f122a51705da1": // policyId
+                [`${dbagsPolicyID}`]: // policyId
                     assets
             }
         }
 
         // hash metadata
         const metaDataHash = nami.hashMetadata(metadata)
-
 
         res.status(200).json(
             {
@@ -83,7 +86,7 @@ router.post('/submitMintDbags', async (req, res) => {
     ) 
     {
         // sign transaction
-        let witnessMinting = await nami.signTxCBOR(transaction, "e077a6a58c4ee9d49aecd7186f38a4a0b47cadee90ac1ad45dcffd5cf60951cc")
+        let witnessMinting = await nami.signTxCBOR(transaction, "1b6f6d0e540f600bf5c4f0f1e426b0353d62dbed6839a57784ffede59d244456")
         // generate witnesses array
         let witnesses = [witnessSignature, witnessMinting]
         
@@ -97,7 +100,9 @@ router.post('/submitMintDbags', async (req, res) => {
         
         // update state in the database
         const formattedMeta = JSON.parse(metadata)
-        const assets = formattedMeta['721']['91d319c0fc8c557244d2ac5c2d1c0cbeaeb40a13804f122a51705da1']
+        const assets = formattedMeta['721'][`${dbagsPolicyID}`]
+        console.log("minting processing")
+        console.log(assets)
 
         const names = Object.keys(assets)
 
