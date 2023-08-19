@@ -267,15 +267,6 @@ const Minting = () => {
         catch (error) {
           console.log(error)
         }
-
-
-        // const { data } = await submitMint({
-        //   variables: {
-        //     transaction: transaction,
-        //     witnessSignature: witnessBuyer,
-        //     autoInput: whip
-        //   },
-        // });
       }
       // do not proceed if issues occur and update database state
       catch (e) {
