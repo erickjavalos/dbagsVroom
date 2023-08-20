@@ -63,9 +63,15 @@ type SelectedMetaData {
   autoAssets: [AutoAsset]
 }
 
+type Assets {
+  dbags : [String]
+  whips : [String]
+}
+
 type Query {
   getDbagMetaData(assets: [String]): [DbagAsset]
   getAutoMetaData(assets: [String]): [AutoAsset]
+  getAssetsInWallet(address: String) : Assets
 }
 
 type Auth {

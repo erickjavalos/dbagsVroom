@@ -1,10 +1,13 @@
 const { AuthenticationError } = require('apollo-server-express');
 const { GraphQLError } = require('graphql')
 const { Dbags, Autos, Mint } = require('../server/../models');
+const { DBAGS_POLICY, WHIPS_POLICY } = require('../Constants.js');
+const ExtractAssets = require('../utils/ExtractAssets');
 const { Profile } = require('../models');
 const { getAuthToken, getUserInfo, checkUserInGuild, signToken } = require('../utils/auth');
 const { checkMint, getMetadata, updateMetadata, uploadIPFS, changeState, txHashExists } = require('../utils/mint');
 const ConstructMfer = require('../utils/ConstructMfer');
+
 const fetch = require('node-fetch');
 
 const paymentWallet = "addr_test1qrnns8ctrctt5ga9g990nc4d7pt0k25gaj0mnlda320ejmprlzyh4mr2psnrgh6ht6kaw860j5rhv44x4mt4csl987zslcr4p6"
@@ -37,6 +40,21 @@ const resolvers = {
       }
       throw new AuthenticationError('You need to be logged in!');
 
+    },
+
+    getAssetsInWallet : async (parent, {address}, context) => {
+      // ensure user is logged into application
+      if (context.user) {
+        if (address)
+        {
+          // instantiante helper class to extract assets
+          const extractAssets = new ExtractAssets(address, DBAGS_POLICY, WHIPS_POLICY);
+          // extract assets
+          const assets = await extractAssets.getAssets()
+
+          return assets
+        }
+      }
     },
 
     getAutoMetaData: async (parent, { assets }, context) => {
