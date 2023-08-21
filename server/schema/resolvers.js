@@ -277,6 +277,7 @@ const resolvers = {
         const amountValid = rounded === mintCost
         // verify amount is valid
         if (!amountValid) {
+          console.log('payment amount is invalid')
           throw new GraphQLError('cost is invalid'), {
             extensions: {
               code: 'ERROR'
