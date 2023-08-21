@@ -3,7 +3,6 @@ import namiImg from "../../images/nami.png";
 import eternlImg from "../../images/eternl.png";
 import NamiWallet from "../../utils/NamiWallet";
 import EternlWallet from "../../utils/EternlWallet";
-import LoadingButton from '../../components/LoadingButton/'
 
 // let nami and eternl wallet be a global variable that can be access all throughout the app
 let nami = null;
@@ -52,6 +51,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
 
       }
       catch (error) {
+        console.log(error)
         console.log('User did not connect wallet')
       }
     }

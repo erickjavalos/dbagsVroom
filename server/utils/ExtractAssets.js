@@ -24,6 +24,9 @@ class ExtractAssets {
     // get assets within their policy ids
     // ********************************************
 
+    //addr_test1qqg3278vaa92lftpf5x3l30lsyjzedvzjpdr3aetnvjvfe0u3jv9a6thqhl78emaank57ysk63yrg0wnrnu65su9uplsw7qsge
+    //addr_test1qrnns8ctrctt5ga9g990nc4d7pt0k25gaj0mnlda320ejmprlzyh4mr2psnrgh6ht6kaw860j5rhv44x4mt4csl987zslcr4p6
+
     getAssets = async () => {
         // retrieve stake address to poll wallets assets
         const stakeAddress = await this.getStakeAddress()

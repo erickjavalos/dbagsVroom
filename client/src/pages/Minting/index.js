@@ -43,21 +43,9 @@ const Minting = () => {
     );
 
     const url = 'api/startMintDbags'; // replace with your API URL
-    // const payload = {
-    //   amount: '10',
-    //   // Add other key-value pairs here
-    // };
+  
 
     try {
-      // const response = await fetch(url, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     // Add other headers here if needed (e.g., authentication)
-      //   },
-      //   body: JSON.stringify(payload),
-
-      // });
       // get 10 assets from backend
       const response = await fetch(url)
       // deconstruct data

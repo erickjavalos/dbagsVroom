@@ -113,7 +113,7 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
     let recipients = [
       {
         address:
-          "addr_test1qrnns8ctrctt5ga9g990nc4d7pt0k25gaj0mnlda320ejmprlzyh4mr2psnrgh6ht6kaw860j5rhv44x4mt4csl987zslcr4p6",
+          "addr_test1qqyretpvwl6hy9jtcj3l8fru66k2r2ff25tnf4zktyxu0flmk9yfxfh2c4pfes04jwnw9p7htz36erfa6aym4jtpvc8qzvtklj",
         amount: "10",
       }, // Seller Wallet, NFT price 10ADA
       {

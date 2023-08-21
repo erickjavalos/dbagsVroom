@@ -11,9 +11,7 @@ import {GET_AUTO_ASSETS, GET_DBAG_ASSETS} from "../../utils/queries"
 
 
 
-const BuildMfer = ({ assets, walletConnected }) => {
-  console.log(walletConnected)
-  
+const BuildMfer = ({ assets, walletConnected }) => {  
   const [dbagAssets, setDbagAssets] = useState()
   const [whipAssets, setWhipAssets] = useState()
   const [dbagSelected, setDbagSelected] = useState(false)

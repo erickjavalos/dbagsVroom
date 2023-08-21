@@ -71,7 +71,6 @@ type Assets {
 type Query {
   getDbagMetaData(assets: [String]): [DbagAsset]
   getAutoMetaData(assets: [String]): [AutoAsset]
-  getAssetsInWallet(address: String) : Assets
 }
 
 type Auth {
@@ -83,6 +82,7 @@ type Mutation {
   login(code: String): Auth
   mint(dbagInput: DbagInput, autoInput: AutoInput): HashMetadata
   submitMint(transaction: String, witnessSignature: String, autoInput: AutoInput): String
+  getAssetsInWallet(address: String) : Assets
   updateAsset(id: ID!, assetInput: AssetInput): AutoAsset
   deleteAsset(id: ID!): AutoAsset
 }

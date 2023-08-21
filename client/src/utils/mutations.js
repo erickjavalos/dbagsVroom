@@ -20,3 +20,12 @@ mutation Mutation($code: String) {
     token
   }
 }`
+
+export const GET_ASSETS = gql`
+mutation Mutation($address: String) {
+  getAssetsInWallet(address: $address) {
+    dbags
+    whips
+  }
+}`
+

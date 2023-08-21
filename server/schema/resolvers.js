@@ -10,7 +10,7 @@ const ConstructMfer = require('../utils/ConstructMfer');
 
 const fetch = require('node-fetch');
 
-const paymentWallet = "addr_test1qrnns8ctrctt5ga9g990nc4d7pt0k25gaj0mnlda320ejmprlzyh4mr2psnrgh6ht6kaw860j5rhv44x4mt4csl987zslcr4p6"
+const paymentWallet = "addr_test1qqyretpvwl6hy9jtcj3l8fru66k2r2ff25tnf4zktyxu0flmk9yfxfh2c4pfes04jwnw9p7htz36erfa6aym4jtpvc8qzvtklj"
 const mintCost = 10;
 
 
@@ -42,26 +42,11 @@ const resolvers = {
 
     },
 
-    getAssetsInWallet : async (parent, {address}, context) => {
-      // ensure user is logged into application
-      if (context.user) {
-        if (address)
-        {
-          // instantiante helper class to extract assets
-          const extractAssets = new ExtractAssets(address, DBAGS_POLICY, WHIPS_POLICY);
-          // extract assets
-          const assets = await extractAssets.getAssets()
-
-          return assets
-        }
-      }
-    },
-
     getAutoMetaData: async (parent, { assets }, context) => {
       if (context.user) {
         // find the autos given by the assets in the wallet
         const autoAssetsData = await Autos.find({
-          asset_name: { $in: assets },
+          'onchain_metadata.name': { $in: assets },
         }).exec();
 
         return autoAssetsData
@@ -141,6 +126,23 @@ const resolvers = {
         // TODO: Reroute to /info page
         console.log(Auth)
         throw new AuthenticationError('Error in Authentication code provided!');
+      }
+    },
+
+    // upon an address being received, this will poll the blockchain and extract all assets in 
+    // dbags and autos policy
+    getAssetsInWallet : async (parent, {address}, context) => {
+      // ensure user is logged into application
+      if (context.user) {
+        if (address)
+        {
+          // instantiante helper class to extract assets
+          const extractAssets = new ExtractAssets(address, DBAGS_POLICY, WHIPS_POLICY);
+          // extract assets
+          const assets = await extractAssets.getAssets()
+
+          return assets
+        }
       }
     },
 

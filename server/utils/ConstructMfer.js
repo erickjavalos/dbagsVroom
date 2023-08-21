@@ -161,6 +161,7 @@ class ConstructMfer {
     }
 
     generateImage = async (mfer, auto) => {
+        console.log('generating')
         // Generate dbagMfer with selected mfer
         const dbagImage = await this.generateDbag(mfer)
         // build dbag + car
@@ -253,7 +254,7 @@ class ConstructMfer {
         for (let i = 0; i < this.DBAG_LAYERING_ORDER.length; i++) {
             const layer = this.DBAG_LAYERING_ORDER[i]
             if (layer === "BodyType" && layers[layer] === "") {
-                assetFileLocations.push(`../assets/mfers_assets/${layer}/Black.png`)
+                assetFileLocations.push(`./assets/mfers_assets/${layer}/Black.png`)
             }
             else if (layers[layer] !== "") {
                 if (layers[layer] === "Captain's hat") {
