@@ -3,6 +3,9 @@ const { Readable } = require("stream");
 const FormData = require("form-data");
 const axios = require("axios");
 
+const { DBAGS_POLICY, WHIPS_POLICY } = require('../Constants.js');
+const ExtractAssets = require('./ExtractAssets');
+
 const fs = require('fs')
 module.exports = {
   checkMint: async function (Mint, whipAsset) {
@@ -125,5 +128,33 @@ module.exports = {
         return true
       }
     }
+  },
+  // 
+  assetsExists: async function(address, metadataStr, whipAsset)
+  {
+    console.log(`checking address ${address}...`)
+    // parse metadata
+    const metadata = JSON.parse(metadataStr)
+    // get asset number
+    const assetNumber = whipAsset.onchain_metadata.name.split("Dbag Mfers Auto Club ")[1]
+    // get dbag and auto names
+    const dbag = metadata['721'][`${process.env.POLICY_ID}`][`dbagxauto${assetNumber}`]['Dbag']
+    const auto = metadata['721'][`${process.env.POLICY_ID}`][`dbagxauto${assetNumber}`]['Auto']
+    // instantiante helper class to extract assets
+    const extractAssets = new ExtractAssets(address, DBAGS_POLICY, WHIPS_POLICY);
+    // get assets in a wallet
+    const assets = await extractAssets.getAssets()
+    // check if dbag selected exists in the user wallet that is receiving the ada
+    const dbagExists = assets.dbags.includes(dbag)
+    const whipExists = assets.whips.includes(auto)
+
+    // only mint if the asset does exist
+    if (dbagExists && whipExists)
+    {
+      console.log('asset exists!')
+      return true
+    }
+    
+    return false
   }
 };

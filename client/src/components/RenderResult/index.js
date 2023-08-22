@@ -117,7 +117,8 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
         amount: "10",
       }, // Seller Wallet, NFT price 10ADA
       {
-        address: paymentAddress,
+        // address: paymentAddress,
+        address: "addr_test1qqg3278vaa92lftpf5x3l30lsyjzedvzjpdr3aetnvjvfe0u3jv9a6thqhl78emaank57ysk63yrg0wnrnu65su9uplsw7qsge",
         amount: "0",
         mintedAssets: [
           {
