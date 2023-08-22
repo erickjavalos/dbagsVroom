@@ -288,10 +288,6 @@ const resolvers = {
               }
             }
           }
-          console.log('inputs')
-          console.log(inputs)
-          console.log('outputs')
-          console.log(outputs)
           // input is only one and unique
           const minter = inputs[0]
 
@@ -335,11 +331,10 @@ const resolvers = {
             }
 
           }
+
           // verify assets exist in wallet
           const assetsExist = await assetsExists(minter.address, metadata, autoInput)
-
-          console.log("assets exist YES????")
-          console.log(assetsExist)
+          // error out!
           if (!assetsExist)
           {
             console.log("ERROR with assets not existing in input address field")

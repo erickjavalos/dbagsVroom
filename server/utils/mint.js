@@ -132,7 +132,6 @@ module.exports = {
   // given an address that the 
   assetsExists: async function(address, metadataStr, whipAsset)
   {
-    console.log(`checking address ${address}...`)
     // parse metadata
     const metadata = JSON.parse(metadataStr)
     // get asset number
@@ -147,15 +146,6 @@ module.exports = {
     // check if dbag selected exists in the user wallet that is receiving the ada
     const dbagExists = assets.dbags.includes(dbag)
     const whipExists = assets.whips.includes(auto)
-    console.log(`address: ${address}`)
-    console.log('assets in wallet')
-    console.log(assets)
-    console.log(`dbag: ${dbag}`)
-    console.log(`auto: ${auto}`)
-
-    console.log(`dbag exists? ${dbagExists}`)
-    console.log(`auto exists? ${whipExists}`)
-
     // only mint if the asset does exist
     if (dbagExists && whipExists)
     {
