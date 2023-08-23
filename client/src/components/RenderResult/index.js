@@ -94,10 +94,12 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
         },
       });
       mintData = data
-    }
-    catch (e) {
-      console.log(e)
-    }
+
+    // Minting was successful, reload the window
+  window.location.reload();
+} catch (e) {
+  console.log(e);
+}
     // instantiate serialization lib that helps decode blockchain data
     const S = await Cardano();
     // initialize nami wallet helper class
