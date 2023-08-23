@@ -78,7 +78,7 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
     // get hashed metadata
     // reconstruct mfer without typename from graphql
     const dbag = removeTypename(mfer);
-    const whip = removeTypename(auto)
+    const whip = removeTypename(auto);
     // mint selected assets
     let hashedMeta = null;
     let assetName = null;

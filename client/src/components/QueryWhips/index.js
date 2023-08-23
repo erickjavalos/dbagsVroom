@@ -5,7 +5,6 @@ import { GET_AUTO_ASSETS } from "../../utils/queries"
 import RenderWhipAssets from '../RenderWhipAssets';
 
 const QueryWhips = ({ assets, assetSelected, setAssetSelected }) => {
-    const name = "whips"
     //  query the auto data
     const { loading, error, data } = useQuery(GET_AUTO_ASSETS,
         {
@@ -29,7 +28,6 @@ const QueryWhips = ({ assets, assetSelected, setAssetSelected }) => {
                     <>
                         <RenderWhipAssets
                             assets={whips}
-                            name={name}
                             assetSelected={assetSelected}
                             setAssetSelected={setAssetSelected}
                         />

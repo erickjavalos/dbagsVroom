@@ -13,14 +13,6 @@ const RenderWhipAssets = ({ assets, assetSelected, setAssetSelected }) => {
     //         }
     //     }
     // )
-    if (!assets) {
-        return (
-            <>
-                <h1>No assets</h1>
-            </>
-        )
-    }
-
 
     return (
         <>
@@ -38,7 +30,6 @@ const RenderWhipAssets = ({ assets, assetSelected, setAssetSelected }) => {
                 <>
                     <RenderWhipSubAssets
                         assets={assets}
-                        name={name}
                         assetSelected={assetSelected}
                         setAssetSelected={setAssetSelected}
                     />

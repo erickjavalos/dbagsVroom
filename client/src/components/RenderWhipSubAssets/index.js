@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery, gql } from '@apollo/client';
-import { GET_AVAILABLE_ASSETS } from "../../utils/queries"
+import RenderWhips from "../RenderWhips";
+
 
 
 const RenderWhipSubAssets = ({ assets, assetSelected, setAssetSelected }) => {
@@ -8,8 +8,6 @@ const RenderWhipSubAssets = ({ assets, assetSelected, setAssetSelected }) => {
     const [currentSlide, setCurrentSlide] = useState(0)
     const [input, setInput] = useState('')
     const [highLightRed, setHighLightRed] = useState(false)
-    const [assetSelectedHere, setAssetSelectedHere] = useState('')
-    // const [assetSelected, setAssetSelected] = useState(false)
 
     // set values based on assets we recieve
     useEffect(() => {
@@ -47,11 +45,6 @@ const RenderWhipSubAssets = ({ assets, assetSelected, setAssetSelected }) => {
         }
     }
 
-
-    const handleClick = (asset) => {
-        setAssetSelectedHere(asset.onchain_metadata.name)
-        setAssetSelected(asset)
-    }
 
     return (
         <>
@@ -112,7 +105,14 @@ const RenderWhipSubAssets = ({ assets, assetSelected, setAssetSelected }) => {
                                     </button>
                                 </>}
                             {/* image cards  */}
-                            {assetMeta
+                            {/* call component */}
+                            <RenderWhips 
+                                assets={assetMeta}
+                                currentSlide={currentSlide}
+                                // setAssetSelectedHere={setAssetSelectedHere}
+                                setAssetSelected={setAssetSelected}
+                            />
+                            {/* {assetMeta
                                 .slice(currentSlide * 3, currentSlide * 3 + 3)
                                 .map((asset) => {
                                     // get length of slice 
@@ -195,7 +195,7 @@ const RenderWhipSubAssets = ({ assets, assetSelected, setAssetSelected }) => {
                                     }
 
                                 })
-                            }
+                            } */}
                             {/* right arrow (>>) */}
                             {((currentSlide + 1) * 3 < assetMeta.length) &&
                                 <>

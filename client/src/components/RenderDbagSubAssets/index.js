@@ -121,7 +121,7 @@ const RenderDbagSubAssets = ({ assets, assetSelected, setAssetSelected }) => {
                                     if (assetsWindow.length === 3) {
                                         return (
                                             <div key={asset._id}
-                                                className={`w-1/2  m-2 rounded-lg ${asset.onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(0,0,0,0.3)]'}   active:bg-[rgb(151,196,109,1)]  cursor-pointer`}
+                                                className={`w-1/2  m-2 rounded-lg ${asset.onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)]'}   active:bg-[rgb(151,196,109,1)]  cursor-pointer`}
                                                 onClick={(e) => handleClick(asset)}
                                             >
                                                 <img className="rounded-t-lg"

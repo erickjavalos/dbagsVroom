@@ -51,8 +51,8 @@ const BuildMfer = ({ assets, walletConnected }) => {
               />
               <QueryWhips
                 assets={whipAssets}
-                assetSelected={dbagSelected}
-                setAssetSelected={setDbag}
+                assetSelected={whipSelected}
+                setAssetSelected={setWhip}
               />
             </div>
 

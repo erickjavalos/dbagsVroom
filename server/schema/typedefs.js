@@ -119,18 +119,18 @@ input DbagMetadataInput {
 }
 
 input AutoInput {
-  _id: ID!
-  asset: String!
-  policy_id: String!
-  asset_name: String!
-  fingerprint: String!
-  quantity: String!
-  initial_mint_tx_hash: String!
-  mint_or_burn_count: String!
-  onchain_metadata: AutoMetadataInput!
-  onchain_metadata_standard: String!
-  createdAt: String!
-  updatedAt: String!
+  _id : ID!
+  asset: String
+  policy_id: String
+  asset_name: String
+  fingerprint: String
+  quantity: String
+  initial_mint_tx_hash: String
+  mint_or_burn_count: String
+  onchain_metadata: AutoMetadataInput
+  onchain_metadata_standard: String
+  createdAt: String
+  updatedAt: String
 }
 
 input AutoMetadataInput {
