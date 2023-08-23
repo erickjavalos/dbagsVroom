@@ -53,6 +53,32 @@ const resolvers = {
       }
       throw new AuthenticationError('You need to be logged in!');
     },
+
+    getAvailableWhips: async (parent, { assets }, context) => {
+      if (context.user) {
+        // extract asset onchain_metadata.name
+        const assetNames = assets.map((asset) => asset.onchain_metadata.name)
+        // query database
+        try {
+          const assetsAvailable = await Mint.find({
+            name: { $in: assetNames },
+            txHash: { $exists: false, $eq: null }
+          });
+
+          // extract only names and return that
+          
+          const assetsAvailableStr = assetsAvailable.map((asset)=> asset.name)
+          // resolve the array of available assets
+          return assetsAvailableStr
+
+        } catch (err) {
+          console.error("Error querying the database:", err);
+          throw new AuthenticationError('Issue querying database');
+          
+        }
+
+      }ß
+    }
   },
   Mutation: {
     createAsset: async (parent, { assetInput }) => {
@@ -292,8 +318,7 @@ const resolvers = {
           const minter = inputs[0]
 
           // verify the input address(person who signed) matches the asset destination address (person recieves assets)
-          if (minter.address !== assetDestination.address)
-          {
+          if (minter.address !== assetDestination.address) {
             console.log('asset is not being sent to the person who signed!')
             throw new GraphQLError('cost is invalid'), {
               extensions: {
@@ -319,7 +344,7 @@ const resolvers = {
           // extract metadata from backend database
           const metadata = await getMetadata(Mint, autoInput)
           // verify metadata was returned
-          if(!metadata) {
+          if (!metadata) {
             console.log(`ERROR: No metadata found for`)
             console.log('***************************')
             console.log(autoInput)
@@ -335,8 +360,7 @@ const resolvers = {
           // verify assets exist in wallet
           const assetsExist = await assetsExists(minter.address, metadata, autoInput)
           // error out!
-          if (!assetsExist)
-          {
+          if (!assetsExist) {
             console.log("ERROR with assets not existing in input address field")
             throw new GraphQLError('Assets do not exist in wallet!'), {
               extensions: {

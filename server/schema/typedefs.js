@@ -71,6 +71,7 @@ type Assets {
 type Query {
   getDbagMetaData(assets: [String]): [DbagAsset]
   getAutoMetaData(assets: [String]): [AutoAsset]
+  getAvailableWhips(assets: [AutoInput]): [String]
 }
 
 type Auth {
