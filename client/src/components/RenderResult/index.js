@@ -7,6 +7,9 @@ import NamiWalletApi, { Cardano } from "../../nami-js";
 import blockfrostApiKey from "../../../config.js";
 
 import { MINT,SUBMIT_MINT } from "../../utils/mutations"
+import LoadingSpinner from './LoadingSpinner';
+
+
 let nami;
 
 
@@ -37,26 +40,29 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
   const [auto, setAuto] = useState();
   const [addMint, { error, data }] = useMutation(MINT);
   const [submitMint, { errorSubmit, dataSubmit}] = useMutation(SUBMIT_MINT);
+  const [isLoadingAssets, setIsLoadingAssets] = useState(true);
+
 
   const canvas = useRef(null);
 
 
-  useEffect(async () => {
+  useEffect(() => {
     if (canvas.current) {
       if (dbag && whip) {
         // build the mfer + whip
-        const constructMfer = new ConstructMfer()
-        constructMfer.generateDbagImage(canvas, dbag, whip)
-
-      }
-      else {
+        const constructMfer = new ConstructMfer();
+        constructMfer.generateDbagImage(canvas, dbag, whip);
+        setIsLoadingAssets(false); // Assets are no longer loading
+      } else {
         const context = canvas.current.getContext('2d');
         // Set the canvas background color to brown
         context.fillStyle = 'rgba(202,195,172,1)';
         context.fillRect(0, 0, canvas.current.width, canvas.current.height);
+        setIsLoadingAssets(false); // Assets are no longer loading
       }
     }
   }, [dbag, whip]);
+  
 
   // updates the dbag and whip assets
   useEffect(() => {
@@ -198,8 +204,12 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
   return (
     <>
       <div className="flex flex-col w-2/4">
-        <div className='flex flex-col h-5/6 mt-11  justify-center rounded-lg'>
-          <canvas className='rounded-lg' ref={canvas} width={1500} height={500} />
+      <div className="flex flex-col h-5/6 mt-11 justify-center rounded-lg">
+        {isLoadingAssets ? (
+          <LoadingSpinner /> // Display the loading spinner
+        ) : (
+          <canvas className="rounded-lg" ref={canvas} width={1500} height={500} />
+        )}
           <div className='m-2'>
             {!mfer && <h1>* select your mfer</h1>}
             {!auto && <h1>* select your whip</h1>}

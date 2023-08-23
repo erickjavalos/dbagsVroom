@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, gql } from '@apollo/client';
+import LoadingSpinner from './LoadingSpinner';
 
 
 // query for graphql
@@ -21,6 +22,7 @@ const RenderAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
     const [input, setInput] = useState('')
     const [highLightRed, setHighLightRed] = useState(false)
     const [assetSelectedHere, setAssetSelectedHere] = useState('')
+    const [isLoadingAssets, setIsLoadingAssets] = useState(false);
     // const [assetSelected, setAssetSelected] = useState(false)
 
     // set values based on assets we recieve
@@ -65,10 +67,20 @@ const RenderAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
         setAssetSelected(asset)
     }
 
+
+    const renderNfts = async () => {
+        setIsLoadingAssets(true);
+        // Simulate loading delay or actual API call
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setIsLoadingAssets(false);
+      };
+
     return (
         <>
             {/* header name of assets */}
             {/* assets in wallet per window */}
+            {/* Display the loading spinner */}
+            {isLoadingAssets && <LoadingSpinner />}
             {assetMeta.length > 0 ? (
                 // render assets
                 <>
