@@ -161,7 +161,6 @@ class ConstructMfer {
     }
 
     generateImage = async (mfer, auto) => {
-        console.log('generating')
         // Generate dbagMfer with selected mfer
         const dbagImage = await this.generateDbag(mfer)
         // build dbag + car
