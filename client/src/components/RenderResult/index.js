@@ -40,6 +40,7 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
   const [auto, setAuto] = useState();
   const [addMint, { error, data }] = useMutation(MINT);
   const [submitMint, { errorSubmit, dataSubmit}] = useMutation(SUBMIT_MINT);
+  const [isMinting, setIsMinting] = useState(false);
   const [isLoadingAssets, setIsLoadingAssets] = useState(true);
 
 
@@ -72,6 +73,7 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
 
 
   const processMintRequest = async () => {
+    setIsMinting(true);
     // get hashed metadata
     // console.log("gettin address");
     console.log("assets selected")
@@ -216,16 +218,25 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
           </div>
 
         </div>
-        {mfer && auto &&
+        {mfer && auto && (
           <div className='mt-4'>
-            <button type="submit"
+            <button
+              type="submit"
               className="mx-1 text-white bg-[rgb(151,196,109,0.8)] hover:bg-[rgb(151,196,109,1)] rounded-lg text-lg px-4 py-2"
               onClick={processMintRequest}
+              disabled={isMinting}
             >
-              mint
+              {isMinting ? (
+                <div className="flex items-center">
+                  <div className="spinner border-t-4 border-gray-500 border-solid rounded-full h-4 w-4 animate-spin mr-2"></div>
+                  Minting...
+                </div>
+              ) : (
+                'mint'
+              )}
             </button>
           </div>
-        }
+        )}
       </div>
     </>
   );
