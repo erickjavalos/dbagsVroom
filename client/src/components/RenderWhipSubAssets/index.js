@@ -3,8 +3,7 @@ import { useQuery, gql } from '@apollo/client';
 import { GET_AVAILABLE_ASSETS } from "../../utils/queries"
 
 
-const RenderSubAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
-   
+const RenderWhipSubAssets = ({ assets, assetSelected, setAssetSelected }) => {
     const [assetMeta, setAssetMeta] = useState([])
     const [currentSlide, setCurrentSlide] = useState(0)
     const [input, setInput] = useState('')
@@ -57,21 +56,20 @@ const RenderSubAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
     return (
         <>
             {/* header name of assets */}
-            {/* assets in wallet per window */}
             {assetMeta.length > 0 ? (
                 // render assets
                 <>
                     {/* add left arrow */}
                     <div className="flex flex-col items-center">
                         <div className="justify-center items-center w-2/5 bg-[rgb(96,107,171)] text-2xl rounded-lg m-2">
-                            {name}
+                            whips
                         </div>
                         <div className="flex flex-row justify-center items-center w-11/12 mb-1">
                             {/* filter */}
                             <input
                                 type="search"
                                 className={`bg-[rgba(96,107,171,1)] rounded-lg relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-white outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-white focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none  dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary`}
-                                placeholder={`Search ${assetMeta.length} ${name}`}
+                                placeholder={`Search ${assetMeta.length} whips`}
                                 aria-label="Search"
                                 aria-describedby="button-addon1"
                                 onInput={updateSearch}
@@ -216,32 +214,24 @@ const RenderSubAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
                         <div className="flex flex-row w-11/12 text-sm p-2 rounded-lg">
                             {!assetSelected &&
                                 <>
-                                    <div>* select your {name.slice(0, -1)}</div>
+                                    <div>* select your whip</div>
                                 </>
                             }
                         </div>
                     </div>
-                    {/* <div className="flex flex-col w-11/12">
-
-                        {!dbagSelected &&
-                            <>
-                                    <div>* select {name.slice(0, -1)}</div>
-                            </>
-                        }
-
-                    </div> */}
                     {/* add right arrow */}
                 </>
             ) : (
                 <>
                     <div className="flex flex-row w-4/5 bg-[rgb(123,105,171)] text-sm items-center justify-center p-2 rounded-lg">
                         <div className="w-2/4 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
-                            <h1 className="text-red">You do not hold any {name}</h1>
+                            <h1 className="text-red">You do not hold any whips</h1>
                         </div>
                     </div>
 
                 </>
-            )}
+            )
+            }
 
 
 
@@ -249,4 +239,4 @@ const RenderSubAssets = ({ assets, name, assetSelected, setAssetSelected }) => {
     );
 };
 
-export default RenderSubAssets;
+export default RenderWhipSubAssets;

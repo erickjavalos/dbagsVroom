@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, gql } from '@apollo/client';
-import RenderAssets from "../RenderAssets";
+import RenderAssets from "../RenderDbagAssets";
+import { GET_AUTO_ASSETS } from "../../utils/queries"
+import RenderWhipAssets from '../RenderWhipAssets';
 
-const QueryRender = ({ assets, name, assetSelected, setAssetSelected, query }) => {
+const QueryWhips = ({ assets, assetSelected, setAssetSelected }) => {
+    const name = "whips"
     //  query the auto data
-    const { loading, error, data } = useQuery(query,
+    const { loading, error, data } = useQuery(GET_AUTO_ASSETS,
         {
             variables: {
                 "assets": assets
@@ -12,20 +15,20 @@ const QueryRender = ({ assets, name, assetSelected, setAssetSelected, query }) =
         }
     )
     // extract data
-    const assetsLibrary = data?.getAutoMetaData || data?.getDbagMetaData || []
+    const whips = data?.getAutoMetaData || []
     // return rendered area
     return (
         <>
             {loading ? <>
-            <h1>
-                rendering....
-            </h1>
+                <h1>
+                    rendering....
+                </h1>
 
             </> : <>
                 {data && (
                     <>
-                        < RenderAssets
-                            assets={assetsLibrary}
+                        <RenderWhipAssets
+                            assets={whips}
                             name={name}
                             assetSelected={assetSelected}
                             setAssetSelected={setAssetSelected}
@@ -38,4 +41,4 @@ const QueryRender = ({ assets, name, assetSelected, setAssetSelected, query }) =
     );
 };
 
-export default QueryRender;
+export default QueryWhips;
