@@ -10,9 +10,6 @@ const { authMiddleware } = require('./utils/auth');
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-// Access the secret key from the environment variable
-const jwtSecretKey = process.env.JWT_SECRET;
-
 // Create a new instance of ApolloServer with the GraphQL schema
 const server = new ApolloServer({
   typeDefs,

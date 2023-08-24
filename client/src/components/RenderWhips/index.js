@@ -49,7 +49,7 @@ const RenderWhips = ({ assets, currentSlide, setAssetSelected }) => {
         setAssetSelectedHere(asset.onchain_metadata.name)
         setAssetSelected(asset)
     }
-    
+
     return (
         <>
             {loading ? <>
@@ -61,8 +61,7 @@ const RenderWhips = ({ assets, currentSlide, setAssetSelected }) => {
                         const assetsWindow = assets.slice(currentSlide * 3, currentSlide * 3 + 3)
                         // express images normally
                         if (assetsWindow.length === 3) {
-                            if (assetsAvailable.includes(asset.onchain_metadata.name)) 
-                            {
+                            if (assetsAvailable.includes(asset.onchain_metadata.name)) {
                                 return (
                                     <div key={asset._id}
                                         className={`w-1/2  m-2 rounded-lg ${asset.onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)]'}   active:bg-[rgb(151,196,109,1)]  cursor-pointer`}
@@ -76,7 +75,7 @@ const RenderWhips = ({ assets, currentSlide, setAssetSelected }) => {
                                     </div>
                                 )
                             }
-                            else{
+                            else {
                                 return (
                                     <div key={asset._id}
                                         className={`w-1/2  m-2 rounded-lg bg-[rgb(0,0,0,0.3)]  pointer-events-none`}
@@ -94,32 +93,46 @@ const RenderWhips = ({ assets, currentSlide, setAssetSelected }) => {
                         }
                         // render left for two items in window
                         else if (assetsWindow.length === 2) {
+                            console.log(assetsWindow)
+                            // assets.assetsWindow.
                             if (asset._id !== assetsWindow[1]._id) {
                                 return (
                                     <div key={asset._id} className="flex flex-row items-center justify-center">
                                         <div className="w-1/4 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
                                         </div>
-
-                                        <div
-                                            className={`w-1/2  m-2 rounded-lg ${asset.onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(0,0,0,0.3)]'}   active:bg-[rgb(151,196,109,1)]  cursor-pointer`}
-                                            onClick={(e) => handleClick(asset)}
-                                        >
-                                            <img className="rounded-t-lg"
-                                                src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
-                                            >
-                                            </img>
-                                            {asset.onchain_metadata.name}
-                                        </div>
-                                        <div
-                                            className={`w-1/2  m-2 rounded-lg ${assetsWindow[1].onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(0,0,0,0.3)]'}   active:bg-[rgb(151,196,109,1)]  cursor-pointer`}
-                                            onClick={(e) => handleClick(assetsWindow[1])}
-                                        >
-                                            <img className="rounded-t-lg"
-                                                src={`https://ipfs.io/ipfs/${assetsWindow[1].onchain_metadata.image.split("ipfs://")[1]}`}
-                                            >
-                                            </img>
-                                            {assetsWindow[1].onchain_metadata.name}
-                                        </div>
+                                        {assetsWindow.map((asset) => {
+                                            // check if asset has been minted
+                                            if (assetsAvailable.includes(asset.onchain_metadata.name)) {
+                                                return (
+                                                    <div
+                                                        key={asset._id}
+                                                        className={`w-1/2  m-2 rounded-lg ${asset.onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)]'}   active:bg-[rgb(151,196,109,1)]  cursor-pointer`}
+                                                        onClick={(e) => handleClick(asset)}
+                                                    >
+                                                        <img className="rounded-t-lg"
+                                                            src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
+                                                        >
+                                                        </img>
+                                                        {asset.onchain_metadata.name}
+                                                    </div>
+                                                )
+                                            }
+                                            else {
+                                                return (
+                                                    <div
+                                                        key={asset._id}
+                                                        className={`w-1/2  m-2 rounded-lg  bg-[rgb(0,0,0,0.3)]  pointer-events-none`}
+                                                        onClick={(e) => handleClick(asset)}
+                                                    >
+                                                        <img className="rounded-t-lg"
+                                                            src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
+                                                        >
+                                                        </img>
+                                                        {asset.onchain_metadata.name}
+                                                    </div>
+                                                )
+                                            }
+                                        })}
 
                                         <div className="w-1/4 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
                                         </div>
@@ -131,27 +144,53 @@ const RenderWhips = ({ assets, currentSlide, setAssetSelected }) => {
                         }
                         // render for one asset left in window
                         else {
-                            return (
-                                <div key={asset._id} className="flex flex-row items-center justify-center">
+                            if (assetsAvailable.includes(asset.onchain_metadata.name)) {
+                                return (
+                                    <div key={asset._id} className="flex flex-row items-center justify-center">
 
-                                    <div className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
-                                    </div>
+                                        <div className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
+                                        </div>
 
-                                    <div
-                                        className={`w-1/2 m-2 rounded-lg ${asset.onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(0,0,0,0.3)]'}   active:bg-[rgb(151,196,109,1)] cursor-pointer`}
-                                        onClick={(e) => handleClick(asset)}
-                                    >
-                                        <img className="rounded-t-lg"
-                                            src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
+                                        <div
+                                            className={`w-1/2 m-2 rounded-lg ${asset.onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)]'}   active:bg-[rgb(151,196,109,1)] cursor-pointer`}
+                                            onClick={(e) => handleClick(asset)}
                                         >
-                                        </img>
-                                        {asset.onchain_metadata.name}
-                                    </div>
+                                            <img className="rounded-t-lg"
+                                                src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
+                                            >
+                                            </img>
+                                            {asset.onchain_metadata.name}
+                                        </div>
 
-                                    <div className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
+                                        <div className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
+                                        </div>
                                     </div>
-                                </div>
-                            )
+                                )
+                            }
+                            else {
+                                return (
+                                    <div key={asset._id} className="flex flex-row items-center justify-center">
+
+                                        <div className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
+                                        </div>
+
+                                        <div
+                                            className={`w-1/2 m-2 rounded-lg bg-[rgb(0,0,0,0.3)]  pointer-events-none`}
+                                            onClick={(e) => handleClick(asset)}
+                                        >
+                                            <img className="rounded-t-lg"
+                                                src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
+                                            >
+                                            </img>
+                                            {asset.onchain_metadata.name}
+                                        </div>
+
+                                        <div className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
+                                        </div>
+                                    </div>
+                                )
+
+                            }
                         }
 
                     })
