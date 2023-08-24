@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client';
-import { gql } from '@apollo/client';
-
-
-import QueryRender from "../../components/QueryRender";
-import RenderAssets from "../../components/RenderAssets";
+import QueryDbags from "../../components/QueryDbags";
+import QueryWhips from "../../components/QueryWhips";
 import RenderResult from "../../components/RenderResult";
 
-import {GET_AUTO_ASSETS, GET_DBAG_ASSETS} from "../../utils/queries"
 
 
-
-const BuildMfer = ({ assets, walletConnected }) => {
-  console.log(walletConnected)
-  
+const BuildMfer = ({ assets, walletConnected }) => {  
   const [dbagAssets, setDbagAssets] = useState()
   const [whipAssets, setWhipAssets] = useState()
   const [dbagSelected, setDbagSelected] = useState(false)
@@ -52,20 +44,15 @@ const BuildMfer = ({ assets, walletConnected }) => {
           <div className="flex flex-row text-center justify-center p-5 m-5">
             <div className="flex flex-col w-2/4 text-xl">
               {/* render and query dbag assets */}
-              <QueryRender
+              <QueryDbags
                 assets={dbagAssets}
-                name="dbags"
                 assetSelected={dbagSelected}
                 setAssetSelected={setDbag}
-                query={GET_DBAG_ASSETS}
               />
-              {/* render and query auto assets */}
-              <QueryRender
+              <QueryWhips
                 assets={whipAssets}
-                name="whips"
                 assetSelected={whipSelected}
                 setAssetSelected={setWhip}
-                query={GET_AUTO_ASSETS}
               />
             </div>
 
@@ -75,7 +62,6 @@ const BuildMfer = ({ assets, walletConnected }) => {
               walletConnected={walletConnected}
             />
           </div>
-
         </div>
 
       </div>

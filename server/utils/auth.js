@@ -3,9 +3,6 @@ require('dotenv').config()
 
 const secret = process.env.SECRET;
 const expiration = '1h';
-
-
-// TODO: declare in .env 
 const DBAGS_GUILD_ID = process.env.DBAGS_GUILD_ID;
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
@@ -54,6 +51,7 @@ module.exports = {
     payload.append('redirect_uri', redirectUrl);
     // grab secrets
     let url = `https://discord.com/api/v10/oauth2/token`;
+    console.log('payload: ', payload);
   
     const response = await fetch(url, {
       method: 'POST',

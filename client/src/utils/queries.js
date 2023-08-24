@@ -55,3 +55,16 @@ query GetAllDbagAssets($assets: [String]) {
     updatedAt
   }
 }`
+
+export const GET_ASSETS = gql`
+query GetAssetsInWallet($address: String) {
+  getAssetsInWallet(address: $address) {
+    whips
+    dbags
+  }
+}`
+
+export const GET_AVAILABLE_ASSETS = gql`
+query Query($assets: [AutoInput]) {
+  getAvailableWhips(assets: $assets)
+}`

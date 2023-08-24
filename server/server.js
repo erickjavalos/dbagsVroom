@@ -3,16 +3,12 @@ const { ApolloServer } = require("apollo-server-express");
 const path = require("path");
 const { typeDefs, resolvers } = require("../server/schema");
 const { db } = require("../server/config/connection"); // Update import statement
-// const routes = require('./routes/')
-const jwt = require("jsonwebtoken");
+const routes = require('./routes/')
 const { authMiddleware } = require('./utils/auth');
 
 
 const PORT = process.env.PORT || 3001;
 const app = express();
-
-// Access the secret key from the environment variable
-const jwtSecretKey = process.env.JWT_SECRET;
 
 // Create a new instance of ApolloServer with the GraphQL schema
 const server = new ApolloServer({
@@ -49,14 +45,15 @@ const startServer = async () => {
 
     app.use(requestTime);
 
-    await db; // Wait for the database connection
+    app.use(routes)
 
-    app.listen(PORT, () => {
-      console.log(`API server running on port ${PORT}!`);
-      console.log(
-        `GraphQL server running at http://localhost:${PORT}${server.graphqlPath}`
-      );
-    });
+    db.once('open', () => {
+      app.listen(PORT, () => {
+        console.log(`API server running on port ${PORT}!`);
+      });
+    })
+
+
   } catch (error) {
     console.error("Error starting server:", error);
   }

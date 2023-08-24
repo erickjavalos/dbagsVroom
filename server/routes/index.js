@@ -2,10 +2,10 @@
 const path = require('path')
 const router = require('express').Router();
 // import helper files
-const apiRoutes =  require("./auth")
+const apiRoutes =  require("./api")
 
 // // API routes
-router.use('/auth', apiRoutes);
+router.use('/api', apiRoutes);
 
 // // export router
 module.exports = router;

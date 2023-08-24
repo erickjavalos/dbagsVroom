@@ -1,17 +1,17 @@
 import { gql } from '@apollo/client';
 
 export const MINT = gql`
-mutation Mint($autoInput: AutoInput, $dbagInput: DbagInput) {
-  mint(autoInput: $autoInput, dbagInput: $dbagInput) {
+mutation Mutation($dbagInput: DbagInput, $autoInput: AutoInput) {
+  mint(dbagInput: $dbagInput, autoInput: $autoInput) {
     hashedMeta
-    metadata
+    assetName
   }
 }
 `;
 
 export const SUBMIT_MINT = gql`
-mutation Mutation($transaction: String, $witnessSignature: String) {
-  submitMint(transaction: $transaction, witnessSignature: $witnessSignature)
+mutation SubmitMint($transaction: String, $witnessSignature: String, $autoInput: AutoInput) {
+  submitMint(transaction: $transaction, witnessSignature: $witnessSignature, autoInput: $autoInput)
 }`;
 
 export const LOGIN_USER = gql`
@@ -20,3 +20,12 @@ mutation Mutation($code: String) {
     token
   }
 }`
+
+export const GET_ASSETS = gql`
+mutation Mutation($address: String) {
+  getAssetsInWallet(address: $address) {
+    dbags
+    whips
+  }
+}`
+

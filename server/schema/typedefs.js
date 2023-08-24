@@ -55,7 +55,7 @@ type DbagMetadata {
 
 type HashMetadata {
   hashedMeta: String
-  metadata: String
+  assetName: String
 }
 
 type SelectedMetaData {
@@ -63,9 +63,15 @@ type SelectedMetaData {
   autoAssets: [AutoAsset]
 }
 
+type Assets {
+  dbags : [String]
+  whips : [String]
+}
+
 type Query {
   getDbagMetaData(assets: [String]): [DbagAsset]
   getAutoMetaData(assets: [String]): [AutoAsset]
+  getAvailableWhips(assets: [AutoInput]): [String]
 }
 
 type Auth {
@@ -76,7 +82,8 @@ type Mutation {
   createAsset(assetInput: AssetInput): AutoAsset
   login(code: String): Auth
   mint(dbagInput: DbagInput, autoInput: AutoInput): HashMetadata
-  submitMint(transaction: String, witnessSignature: String): String
+  submitMint(transaction: String, witnessSignature: String, autoInput: AutoInput): String
+  getAssetsInWallet(address: String) : Assets
   updateAsset(id: ID!, assetInput: AssetInput): AutoAsset
   deleteAsset(id: ID!): AutoAsset
 }
@@ -112,18 +119,18 @@ input DbagMetadataInput {
 }
 
 input AutoInput {
-  _id: ID!
-  asset: String!
-  policy_id: String!
-  asset_name: String!
-  fingerprint: String!
-  quantity: String!
-  initial_mint_tx_hash: String!
-  mint_or_burn_count: String!
-  onchain_metadata: AutoMetadataInput!
-  onchain_metadata_standard: String!
-  createdAt: String!
-  updatedAt: String!
+  _id : ID!
+  asset: String
+  policy_id: String
+  asset_name: String
+  fingerprint: String
+  quantity: String
+  initial_mint_tx_hash: String
+  mint_or_burn_count: String
+  onchain_metadata: AutoMetadataInput
+  onchain_metadata_standard: String
+  createdAt: String
+  updatedAt: String
 }
 
 input AutoMetadataInput {

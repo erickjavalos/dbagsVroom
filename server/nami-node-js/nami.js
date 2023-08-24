@@ -2,7 +2,7 @@ var S = require('@emurgo/cardano-serialization-lib-nodejs')
 var Buffer = require('buffer').Buffer;
 const fetchPromise = import('node-fetch').then(mod => mod.default)
 const fetch = (...args) => fetchPromise.then(fetch => fetch(...args))
-; 
+    ;
 
 const ERROR = {
     FAILED_PROTOCOL_PARAMETER: 'Couldnt fetch protocol parameters from blockfrost',
@@ -11,16 +11,16 @@ const ERROR = {
 
 function harden(num) {
     return 0x80000000 + num;
-  }
-  
+}
+
 
 class NamiWalletApi {
     constructor(blockfrostApiKey) {
-        this.blockfrostApiKey = blockfrostApiKey; 
-        this.privateKey = null; 
-        this.accountKey = null; 
-        this.paymentKey = null; 
-        this.stakeKey = null; 
+        this.blockfrostApiKey = blockfrostApiKey;
+        this.privateKey = null;
+        this.accountKey = null;
+        this.paymentKey = null;
+        this.stakeKey = null;
     }
 
     setPrivateKey(bech32PrivateKey) {
@@ -28,74 +28,102 @@ class NamiWalletApi {
         this.privateKey = S.Bip32PrivateKey.from_bech32(bech32PrivateKey)
 
 
-        this.accountKey = this.privateKey 
-        .derive(harden(1852)) // purpose
-        .derive(harden(1815)) // coin type
-        .derive(harden(0)); // account #0
+        this.accountKey = this.privateKey
+            .derive(harden(1852)) // purpose
+            .derive(harden(1815)) // coin type
+            .derive(harden(0)); // account #0
 
         this.paymentKey = this.accountKey
-        .derive(0) // external
-        .derive(0)
-       ;
+            .derive(0) // external
+            .derive(0)
+            ;
 
         this.stakeKey = this.accountKey
-        .derive(2) // chimeric
-        .derive(0)   
-        ;
+            .derive(2) // chimeric
+            .derive(0)
+            ;
         console.log("key successfully set!")
     }
     createNewBech32PrivateKey() {
-          let key = S.Bip32PrivateKey.generate_ed25519_bip32(); 
-          return key.to_bech32()
+        let key = S.Bip32PrivateKey.generate_ed25519_bip32();
+        return key.to_bech32()
     }
-   
+
 
     getApiKey(networkId) {
         return this.blockfrostApiKey[networkId]
-        
+
     }
 
- 
 
-    async createLockingPolicyScript( networkId, expirationTime) {
+    async createLockingPolicyScriptHexKey(yourHexKey, slot) {
+        const hexKeyBuffer = HexToBuffer(yourHexKey)
+        const paymentKeyHash = S.Ed25519KeyHash.from_bytes(Buffer.from(hexKeyBuffer, "hex"))
+        const nativeScripts = S.NativeScripts.new();
+        const script = S.ScriptPubkey.new(paymentKeyHash);
+        const nativeScript = S.NativeScript.new_script_pubkey(script);
+        const lockScript = S.NativeScript.new_timelock_expiry(
+            S.TimelockExpiry.new(slot)
+        );
+        nativeScripts.add(nativeScript);
+        nativeScripts.add(lockScript);
+        const finalScript = S.NativeScript.new_script_all(
+            S.ScriptAll.new(nativeScripts)
+        );
+
+        const policyId = Buffer.from(
+            S.ScriptHash.from_bytes(
+                finalScript.hash().to_bytes()
+            ).to_bytes(),
+            "hex"
+        ).toString("hex");
+        return {
+            id: policyId,
+            script: Buffer.from(finalScript.to_bytes()).toString("hex"),
+            paymentKeyHash: Buffer.from(paymentKeyHash.to_bytes(), "hex").toString("hex"),
+            slot
+        };
+    }
+
+    async createLockingPolicyScript(networkId, expirationTime) {
         var now = new Date()
 
         const protocolParameters = await this._getProtocolParameter(networkId);
-        
+
         const slot = parseInt(protocolParameters.slot);
-        const duration = parseInt((expirationTime.getTime() - now.getTime())/1000)
+        const duration = parseInt((expirationTime.getTime() - now.getTime()) / 1000)
 
         const ttl = slot + duration;
         const publicKey = this.privateKey
-        .derive(harden(1852)) // purpose
-        .derive(harden(1815)) // coin type;
-        .derive(harden(0))
-        .to_public();
-        
+            .derive(harden(1852)) // purpose
+            .derive(harden(1815)) // coin type;
+            .derive(harden(0))
+            .to_public();
 
-        
+
+
         const paymentKeyHashRaw = publicKey.derive(0).derive(0).to_raw_key().hash();
         const stakeKeyHashRaw = publicKey.derive(2).derive(0).to_raw_key().hash();
-    
-    
-         const baseAddr = S.BaseAddress.new(
+
+
+        const baseAddr = S.BaseAddress.new(
             networkId,
             S.StakeCredential.from_keyhash(paymentKeyHashRaw),
             S.StakeCredential.from_keyhash(stakeKeyHashRaw)
-            )
-            // .to_address();
+        )
+        // .to_address();
         // const baseAddr = S.BaseAddress.new(
         //     networkId,
         //     S.StakeCredential.from_keyhash(this.utxoPubKey.to_raw_key().hash()),
         //     S.StakeCredential.from_keyhash(this.stakeKey.to_raw_key().hash()),
         //   );
-          
+
         const paymentKeyHash = baseAddr
             .payment_cred()
             .to_keyhash();
 
-        
-        
+
+
         const nativeScripts = S.NativeScripts.new();
         const script = S.ScriptPubkey.new(paymentKeyHash);
         const nativeScript = S.NativeScript.new_script_pubkey(script);
@@ -123,17 +151,17 @@ class NamiWalletApi {
 
 
 
-    async decodeTransaction(transactionHex, networkId ) {
+    async decodeTransaction(transactionHex, networkId) {
 
         const recipients = {}
 
         const transaction = S.Transaction.from_bytes(Buffer.from(transactionHex, "hex"));
-       
+
         const transaction_body = transaction.body()
         // get outputs 
         transaction_body.inputs().len
         const outputs = transaction_body.outputs()
-      
+
         // get inputs
         const inputs = transaction_body.inputs()
 
@@ -156,7 +184,7 @@ class NamiWalletApi {
 
             const txInput = tx.outputs.filter((row) => row.output_index == txIndex)[0]
 
-          
+
             if (typeof txInputs[txInput.address] == "undefined") {
                 txInputs[txInput.address] = {
                     amount: 0,
@@ -164,8 +192,8 @@ class NamiWalletApi {
                 }
             }
             txInput.amount.map((amount) => {
-               
-                
+
+
                 if (amount.unit == "lovelace") {
                     txInputs[txInput.address].amount += parseInt(amount.quantity)
                 } else {
@@ -175,15 +203,15 @@ class NamiWalletApi {
 
                         txInputs[txInput.address].assets[unit] = 0
                     }
-                    
+
                     txInputs[txInput.address].assets[unit] = txInputs[txInput.address].assets[unit] + parseInt(amount.quantity)
-                 
+
                 }
-                
+
             })
-        
+
         }
-        
+
         for (let outputIndex of [...Array(outputs.len()).keys()]) {
             let outputTransaction = outputs.get(outputIndex);
             let outputAddress = outputTransaction.address().to_bech32().toString()
@@ -209,7 +237,7 @@ class NamiWalletApi {
                         let assetNum = assets.get(asset)
                         let unit = policyId + "." + HexToAscii(Buffer.from(asset.name()).toString("hex"))
 
-                        recipients[outputAddress].assets[unit] = parseInt( assetNum.to_str());
+                        recipients[outputAddress].assets[unit] = parseInt(assetNum.to_str());
                     }
                 }
 
@@ -219,32 +247,32 @@ class NamiWalletApi {
         }
 
         const auxiliary_data = transaction.auxiliary_data()
-        
+
         const _metadata = auxiliary_data.metadata()
         let metadata = {}
-        if (_metadata){
- 
-        const metadataKeys = _metadata.keys()
-        
-        for (let metadataKeyIndex of [...Array(metadataKeys.len()).keys()]){
-            const metadataKey = metadataKeys.get(metadataKeyIndex)
-            const metadataRaw = _metadata.get(metadataKey)
-            const metadataJson = JSON.parse(S.decode_metadatum_to_json_str(metadataRaw, 0))
-            metadata[metadataKey.to_str()] = metadataJson
+        if (_metadata) {
 
+            const metadataKeys = _metadata.keys()
+
+            for (let metadataKeyIndex of [...Array(metadataKeys.len()).keys()]) {
+                const metadataKey = metadataKeys.get(metadataKeyIndex)
+                const metadataRaw = _metadata.get(metadataKey)
+                const metadataJson = JSON.parse(S.decode_metadatum_to_json_str(metadataRaw, 0))
+                metadata[metadataKey.to_str()] = metadataJson
+
+            }
         }
-        }
-        
-        
-       
+
+
+
         Object.keys(txInputs).map((senderAddress) => {
             if (recipients[senderAddress] != "undefined") {
                 txInputs[senderAddress].amount -= recipients[senderAddress].amount;
                 recipients[senderAddress].amount = 0;
-            
+
 
                 Object.entries(recipients[senderAddress].assets).forEach(([unit, quantity]) => {
-                    
+
                     if (typeof txInputs[senderAddress].assets[unit] != "undefined") {
                         txInputs[senderAddress].assets[unit] -= quantity;
                         recipients[senderAddress].assets[unit] = 0;
@@ -258,7 +286,7 @@ class NamiWalletApi {
 
         let inputValue = 0
         let outputValue = 0
-        
+
         const recipientsFinal = []
         Object.keys(recipients).map((key) => {
             if ((recipients[key].amount > 0) || Object.keys(recipients[key].assets).length > 0) recipientsFinal.push({
@@ -272,7 +300,7 @@ class NamiWalletApi {
                 ...txInputs[key]
             }
         })
-        
+
         for (let r of recipientsFinal) {
             outputValue += r.amount
         }
@@ -290,11 +318,11 @@ class NamiWalletApi {
         metadata = null,
         utxosRaw = [],
         networkId = 0,
-        ttl = 3600, 
+        ttl = 3600,
         multiSig = false
     }) {
-        
-        
+
+
         let utxos = utxosRaw.map(u => S.TransactionUnspentOutput.from_bytes(
             Buffer.from(
                 u,
@@ -304,7 +332,7 @@ class NamiWalletApi {
         let protocolParameter = await this._getProtocolParameter(networkId)
         let mintedAssetsArray = []
         let outputs = S.TransactionOutputs.new()
-        
+
         let minting = 0;
         let outputValues = {}
         let costValues = {}
@@ -313,7 +341,7 @@ class NamiWalletApi {
             let ReceiveAddress = recipient.address
             let multiAsset = this._makeMultiAsset(recipient?.assets || [])
             let mintedAssets = this._makeMintedAssets(recipient?.mintedAssets || [])
-            
+
             let outputValue = S.Value.new(
                 S.BigNum.from_str(lovelace)
             )
@@ -327,7 +355,7 @@ class NamiWalletApi {
                     outputValue,
                     S.BigNum.from_str(protocolParameter.minUtxo)
                 )
-                
+
                 if (S.BigNum.from_str(lovelace).compare(minAda) < 0) outputValue.set_coin(minAda)
 
             }
@@ -341,23 +369,23 @@ class NamiWalletApi {
 
 
 
-            
-          
+
+
             if (parseInt(outputValue.coin().to_str()) > 0) {
                 outputValues[recipient.address] = outputValue
             }
             if ((recipient.mintedAssets || []).length > 0) {
-                
+
                 minAdaMint = S.min_ada_required(
                     mintedAssets,
                     S.BigNum.from_str(protocolParameter.minUtxo)
                 );
-                
+
                 let requiredMintAda = S.Value.new(
                     S.BigNum.from_str("0")
                 )
                 requiredMintAda.set_coin(minAdaMint)
-                if (outputValue.coin().to_str() == 0 ){
+                if (outputValue.coin().to_str() == 0) {
                     outputValue = requiredMintAda
                 } else {
                     outputValue = outputValue.checked_add(requiredMintAda)
@@ -386,7 +414,7 @@ class NamiWalletApi {
             outputValues[PaymentAddress] = S.Value.new(
                 S.BigNum.from_str("0"))
 
-            
+
             RawTransaction = await this._txBuilderMinting({
                 PaymentAddress: PaymentAddress,
                 Utxos: utxos,
@@ -395,7 +423,7 @@ class NamiWalletApi {
                 outputValues: outputValues,
                 ProtocolParameter: protocolParameter,
                 metadata: metadata,
-                multiSig: multiSig, 
+                multiSig: multiSig,
                 ttl: ttl,
                 costValues: costValues
             })
@@ -406,24 +434,24 @@ class NamiWalletApi {
                 Outputs: outputs,
                 ProtocolParameter: protocolParameter,
                 Metadata: metadata,
-                
+
                 Delegation: null
             })
         }
         return Buffer.from(RawTransaction, "hex").toString("hex")
-      
+
     }
 
-    async signTxCBOR(txHash,signingKeyHexCBOR){ 
+    async signTxCBOR(txHash, signingKeyHexCBOR) {
 
         const transaction = S.Transaction.from_bytes(Buffer.from(txHash, "hex"));
 
         const transaction_body = transaction.body()
-    
+
         const txBodyHash = S.hash_transaction(transaction_body)
-    
+
         // const witness = S.make_vkey_witness(txBodyHash, this.paymentKey.to_raw_key())
-        const signingKey = S.PrivateKey.from_normal_bytes(Buffer.from(signingKeyHexCBOR,'hex'));
+        const signingKey = S.PrivateKey.from_normal_bytes(Buffer.from(signingKeyHexCBOR, 'hex'));
         const witness = S.make_vkey_witness(txBodyHash, signingKey)
         const witnessSet = S.TransactionWitnessSet.new()
         const vKeys = S.Vkeywitnesses.new();
@@ -434,15 +462,15 @@ class NamiWalletApi {
 
     }
 
-    signTx(txHash){ 
+    signTx(txHash) {
 
         const transaction = S.Transaction.from_bytes(Buffer.from(txHash, "hex"));
 
 
         const transaction_body = transaction.body()
-    
+
         const txBodyHash = S.hash_transaction(transaction_body)
-    
+
         const witness = S.make_vkey_witness(txBodyHash, this.paymentKey.to_raw_key())
         const witnessSet = S.TransactionWitnessSet.new()
         const vKeys = S.Vkeywitnesses.new();
@@ -452,17 +480,17 @@ class NamiWalletApi {
         return Buffer.from(witnessSet.to_bytes(), "hex").toString("hex")
 
     }
-   
+
 
     async submitTx({
         transactionRaw,
         witnesses,
         scripts,
-        networkId, 
+        networkId,
         metadata = null
     }) {
 
-        
+
         let transaction = S.Transaction.from_bytes(Buffer.from(transactionRaw, "hex"))
 
 
@@ -472,19 +500,19 @@ class NamiWalletApi {
         const totalVkeys = S.Vkeywitnesses.new();
         const totalScripts = S.NativeScripts.new();
 
-        for (let witness of witnesses){
-        const addWitnesses = S.TransactionWitnessSet.from_bytes(
-            Buffer.from(witness, "hex")
-        );
-        const addVkeys = addWitnesses.vkeys();
-        if (addVkeys) {
-            for (let i = 0; i < addVkeys.len(); i++) {
-                totalVkeys.add(addVkeys.get(i));
+        for (let witness of witnesses) {
+            const addWitnesses = S.TransactionWitnessSet.from_bytes(
+                Buffer.from(witness, "hex")
+            );
+            const addVkeys = addWitnesses.vkeys();
+            if (addVkeys) {
+                for (let i = 0; i < addVkeys.len(); i++) {
+                    totalVkeys.add(addVkeys.get(i));
+                }
             }
+
         }
-      
-        }
-      
+
 
         if (txVkeys) {
             for (let i = 0; i < txVkeys.len(); i++) {
@@ -496,28 +524,28 @@ class NamiWalletApi {
                 totalScripts.add(txScripts.get(i));
             }
         }
-       
+
 
         const totalWitnesses = S.TransactionWitnessSet.new();
         totalWitnesses.set_vkeys(totalVkeys);
         totalWitnesses.set_native_scripts(totalScripts);
-        let aux; 
-        if (metadata){
+        let aux;
+        if (metadata) {
 
 
-        aux = S.AuxiliaryData.new()
-        const generalMetadata = S.GeneralTransactionMetadata.new();
-        Object.entries(metadata).map(([MetadataLabel, Metadata]) => {
-        
-        generalMetadata.insert(
-            S.BigNum.from_str(MetadataLabel),
-            S.encode_json_str_to_metadatum(JSON.stringify(Metadata), 0)
-        );
-        });
+            aux = S.AuxiliaryData.new()
+            const generalMetadata = S.GeneralTransactionMetadata.new();
+            Object.entries(metadata).map(([MetadataLabel, Metadata]) => {
 
-        aux.set_metadata(generalMetadata)      
+                generalMetadata.insert(
+                    S.BigNum.from_str(MetadataLabel),
+                    S.encode_json_str_to_metadatum(JSON.stringify(Metadata), 0)
+                );
+            });
+
+            aux.set_metadata(generalMetadata)
         } else {
-            aux = transaction.auxiliary_data(); 
+            aux = transaction.auxiliary_data();
         }
         const signedTx = await S.Transaction.new(
             transaction.body(),
@@ -533,7 +561,7 @@ class NamiWalletApi {
             networkId: networkId,
             method: "POST"
         });
-        
+
         return txhash
 
     }
@@ -542,26 +570,26 @@ class NamiWalletApi {
 
 
 
-    hashMetadata(metadata){
+    hashMetadata(metadata) {
         let aux = S.AuxiliaryData.new()
-        
-        
+
+
         const generalMetadata = S.GeneralTransactionMetadata.new();
         Object.entries(metadata).map(([MetadataLabel, Metadata]) => {
-        
-        generalMetadata.insert(
-            S.BigNum.from_str(MetadataLabel),
-            S.encode_json_str_to_metadatum(JSON.stringify(Metadata), 0)
-        );
+
+            generalMetadata.insert(
+                S.BigNum.from_str(MetadataLabel),
+                S.encode_json_str_to_metadatum(JSON.stringify(Metadata), 0)
+            );
         });
 
         aux.set_metadata(generalMetadata)
-        
-        
-        
 
-    const metadataHash = S.hash_auxiliary_data(aux);
-    return Buffer.from(metadataHash.to_bytes(), "hex").toString("hex")
+
+
+
+        const metadataHash = S.hash_auxiliary_data(aux);
+        return Buffer.from(metadataHash.to_bytes(), "hex").toString("hex")
 
     }
 
@@ -571,7 +599,7 @@ class NamiWalletApi {
 
 
     _makeMintedAssets(mintedAssets) {
-     
+
         let AssetsMap = {}
 
         for (let asset of mintedAssets) {
@@ -587,7 +615,7 @@ class NamiWalletApi {
 
         }
         let multiAsset = S.MultiAsset.new()
-        
+
         for (const policy in AssetsMap) {
 
             const ScriptHash = S.ScriptHash.from_bytes(
@@ -603,20 +631,20 @@ class NamiWalletApi {
 
                 Assets.insert(AssetName, BigNum)
             }
-            
+
             multiAsset.insert(ScriptHash, Assets)
-            
+
         }
         const value = S.Value.new(
             S.BigNum.from_str("0")
         );
-        
+
         value.set_multiasset(multiAsset);
         return value
     }
 
     _makeMultiAsset(assets) {
-        
+
         let AssetsMap = {}
         for (let asset of assets) {
             let [policy, assetName] = asset.unit.split('.')
@@ -632,7 +660,7 @@ class NamiWalletApi {
         }
 
         let multiAsset = S.MultiAsset.new()
-     
+
         for (const policy in AssetsMap) {
 
             const ScriptHash = S.ScriptHash.from_bytes(
@@ -648,9 +676,9 @@ class NamiWalletApi {
 
                 Assets.insert(AssetName, BigNum)
             }
-            
+
             multiAsset.insert(ScriptHash, Assets)
-            
+
         }
 
         return multiAsset
@@ -696,21 +724,21 @@ class NamiWalletApi {
         Outputs,
         ProtocolParameter,
         mintedAssetsArray = [],
-    
+
         outputValues = {},
         metadata = null,
         ttl = 3600,
-        multiSig = false, 
+        multiSig = false,
         costValues = {}
     }) {
-        
-       
+
+
         const MULTIASSET_SIZE = 5000;
         const VALUE_SIZE = 5000;
         const totalAssets = 0;
 
-        
-        
+
+
         CoinSelection.setProtocolParameters(
             ProtocolParameter.minUtxo.toString(),
             ProtocolParameter.linearFee.minFeeA.toString(),
@@ -721,12 +749,12 @@ class NamiWalletApi {
             Utxos,
             Outputs,
             20 + totalAssets,
-            
+
         )
 
         const nativeScripts = S.NativeScripts.new();
         let mint = S.Mint.new();
-        
+
         let mintedAssetsDict = {}
         let assetsDict = {}
         for (let asset of mintedAssetsArray) {
@@ -737,26 +765,26 @@ class NamiWalletApi {
             }
             assetsDict[asset.assetName].quantity = assetsDict[asset.assetName].quantity + parseInt(asset.quantity)
         }
-        
-        Object.entries(assetsDict).map(([assetName, asset])=>{
-            
-            
+
+        Object.entries(assetsDict).map(([assetName, asset]) => {
+
+
             const mintAssets = S.MintAssets.new();
             mintAssets.insert(
                 S.AssetName.new(Buffer.from(assetName)),
                 S.Int.new(S.BigNum.from_str(asset.quantity.toString()))
             );
-           
+
             if (typeof mintedAssetsDict[asset.policyScript] == "undefined") {
                 mintedAssetsDict[asset.policyScript] = S.MintAssets.new();
-           
+
             }
             mintedAssetsDict[asset.policyScript].insert(
                 S.AssetName.new(Buffer.from(assetName)),
                 S.Int.new(S.BigNum.from_str(asset.quantity.toString()))
             );
-         
-           
+
+
 
         })
 
@@ -764,10 +792,10 @@ class NamiWalletApi {
         for (let asset of mintedAssetsArray) {
             const multiAsset = S.MultiAsset.new();
             const mintedAssets = S.Assets.new();
-           
+
             const policyScript = S.NativeScript.from_bytes(Buffer.from(asset.policyScript, "hex"))
             nativeScripts.add(policyScript);
-            
+
             mintedAssets.insert(
                 S.AssetName.new(Buffer.from(asset.assetName)),
                 S.BigNum.from_str(asset.quantity.toString())
@@ -796,24 +824,24 @@ class NamiWalletApi {
             // }
             outputValues[asset.address] = outputValues[asset.address].checked_add(mintedValue)
         }
-      
-        Object.entries(mintedAssetsDict).map(([policyScriptHex, mintAssets]) => {
-        const policyScript = S.NativeScript.from_bytes(Buffer.from(policyScriptHex, "hex"))
-        mint.insert(
-            S.ScriptHash.from_bytes(
-                policyScript
-                    .hash(S.ScriptHashNamespace.NativeScript)
-                    .to_bytes()
-            ),
-            mintAssets
-        );
-      
-            }) 
 
-       
+        Object.entries(mintedAssetsDict).map(([policyScriptHex, mintAssets]) => {
+            const policyScript = S.NativeScript.from_bytes(Buffer.from(policyScriptHex, "hex"))
+            mint.insert(
+                S.ScriptHash.from_bytes(
+                    policyScript
+                        .hash(S.ScriptHashNamespace.NativeScript)
+                        .to_bytes()
+                ),
+                mintAssets
+            );
+
+        })
+
+
 
         const inputs = S.TransactionInputs.new();
-        
+
         selection.input.forEach((utxo) => {
 
             inputs.add(
@@ -825,11 +853,11 @@ class NamiWalletApi {
             outputValues[PaymentAddress] = outputValues[PaymentAddress].checked_add(utxo.output().amount());
         });
 
-  
+
         const rawOutputs = S.TransactionOutputs.new();
-        
+
         Object.entries(outputValues).map(([address, value]) => {
-            
+
             rawOutputs.add(
                 S.TransactionOutput.new(
                     S.Address.from_bech32(address),
@@ -837,7 +865,7 @@ class NamiWalletApi {
                 )
             );
         })
-        
+
         const fee = S.BigNum.from_str("0");
         const rawTxBody = S.TransactionBody.new(
             inputs,
@@ -847,24 +875,24 @@ class NamiWalletApi {
         );
         rawTxBody.set_mint(mint);
 
-       
+
 
         let aux = S.AuxiliaryData.new()
-        
+
         if (metadata) {
             const generalMetadata = S.GeneralTransactionMetadata.new();
             Object.entries(metadata).map(([MetadataLabel, Metadata]) => {
-            
-            generalMetadata.insert(
-                S.BigNum.from_str(MetadataLabel),
-                S.encode_json_str_to_metadatum(JSON.stringify(Metadata), 0)
-            );
+
+                generalMetadata.insert(
+                    S.BigNum.from_str(MetadataLabel),
+                    S.encode_json_str_to_metadatum(JSON.stringify(Metadata), 0)
+                );
             });
 
             aux.set_metadata(generalMetadata)
-            
+
             rawTxBody.set_auxiliary_data_hash(S.hash_auxiliary_data(aux));
-            
+
 
 
         }
@@ -889,12 +917,12 @@ class NamiWalletApi {
             )
         );
         if (multiSig) {
-        vkeys.add(
-            S.Vkeywitness.from_bytes(
-                Buffer.from(dummyVkeyWitness, "hex")
-            )
-        );
-            }
+            vkeys.add(
+                S.Vkeywitness.from_bytes(
+                    Buffer.from(dummyVkeyWitness, "hex")
+                )
+            );
+        }
         witnesses.set_vkeys(vkeys);
 
 
@@ -908,7 +936,7 @@ class NamiWalletApi {
             S.BigNum.from_str(ProtocolParameter.linearFee.minFeeA),
             S.BigNum.from_str(ProtocolParameter.linearFee.minFeeB)
         ));
-        
+
         outputValues[PaymentAddress] = outputValues[PaymentAddress].checked_sub(S.Value.new(minFee));
         Object.entries(costValues).map(([address, value]) => {
 
@@ -918,7 +946,7 @@ class NamiWalletApi {
 
         const outputs = S.TransactionOutputs.new();
         Object.entries(outputValues).map(([address, value]) => {
-            
+
             outputs.add(
                 S.TransactionOutput.new(
                     S.Address.from_bech32(address),
@@ -927,8 +955,8 @@ class NamiWalletApi {
             );
         })
 
-      
-        
+
+
         const finalTxBody = S.TransactionBody.new(
             inputs,
             outputs,
@@ -951,7 +979,7 @@ class NamiWalletApi {
 
         const size = transaction.to_bytes().length * 2;
         if (size > ProtocolParameter.maxTxSize) throw ERROR.TX_TOO_BIG;
-        
+
         return transaction.to_bytes()
     }
     async _txBuilder({
@@ -961,16 +989,16 @@ class NamiWalletApi {
         ProtocolParameter,
 
         metadata = null,
-        
+
 
     }) {
-        
+
         const MULTIASSET_SIZE = 5000;
         const VALUE_SIZE = 5000;
         const totalAssets = 0;
 
-        
-        
+
+
         CoinSelection.setProtocolParameters(
             ProtocolParameter.minUtxo.toString(),
             ProtocolParameter.linearFee.minFeeA.toString(),
@@ -982,9 +1010,9 @@ class NamiWalletApi {
             Utxos,
             Outputs,
             20 + totalAssets,
-            
+
         )
-        
+
         const inputs = selection.input;
         const txBuilder = S.TransactionBuilder.new(
             S.LinearFee.new(
@@ -1013,14 +1041,14 @@ class NamiWalletApi {
             AUXILIARY_DATA = S.AuxiliaryData.new()
             const generalMetadata = S.GeneralTransactionMetadata.new();
             Object.entries(Metadata).map(([MetadataLabel, Metadata]) => {
-            generalMetadata.insert(
-                S.BigNum.from_str(MetadataLabel),
-                S.encode_json_str_to_metadatum(JSON.stringify(Metadata), 0)
-            );
+                generalMetadata.insert(
+                    S.BigNum.from_str(MetadataLabel),
+                    S.encode_json_str_to_metadatum(JSON.stringify(Metadata), 0)
+                );
             });
 
             aux.set_metadata(generalMetadata)
-            
+
             txBuilder.set_auxiliary_data(AUXILIARY_DATA)
         }
 
@@ -1166,7 +1194,7 @@ class NamiWalletApi {
             'https://cardano-preprod.blockfrost.io/api/v0' :
             'https://cardano-mainnet.blockfrost.io/api/v0'
         let blockfrostApiKey = this.getApiKey(networkId)
-        
+
         try {
             return await (await fetch(`${networkEndpoint}${endpoint}`, {
                 headers: {
