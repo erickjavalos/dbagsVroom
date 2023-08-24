@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { GET_AVAILABLE_ASSETS } from "../../utils/queries"
 
-
 function removeTypename(obj) {
     // Check if the input is an object
     if (typeof obj === 'object' && obj !== null) {
