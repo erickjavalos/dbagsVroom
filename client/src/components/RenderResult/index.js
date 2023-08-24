@@ -7,7 +7,7 @@ import NamiWalletApi, { Cardano } from "../../nami-js";
 import blockfrostApiKey from "../../../config.js";
 
 import { MINT,SUBMIT_MINT } from "../../utils/mutations"
-import LoadingSpinner from './LoadingSpinner';
+import LoadingSpinner from '../LoadingSpinner';
 
 
 let nami;
