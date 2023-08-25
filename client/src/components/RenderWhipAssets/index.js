@@ -4,26 +4,11 @@ import { GET_AVAILABLE_ASSETS } from "../../utils/queries"
 import RenderWhipSubAssets from "../RenderWhipSubAssets";
 
 
-const RenderWhipAssets = ({ assets, assetSelected, setAssetSelected }) => {
+const RenderWhipAssets = ({ assets, assetSelected, setAssetSelected, minted, setMinted }) => {
 
-    // const { loading, error, data } = useQuery(GET_AVAILABLE_ASSETS,
-    //     {
-    //         variables: {
-    //             "assets": assets
-    //         }
-    //     }
-    // )
 
     return (
         <>
-            {/* {loading ? <>
-                <h1>
-                    rendering....
-                </h1>
-
-            </> : <> */}
-            {console.log("whips available")}
-            {console.log()}
             {/* assets in wallet per window */}
             {assets.length > 0 ? (
                 // render assets
@@ -32,6 +17,8 @@ const RenderWhipAssets = ({ assets, assetSelected, setAssetSelected }) => {
                         assets={assets}
                         assetSelected={assetSelected}
                         setAssetSelected={setAssetSelected}
+                        minted={minted}
+                        setMinted={setMinted}
                     />
                 </>
             ) : (
@@ -44,11 +31,6 @@ const RenderWhipAssets = ({ assets, assetSelected, setAssetSelected }) => {
 
                 </>
             )}
-            {/* </>
-            } */}
-
-
-
         </>
     );
 };

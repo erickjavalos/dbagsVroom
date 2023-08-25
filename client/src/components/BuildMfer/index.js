@@ -10,6 +10,7 @@ const BuildMfer = ({ assets, walletConnected }) => {
   const [whipAssets, setWhipAssets] = useState()
   const [dbagSelected, setDbagSelected] = useState(false)
   const [whipSelected, setWhipSelected] = useState(false)
+  const [minted, setMinted] = useState(false)
 
   useEffect(() => {
     const dbagAssetsRendered = assets?.dbagAssets || [];
@@ -53,12 +54,15 @@ const BuildMfer = ({ assets, walletConnected }) => {
                 assets={whipAssets}
                 assetSelected={whipSelected}
                 setAssetSelected={setWhip}
+                minted={minted}
+                setMinted={setMinted}
               />
             </div>
 
             <RenderResult
               dbag={dbagSelected}
               whip={whipSelected}
+              setMinted={setMinted}
               walletConnected={walletConnected}
             />
           </div>

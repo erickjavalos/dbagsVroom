@@ -5,6 +5,7 @@ import ConstructMfer from '../../utils/ConstructMfer';
 
 import NamiWalletApi, { Cardano } from "../../nami-js";
 import blockfrostApiKey from "../../../config.js";
+import LoadingSpinner from '../LoadingSpinner';
 
 import { MINT, SUBMIT_MINT } from "../../utils/mutations"
 let nami;
@@ -32,11 +33,12 @@ function removeTypename(obj) {
   return obj;
 }
 
-const RenderResult = ({ dbag, whip, walletConnected }) => {
+const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
   const [mfer, setMfer] = useState();
   const [auto, setAuto] = useState();
   const [addMint, { error, data }] = useMutation(MINT);
   const [submitMint, { errorSubmit, dataSubmit }] = useMutation(SUBMIT_MINT);
+  const [isMinting, setIsMinting] = useState(false);
 
   const canvas = useRef(null);
 
@@ -65,6 +67,7 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
 
 
   const processMintRequest = async () => {
+    setIsMinting(true)
 
     // instantiate serialization lib that helps decode blockchain data
     const S = await Cardano();
@@ -99,6 +102,7 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
     catch (e) {
       console.log(e)
       console.log("issue with mint")
+      setMinted(false)
       return
     }
     // extract asset name 
@@ -138,7 +142,7 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
         "cbee942c033ace397faca24b6481f1c7a99cdc5b8005ccd25fe2ac64": {
           // NFTName
           assetName: {
-            name : `dbagxauto000000000`, // dynamic
+            name: `dbagxauto000000000`, // dynamic
             Dbag: "asdfasdfasdfasdfasdfasdfasdfasdfasd",
             Auto: "asdfasdfasdfasdfasdfasdfasdfasdfasd",
             image: "isdgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfgdfgdfsgdfsfsgdfsg",
@@ -173,12 +177,19 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
         },
       });
       console.log(data)
+
+      setIsMinting(false)
+      setMinted(true)
     }
     // do not proceed if issues occur and update database state
     catch (e) {
       // update database
       console.log("not signed, or error occured")
       console.log(e)
+
+      setIsMinting(false)
+      setMinted(false)
+
       return
     }
 
@@ -187,8 +198,13 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
   return (
     <>
       <div className="flex flex-col w-2/4">
-        <div className='flex flex-col h-5/6 mt-11  justify-center rounded-lg'>
-          <canvas className='rounded-lg' ref={canvas} width={1500} height={500} />
+        <div className="flex flex-col h-5/6 mt-11 justify-center rounded-lg">
+          {/* canvas for dbag and whip */}
+          <canvas className="rounded-lg"
+            ref={canvas}
+            width={1500}
+            height={500}
+          />
           <div className='m-2'>
             {!mfer && <h1>* select your mfer</h1>}
             {!auto && <h1>* select your whip</h1>}
@@ -198,10 +214,18 @@ const RenderResult = ({ dbag, whip, walletConnected }) => {
         {mfer && auto &&
           <div className='mt-4'>
             <button type="submit"
-              className="mx-1 text-white bg-[rgb(151,196,109,0.8)] hover:bg-[rgb(151,196,109,1)] rounded-lg text-lg px-4 py-2"
+              className={`mx-1 text-white ${isMinting && `pointer-events-none`} bg-[rgb(151,196,109,0.8)] hover:bg-[rgb(151,196,109,1)] rounded-lg text-lg px-4 py-2`}
               onClick={processMintRequest}
             >
-              mint
+              {/* mint spinner */}
+              {isMinting ? (
+                <div className="flex items-center">
+                  <div className="spinner border-t-4 border-gray-500 border-solid rounded-full h-4 w-4 animate-spin mr-2"></div>
+                  Minting...
+                </div>
+              ) : (
+                'mint'
+              )}
             </button>
           </div>
         }

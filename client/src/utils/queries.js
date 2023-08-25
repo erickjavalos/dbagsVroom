@@ -63,8 +63,3 @@ query GetAssetsInWallet($address: String) {
     dbags
   }
 }`
-
-export const GET_AVAILABLE_ASSETS = gql`
-query Query($assets: [AutoInput]) {
-  getAvailableWhips(assets: $assets)
-}`
