@@ -3,7 +3,7 @@ import RenderWhips from "../RenderWhips";
 
 
 
-const RenderWhipSubAssets = ({ assets, assetSelected, setAssetSelected }) => {
+const RenderWhipSubAssets = ({ assets, assetSelected, setAssetSelected, minted, setMinted }) => {
     const [assetMeta, setAssetMeta] = useState([])
     const [currentSlide, setCurrentSlide] = useState(0)
     const [input, setInput] = useState('')
@@ -81,9 +81,6 @@ const RenderWhipSubAssets = ({ assets, assetSelected, setAssetSelected }) => {
                                 )}
 
                             </div>
-
-
-
                         </div>
                         <div className="flex flex-row w-11/12 bg-[rgba(202,195,172,1)] text-sm items-center justify-center p-2 rounded-lg">
                             {/* left arrow (<<) */}
@@ -105,97 +102,13 @@ const RenderWhipSubAssets = ({ assets, assetSelected, setAssetSelected }) => {
                                     </button>
                                 </>}
                             {/* image cards  */}
-                            {/* call component */}
                             <RenderWhips 
                                 assets={assetMeta}
                                 currentSlide={currentSlide}
-                                // setAssetSelectedHere={setAssetSelectedHere}
+                                minted={minted}
+                                setMinted={setMinted}
                                 setAssetSelected={setAssetSelected}
                             />
-                            {/* {assetMeta
-                                .slice(currentSlide * 3, currentSlide * 3 + 3)
-                                .map((asset) => {
-                                    // get length of slice 
-                                    const assetsWindow = assetMeta.slice(currentSlide * 3, currentSlide * 3 + 3)
-                                    // express images normally
-                                    if (assetsWindow.length === 3) {
-                                        return (
-                                            <div key={asset._id}
-                                                className={`w-1/2  m-2 rounded-lg ${asset.onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(0,0,0,0.3)]'}   active:bg-[rgb(151,196,109,1)]  cursor-pointer`}
-                                                onClick={(e) => handleClick(asset)}
-                                            >
-                                                <img className="rounded-t-lg"
-                                                    src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
-                                                >
-                                                </img>
-                                                {asset.onchain_metadata.name}
-                                            </div>
-                                        )
-                                    }
-                                    // render left for two items in window
-                                    else if (assetsWindow.length === 2) {
-                                        if (asset._id !== assetsWindow[1]._id) {
-                                            return (
-                                                <div key={asset._id} className="flex flex-row items-center justify-center">
-                                                    <div className="w-1/4 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
-                                                    </div>
-
-                                                    <div
-                                                        className={`w-1/2  m-2 rounded-lg ${asset.onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(0,0,0,0.3)]'}   active:bg-[rgb(151,196,109,1)]  cursor-pointer`}
-                                                        onClick={(e) => handleClick(asset)}
-                                                    >
-                                                        <img className="rounded-t-lg"
-                                                            src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
-                                                        >
-                                                        </img>
-                                                        {asset.onchain_metadata.name}
-                                                    </div>
-                                                    <div
-                                                        className={`w-1/2  m-2 rounded-lg ${assetsWindow[1].onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(0,0,0,0.3)]'}   active:bg-[rgb(151,196,109,1)]  cursor-pointer`}
-                                                        onClick={(e) => handleClick(assetsWindow[1])}
-                                                    >
-                                                        <img className="rounded-t-lg"
-                                                            src={`https://ipfs.io/ipfs/${assetsWindow[1].onchain_metadata.image.split("ipfs://")[1]}`}
-                                                        >
-                                                        </img>
-                                                        {assetsWindow[1].onchain_metadata.name}
-                                                    </div>
-
-                                                    <div className="w-1/4 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
-                                                    </div>
-
-                                                </div>
-
-                                            )
-                                        }
-                                    }
-                                    // render for one asset left in window
-                                    else {
-                                        return (
-                                            <div key={asset._id} className="flex flex-row items-center justify-center">
-
-                                                <div className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
-                                                </div>
-
-                                                <div
-                                                    className={`w-1/2 m-2 rounded-lg ${asset.onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(0,0,0,0.3)]'}   active:bg-[rgb(151,196,109,1)] cursor-pointer`}
-                                                    onClick={(e) => handleClick(asset)}
-                                                >
-                                                    <img className="rounded-t-lg"
-                                                        src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
-                                                    >
-                                                    </img>
-                                                    {asset.onchain_metadata.name}
-                                                </div>
-
-                                                <div className="w-1/2 bg-[rgba(217,217,217,0.5)] m-2 rounded-lg">
-                                                </div>
-                                            </div>
-                                        )
-                                    }
-
-                                })
-                            } */}
                             {/* right arrow (>>) */}
                             {((currentSlide + 1) * 3 < assetMeta.length) &&
                                 <>
@@ -219,7 +132,6 @@ const RenderWhipSubAssets = ({ assets, assetSelected, setAssetSelected }) => {
                             }
                         </div>
                     </div>
-                    {/* add right arrow */}
                 </>
             ) : (
                 <>

@@ -4,7 +4,7 @@ import RenderAssets from "../RenderDbagAssets";
 import { GET_AUTO_ASSETS } from "../../utils/queries"
 import RenderWhipAssets from '../RenderWhipAssets';
 
-const QueryWhips = ({ assets, assetSelected, setAssetSelected }) => {
+const QueryWhips = ({ assets, assetSelected, setAssetSelected, minted, setMinted }) => {
     //  query the auto data
     const { loading, error, data } = useQuery(GET_AUTO_ASSETS,
         {
@@ -30,6 +30,8 @@ const QueryWhips = ({ assets, assetSelected, setAssetSelected }) => {
                             assets={whips}
                             assetSelected={assetSelected}
                             setAssetSelected={setAssetSelected}
+                            minted={minted}
+                            setMinted={setMinted}
                         />
                     </>
                 )}
