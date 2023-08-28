@@ -8,4 +8,8 @@ const LoadingSpinner = ({ isLoading }) => {
   );
 };
 
+<<<<<<< HEAD
 export default LoadingSpinner;
+=======
+export default LoadingSpinner;
+>>>>>>> 15b5148d92dcaf1eaad758042814589019349d5c

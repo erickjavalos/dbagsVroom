@@ -29,3 +29,9 @@ mutation Mutation($address: String) {
   }
 }`
 
+export const GET_AVAILABLE_ASSETS = gql`
+mutation Mutation($assets: [AutoInput]) {
+  getAvailableWhips(assets: $assets)
+}`
+
+

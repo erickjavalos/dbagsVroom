@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery, gql } from '@apollo/client';
-import { GET_AVAILABLE_ASSETS } from "../../utils/queries"
+import { useMutation } from '@apollo/client';
+import { GET_AVAILABLE_ASSETS } from "../../utils/mutations"
 
 function removeTypename(obj) {
     // Check if the input is an object
@@ -24,24 +24,25 @@ function removeTypename(obj) {
     return obj;
 }
 
-const RenderWhips = ({ assets, currentSlide, setAssetSelected }) => {
+const RenderWhips = ({ assets, currentSlide, setAssetSelected, minted, setMinted }) => {
     const [assetSelectedHere, setAssetSelectedHere] = useState('')
-
-
+    const [assetsAvailable, setAssetsAvailable] = useState([])
     const assetsWindow = assets.slice(currentSlide * 3, currentSlide * 3 + 3)
-    // console.log(assetsWindow)
     const assetsFixed = Object.values(removeTypename(assetsWindow))
+    const [getAvailableAssets, { error, data, loading }] = useMutation(GET_AVAILABLE_ASSETS);
 
-    // console.log(assetsFixed)
-    const { loading, error, data } = useQuery(GET_AVAILABLE_ASSETS,
-        {
-            variables: {
-                "assets": assetsFixed
-            }
-        }
-    )
+    // if the current slide changes we need to requery database to see if assets are available
+    useEffect(async () => {
+        // return the assets available
+        const { data } = await getAvailableAssets({
+            variables: { assets: assetsFixed },
+        });
 
-    const assetsAvailable = data?.getAvailableWhips || []
+        setAssetsAvailable(data?.getAvailableWhips || [])
+        // set asset back to false
+        minted && setMinted(false)
+    }, [currentSlide, minted])
+
 
 
     const handleClick = (asset) => {
@@ -54,10 +55,11 @@ const RenderWhips = ({ assets, currentSlide, setAssetSelected }) => {
             {loading ? <>
                 <h1>loading...</h1>
             </> : <>
-                {data && assetsWindow
+                {assetsAvailable && assetsWindow
                     .map((asset) => {
                         // get length of slice 
                         const assetsWindow = assets.slice(currentSlide * 3, currentSlide * 3 + 3)
+
                         // express images normally
                         if (assetsWindow.length === 3) {
                             if (assetsAvailable.includes(asset.onchain_metadata.name)) {

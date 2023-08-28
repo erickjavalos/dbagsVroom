@@ -53,32 +53,6 @@ const resolvers = {
       }
       throw new AuthenticationError('You need to be logged in!');
     },
-
-    getAvailableWhips: async (parent, { assets }, context) => {
-      if (context.user) {
-        // extract asset onchain_metadata.name
-        const assetNames = assets.map((asset) => asset.onchain_metadata.name)
-        // query database
-        try {
-          const assetsAvailable = await Mint.find({
-            name: { $in: assetNames },
-            txHash: { $exists: false, $eq: null }
-          });
-
-          // extract only names and return that
-          
-          const assetsAvailableStr = assetsAvailable.map((asset)=> asset.name)
-          // resolve the array of available assets
-          return assetsAvailableStr
-
-        } catch (err) {
-          console.error("Error querying the database:", err);
-          throw new AuthenticationError('Issue querying database');
-          
-        }
-
-      }ß
-    }
   },
   Mutation: {
     createAsset: async (parent, { assetInput }) => {
@@ -409,14 +383,16 @@ const resolvers = {
           console.log("waiting....")
           await new Promise(r => setTimeout(r, 10000));
           console.log("done...")
+          
 
+          // return txHash
           return stateChanged ? txHash : () => {
             console.log("state didnt change")
-            throw new GraphQLError('payment address is not defined'), {
+            throw new GraphQLError('issue with txHash', {
               extensions: {
                 code: 'ERROR'
               }
-            }
+            })
           }
         }
         // asset has already been minted
@@ -430,6 +406,32 @@ const resolvers = {
       }
       throw new AuthenticationError('You need to be logged in!');
 
+    },
+
+    getAvailableWhips: async (parent, { assets }, context) => {
+      if (context.user) {
+        // extract asset onchain_metadata.name
+        const assetNames = assets.map((asset) => asset.onchain_metadata.name)
+        // query database
+        try {
+          const assetsAvailable = await Mint.find({
+            name: { $in: assetNames },
+            txHash: { $exists: false, $eq: null }
+          });
+
+          // extract only names and return that
+          
+          const assetsAvailableStr = assetsAvailable.map((asset)=> asset.name)
+          // resolve the array of available assets
+          return assetsAvailableStr
+
+        } catch (err) {
+          console.error("Error querying the database:", err);
+          throw new AuthenticationError('Issue querying database');
+          
+        }
+
+      }
     },
 
 
