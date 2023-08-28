@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { GET_AVAILABLE_ASSETS } from "../../utils/queries"
-
+import LoadingSpinner from "../LoadingSpinner";
 
 const RenderDbagSubAssets = ({ assets, assetSelected, setAssetSelected }) => {
     const [assetMeta, setAssetMeta] = useState([])
@@ -9,6 +9,7 @@ const RenderDbagSubAssets = ({ assets, assetSelected, setAssetSelected }) => {
     const [input, setInput] = useState('')
     const [highLightRed, setHighLightRed] = useState(false)
     const [assetSelectedHere, setAssetSelectedHere] = useState('')
+    const [isLoadingAssets, setIsLoadingAssets] = useState(false);
     // const [assetSelected, setAssetSelected] = useState(false)
 
     // set values based on assets we recieve
@@ -53,9 +54,20 @@ const RenderDbagSubAssets = ({ assets, assetSelected, setAssetSelected }) => {
         setAssetSelected(asset)
     }
 
+
+    const renderNfts = async () => {
+        setIsLoadingAssets(true);
+        // Simulate loading delay or actual API call
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setIsLoadingAssets(false);
+      };
+
     return (
         <>
             {/* header name of assets */}
+            {/* assets in wallet per window */}
+            {/* Display the loading spinner */}
+            {isLoadingAssets && <LoadingSpinner />}
             {assetMeta.length > 0 ? (
                 // render assets
                 <>

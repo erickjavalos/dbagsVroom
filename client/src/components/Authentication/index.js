@@ -38,6 +38,7 @@ const Authentication = () => {
             variables: { code: code },
           });
           console.log("Authenticated!")
+          console.log(data);
           Auth.login(data.login.token);
         } catch (e) {
           console.error(e);

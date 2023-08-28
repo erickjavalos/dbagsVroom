@@ -1,26 +1,25 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useMutation } from '@apollo/client';
+import React, { useState, useEffect, useRef } from "react";
+import { useMutation } from "@apollo/client";
 
-import ConstructMfer from '../../utils/ConstructMfer';
+import ConstructMfer from "../../utils/ConstructMfer";
 
 import NamiWalletApi, { Cardano } from "../../nami-js";
 import blockfrostApiKey from "../../../config.js";
-import LoadingSpinner from '../LoadingSpinner';
+import { MINT, SUBMIT_MINT } from "../../utils/mutations";
 
-import { MINT, SUBMIT_MINT } from "../../utils/mutations"
+
 let nami;
-
 
 function removeTypename(obj) {
   // Check if the input is an object
-  if (typeof obj === 'object' && obj !== null) {
+  if (typeof obj === "object" && obj !== null) {
     // Create a new object to hold the properties without __typename
     const newObj = {};
 
     // Iterate through the keys of the input object
     for (const key in obj) {
       // Check if the property is not __typename
-      if (key !== '__typename') {
+      if (key !== "__typename") {
         // Recursively call the function for nested objects
         newObj[key] = removeTypename(obj[key]);
       }
@@ -42,19 +41,19 @@ const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
 
   const canvas = useRef(null);
 
-
-  useEffect(async () => {
+  useEffect(() => {
     if (canvas.current) {
       if (dbag && whip) {
         // build the mfer + whip
-        const constructMfer = new ConstructMfer()
-        constructMfer.generateDbagImage(canvas, dbag, whip)
-      }
-      else {
-        const context = canvas.current.getContext('2d');
+        const constructMfer = new ConstructMfer();
+        constructMfer.generateDbagImage(canvas, dbag, whip);
+        // setIsLoadingAssets(false); // Assets are no longer loading
+      } else {
+        const context = canvas.current.getContext("2d");
         // Set the canvas background color to brown
-        context.fillStyle = 'rgba(202,195,172,1)';
+        context.fillStyle = "rgba(202,195,172,1)";
         context.fillRect(0, 0, canvas.current.width, canvas.current.height);
+        // setIsLoadingAssets(false); // Assets are no longer loading
       }
     }
   }, [dbag, whip]);
@@ -64,7 +63,6 @@ const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
     setMfer(dbag);
     setAuto(whip);
   }, [dbag, whip]);
-
 
   const processMintRequest = async () => {
     setIsMinting(true)
@@ -91,12 +89,13 @@ const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
         variables: {
           dbagInput: dbag,
           autoInput: whip,
-          address: await nami.getAddress()
+          address: await nami.getAddress(),
         },
       });
       // extract hashed metadata
       hashedMeta = data.mint.hashedMeta;
-      assetName = data.mint.assetName
+      assetName = data.mint.assetName;
+      window.location.reload();
     }
     // return normally
     catch (e) {
@@ -139,22 +138,23 @@ const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
     let dummyMetadata = {
       721: {
         // policyId
-        "cbee942c033ace397faca24b6481f1c7a99cdc5b8005ccd25fe2ac64": {
+        cbee942c033ace397faca24b6481f1c7a99cdc5b8005ccd25fe2ac64: {
           // NFTName
           assetName: {
             name: `dbagxauto000000000`, // dynamic
             Dbag: "asdfasdfasdfasdfasdfasdfasdfasdfasd",
             Auto: "asdfasdfasdfasdfasdfasdfasdfasdfasd",
-            image: "isdgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfgdfgdfsgdfsfsgdfsg",
+            image:
+              "isdgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfsgdfgdfgdfsgdfsfsgdfsg",
             Collection: "asdfasdfasdfasdfasdfasdfasdfasdf",
             Twitter: "asdfasdfasdfasdfasdfasdfasdfasdfasd",
-            Website: "asdfasdfasdfasdfasdfasdfasdfasdfasd"
+            Website: "asdfasdfasdfasdfasdfasdfasdfasdfasd",
           },
         },
       },
     };
 
-    // build transaction 
+    // build transaction
     try {
       // combine and build transaction
       const transaction = await nami.transaction({
@@ -168,12 +168,12 @@ const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
       });
       // prompting user for signature
       const witnessBuyer = await nami.signTx(transaction, true);
-      // submit metadata to the backend 
+      // submit metadata to the backend
       const { data } = await submitMint({
         variables: {
           transaction: transaction,
           witnessSignature: witnessBuyer,
-          autoInput: whip
+          autoInput: whip,
         },
       });
       console.log(data)
@@ -192,7 +192,6 @@ const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
 
       return
     }
-
   };
 
   return (
@@ -209,13 +208,13 @@ const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
             {!mfer && <h1>* select your mfer</h1>}
             {!auto && <h1>* select your whip</h1>}
           </div>
-
         </div>
         {mfer && auto &&
           <div className='mt-4'>
             <button type="submit"
               className={`mx-1 text-white ${isMinting && `pointer-events-none`} bg-[rgb(151,196,109,0.8)] hover:bg-[rgb(151,196,109,1)] rounded-lg text-lg px-4 py-2`}
               onClick={processMintRequest}
+              disabled={isMinting}
             >
               {/* mint spinner */}
               {isMinting ? (

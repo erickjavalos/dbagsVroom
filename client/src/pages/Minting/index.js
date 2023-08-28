@@ -78,6 +78,7 @@ const Minting = () => {
           }
         )
       })
+      console.log(mintedAssets);
 
       let recipients = [
         {
@@ -94,6 +95,7 @@ const Minting = () => {
       // build transaction 
       try {
         // combine and build transaction
+        console.log("building transaction");
         const transaction = await nami.transaction({
           PaymentAddress: paymentAddress,
           recipients: recipients,
@@ -103,6 +105,7 @@ const Minting = () => {
           utxosRaw: await nami.getUtxosHex(),
           multiSig: true,
         });
+        console.log("transaction built");
         // prompting user for signature
         const witnessBuyer = await nami.signTx(transaction, true);
         // submit metadata to the backend 
