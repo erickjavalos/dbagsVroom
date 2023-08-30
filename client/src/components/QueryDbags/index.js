@@ -29,6 +29,7 @@ const QueryDbags = ({ assets, assetSelected, setAssetSelected }) => {
                             assets={assetsLibrary}
                             assetSelected={assetSelected}
                             setAssetSelected={setAssetSelected}
+                            name={'dbags'}
                         />
                     </>
                 )}
