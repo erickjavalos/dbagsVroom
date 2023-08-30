@@ -24,7 +24,7 @@ const Authentication = () => {
   const [login, { error, data }] = useMutation(LOGIN_USER);
 
 
-
+  
   useEffect(async () => {
     const verifyHash = async () => {
       // get code from query parameter

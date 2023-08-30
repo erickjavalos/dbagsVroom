@@ -1,6 +1,5 @@
 const Jimp = require('jimp');
 const Orientation = require("../assets/data/OrientationConstants.json")
-const fs = require('fs')
 
 class ConstructMfer {
     constructor(metadata) {
