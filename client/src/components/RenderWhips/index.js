@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { GET_AVAILABLE_ASSETS } from "../../utils/mutations"
+import LoadableImage from '../LoadableImage';
+// import image
+import defaultImage from "../../assets/mfers_assets/Background/Light orange.png"
+
+
 
 function removeTypename(obj) {
     // Check if the input is an object
@@ -62,28 +67,35 @@ const RenderWhips = ({ assets, currentSlide, setAssetSelected, minted, setMinted
 
                         // express images normally
                         if (assetsWindow.length === 3) {
+                            // verify that the asset in the window is available to mint
                             if (assetsAvailable.includes(asset.onchain_metadata.name)) {
                                 return (
                                     <div key={asset._id}
                                         className={`w-1/2  m-2 rounded-lg ${asset.onchain_metadata.name === assetSelectedHere ? 'bg-[rgb(151,196,109,1)] hover:bg-[rgb(151,196,109,1)]' : 'bg-[rgb(96,107,171)] hover:bg-[rgb(151,196,109,1)]'}   active:bg-[rgb(151,196,109,1)]  cursor-pointer`}
                                         onClick={(e) => handleClick(asset)}
                                     >
-                                        <img className="rounded-t-lg"
+                                        {/* import loadingImage component */}
+                                        <img
+                                            className="rounded-t-lg"
                                             src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
+                                            loading='lazy'
                                         >
                                         </img>
                                         {asset.onchain_metadata.name}
                                     </div>
                                 )
                             }
+                            // asset is not available
                             else {
                                 return (
                                     <div key={asset._id}
                                         className={`w-1/2  m-2 rounded-lg bg-[rgb(0,0,0,0.3)]  pointer-events-none`}
                                         onClick={(e) => handleClick(asset)}
                                     >
-                                        <img className="rounded-t-lg"
+                                        <img
+                                            className="rounded-t-lg"
                                             src={`https://ipfs.io/ipfs/${asset.onchain_metadata.image.split("ipfs://")[1]}`}
+                                            loading='lazy'
                                         >
                                         </img>
                                         {asset.onchain_metadata.name}
@@ -94,7 +106,6 @@ const RenderWhips = ({ assets, currentSlide, setAssetSelected, minted, setMinted
                         }
                         // render left for two items in window
                         else if (assetsWindow.length === 2) {
-                            console.log(assetsWindow)
                             // assets.assetsWindow.
                             if (asset._id !== assetsWindow[1]._id) {
                                 return (
