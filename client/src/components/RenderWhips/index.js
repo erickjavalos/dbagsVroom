@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { GET_AVAILABLE_ASSETS } from "../../utils/mutations"
-import LoadableImage from '../LoadableImage';
-// import image
-import defaultImage from "../../assets/mfers_assets/Background/Light orange.png"
-
 
 
 function removeTypename(obj) {
