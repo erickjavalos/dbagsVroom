@@ -7,7 +7,6 @@ const { Mint } = require('../models/');
 // seed data
 const autoSeeds = require('./autoSeeds.json');
 const dbagSeeds = require('./dbagSeeds.json');
-const profileSeeds = require('./profileSeeds.json');
 
 
 const loadData = async (model, data, str) => {
@@ -60,7 +59,6 @@ db.once('open', async () => {
     // delete dbags and auto entries from db
     await Dbags.deleteMany({});
     await Autos.deleteMany({})
-    await Profile.deleteMany({});
     await Mint.deleteMany({})
     
 
@@ -68,9 +66,9 @@ db.once('open', async () => {
     // await Dbags.create(dbagSeeds)
     await loadData(Dbags,dbagSeeds, "dbags")
     await loadData(Autos,autoSeeds, "autos")
-    await loadMint(Mint,autoSeeds, "autos")
+    await loadMint(Mint,autoSeeds, "mint")
 
-    await Profile.create(profileSeeds);
+    // await Profile.create(profileSeeds);
 
   } catch (err) {
     console.error(err);
