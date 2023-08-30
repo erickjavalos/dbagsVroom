@@ -90,9 +90,11 @@ const resolvers = {
 
     login: async (parent, { code }) => {
       // extract token from mutation
+      console.log(code)
       const Auth = await getAuthToken(code)
       // verify auth token was returned 
       if (!Auth?.error) {
+        console.log(Auth);
         // Verify Discord presence
         const userInfo = await getUserInfo(Auth)
         if (userInfo) {

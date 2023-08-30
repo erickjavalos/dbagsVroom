@@ -51,6 +51,7 @@ module.exports = {
     payload.append('redirect_uri', redirectUrl);
     // grab secrets
     let url = `https://discord.com/api/v10/oauth2/token`;
+    console.log('payload: ', payload);
   
     const response = await fetch(url, {
       method: 'POST',
