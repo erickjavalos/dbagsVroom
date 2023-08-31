@@ -61,6 +61,7 @@ class ConstructMfer {
     }
 
     importImage = async (collection, asset) => {
+        // console.log(__dirname)
         let response = await import(`../assets/${collection}/${asset}`)
         return response.default
     }

@@ -5,6 +5,9 @@ import Auth from "../../utils/auth";
 import BuildMfer from "../../components/BuildMfer";
 import backgroundImage from "../../images/background_auto.png"
 
+import planetX from '../../assets/auto_assets/Background/PlanetX.png';
+console.log(planetX)
+
 // instantiate nami wallet class
 import NamiWalletApi, { Cardano } from "../../nami-js";
 import blockfrostApiKey from "../../../config.js";

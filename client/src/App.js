@@ -14,17 +14,20 @@ import {
   createHttpLink,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-// import Authentication from "./components/Authentication/index.js";
+import Authentication from "./components/Authentication/index.js";
 import Home from "./pages/Home";
-// import Join from "./pages/Join";
-// import Login from "./pages/Login";
-// import Minting from "./pages/Minting";
+import Join from "./pages/Join";
+import Login from "./pages/Login";
+import Minting from "./pages/Minting";
 import Test from "./components/Test/"
+
+// test
+
 
 import './App.css'
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3001/graphql',
+  uri: 'http://localhost:3000/graphql',
 });
 
 // Construct request middleware that will attach the JWT token to every request as an `authorization` header
@@ -53,13 +56,12 @@ export default function App() {
       <ApolloProvider client={client}>
         <Router>
           <Routes>
-            {/* <Route path="/auth" element={<Authentication />} />
-            <Route path="/home" element={<Home />} /> */}
-            <Route path="/" element={<Home />} />
-            {/* <Route path="/home" element={<Home />} /> */}
-            {/* <Route path="/join" element={<Join />} />
+            <Route path="/auth" element={<Authentication />} />
+            <Route path="/test" element={<Test />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/join" element={<Join />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/minting" element={<Minting />} /> */}
+            <Route path="/minting" element={<Minting />} />
           </Routes>
         </Router>
       </ApolloProvider>
