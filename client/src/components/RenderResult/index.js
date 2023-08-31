@@ -48,9 +48,7 @@ const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
     if (canvas.current) {
       if (dbag && whip) {
         // build the mfer + whip
-        console.log("constructing")
         const constructMfer = new ConstructMfer();
-        console.log("constructed...")
         await constructMfer.generateDbagImage(canvas, dbag, whip);
         setIsLoadingAssets(false); // Assets are no longer loading
       } else {
