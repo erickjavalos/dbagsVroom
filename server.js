@@ -10,7 +10,7 @@ const fs = require('fs');
 const files = fs.readdirSync('./schema');
 console.log(files)
 
-const { typeDefs, resolvers } = require('./app/schema/index.js');
+// const { typeDefs, resolvers } = require('./schema/index.js');
 console.log(typeDefs)
 console.log(__dirname)
 // const {db} = require('./config/connection');
