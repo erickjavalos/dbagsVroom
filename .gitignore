@@ -2,7 +2,6 @@ node_modules
 package-lock.json
 .DS_Store
 .env
-
 client/
 client/dist/
 server/dist/
