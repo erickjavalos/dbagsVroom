@@ -88,6 +88,7 @@ module.exports = {
       return {"me" : {...await meData.json()}, "guilds": [...await guildsData.json()]}
     }
     catch (err) {
+      console.log('error trying to get user info')
       console.log(err)
       return 0;
     }
