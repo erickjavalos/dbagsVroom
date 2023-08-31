@@ -8,8 +8,7 @@ const buildPath = path.join(__dirname, '../client/dist');
 const { typeDefs, resolvers } = require('./schema');
 const {db} = require('./config/connection');
 
-const PORT = process.env.NODE_ENV === 'production' ? process.env.PROD_PORT : process.env.DEV_PORT;
-
+const PORT = 3001;
 const app = express();
 
 const server = new ApolloServer({
@@ -22,8 +21,6 @@ const server = new ApolloServer({
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static(buildPath));
-
-
 
 if (process.env.NODE_ENV === 'production') {
   app.get('*', (req, res) => {
