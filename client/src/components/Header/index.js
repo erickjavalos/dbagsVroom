@@ -136,6 +136,7 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
   </div>
 </div>
   );
+  
 }
 
 export default Header;
