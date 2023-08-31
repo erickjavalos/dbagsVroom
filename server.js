@@ -5,6 +5,10 @@ const path = require('path');
 const { authMiddleware } = require('./utils/auth');
 const buildPath = path.join(__dirname, './dist');
 console.log(__dirname)
+const fs = require('fs');
+
+const files = fs.readdirSync('.');
+console.log(files)
 
 const { typeDefs, resolvers } = require('./schema/index.js');
 console.log(typeDefs)
