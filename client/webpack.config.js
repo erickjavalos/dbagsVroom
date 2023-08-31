@@ -1,6 +1,7 @@
 const path = require('path');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
 
 module.exports = {
   mode: 'production',
@@ -59,5 +60,10 @@ module.exports = {
       filename: '[name].bundle.css',
       chunkFilename: '[id].css'
     }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'template.html'), // use your custom template
+      filename: 'index.html', // output file
+    }),
+    
   ]
 };
