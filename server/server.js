@@ -3,12 +3,12 @@ require('dotenv').config();
 const { ApolloServer } = require('apollo-server-express');
 const path = require('path');
 const { authMiddleware } = require('./utils/auth');
-const buildPath = path.join(__dirname, '../client/dist');
+const buildPath = path.join(__dirname, './dist');
 
 const { typeDefs, resolvers } = require('./schema');
 const {db} = require('./config/connection');
 
-const PORT = process.env.NODE_ENV === 'production' ? process.env.PROD_PORT : process.env.DEV_PORT;
+const PORT = process.env.PORT || 3001
 
 const app = express();
 
