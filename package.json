@@ -55,6 +55,7 @@
     "jimp": "^0.22.10",
     "jsonwebtoken": "^9.0.2",
     "lodash.clonedeep": "^4.5.0",
+    "mongodb": "^6.0.0",
     "mongoose": "^7.3.1",
     "node-fetch": "^2.6.12",
     "nodemon": "^2.0.22",
