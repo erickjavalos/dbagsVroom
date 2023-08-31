@@ -5,19 +5,19 @@ const path = require('path');
 const { authMiddleware } = require('./utils/auth');
 const buildPath = path.join(__dirname, './dist');
 
-const { typeDefs, resolvers } = require('./schema');
-const {db} = require('./config/connection');
+// const { typeDefs, resolvers } = require('./schema');
+// const {db} = require('./config/connection');
 
-const PORT = process.env.PORT || 3001
+// const PORT = process.env.PORT || 3001
 
-const app = express();
+// const app = express();
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: authMiddleware,
-  persistedQueries: false
-});
+// const server = new ApolloServer({
+//   typeDefs,
+//   resolvers,
+//   context: authMiddleware,
+//   persistedQueries: false
+// });
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
