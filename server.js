@@ -4,6 +4,7 @@ const { ApolloServer } = require('apollo-server-express');
 const path = require('path');
 const { authMiddleware } = require('./utils/auth');
 const buildPath = path.join(__dirname, './dist');
+console.log(__dirname)
 
 const { typeDefs, resolvers } = require('./schema/index.js');
 console.log(typeDefs)
