@@ -19,6 +19,7 @@ import Home from "./pages/Home";
 import Join from "./pages/Join";
 import Login from "./pages/Login";
 import Minting from "./pages/Minting";
+import Test from "./components/Test/"
 
 import './App.css'
 
@@ -55,6 +56,7 @@ export default function App() {
           <Routes>
             <Route path="/auth" element={<Authentication />} />
             <Route path="/home" element={<Home />} />
+            <Route path="/" element={<Test />} />
             <Route path="/join" element={<Join />} />
             <Route path="/login" element={<Login />} />
             <Route path="/minting" element={<Minting />} />
