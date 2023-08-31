@@ -1,7 +1,0 @@
-const DBAGS_POLICY = "ecb41dc4214459af7e74b40116704b5aed34d4deda785e59a7cf8c53";
-const WHIPS_POLICY = "a89d6c96713c57190c98cae3d26a85e1528bc9ec22fb85d5e21e0ab7";
-
-module.exports = {
-    DBAGS_POLICY,
-    WHIPS_POLICY
-  };
