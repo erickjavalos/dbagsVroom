@@ -63,6 +63,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'template.html'), // use your custom template
       filename: 'index.html', // output file
+      inject: 'body', // This will place the script at the end of the body
+
+
     }),
     
   ]
