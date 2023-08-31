@@ -19,10 +19,6 @@ import Home from "./pages/Home";
 import Join from "./pages/Join";
 import Login from "./pages/Login";
 import Minting from "./pages/Minting";
-import Test from "./components/Test/"
-
-// test
-
 
 import './App.css'
 
@@ -57,7 +53,6 @@ export default function App() {
         <Router>
           <Routes>
             <Route path="/auth" element={<Authentication />} />
-            <Route path="/test" element={<Test />} />
             <Route path="/home" element={<Home />} />
             <Route path="/join" element={<Join />} />
             <Route path="/login" element={<Login />} />

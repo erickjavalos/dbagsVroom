@@ -10,7 +10,6 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
   },
-
   module: {
     rules: [
       {
@@ -64,9 +63,23 @@ module.exports = {
       template: path.resolve(__dirname, 'template.html'), // use your custom template
       filename: 'index.html', // output file
       inject: 'body', // This will place the script at the end of the body
-
-
     }),
-    
-  ]
+  ],
+
+  devServer: {
+    contentBase: path.resolve(__dirname, './dist'),
+    hot: true,
+    historyApiFallback: true,
+    publicPath: '/', 
+    port: 3000,
+    host: '0.0.0.0',
+    disableHostCheck: true,
+    proxy: {
+      '/api': {
+           target: 'http://localhost:3000',
+           router: () => 'http://localhost:3001',
+           logLevel: 'debug' /*optional*/
+      }
+   }
+  },
 };
