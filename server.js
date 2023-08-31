@@ -8,7 +8,7 @@ const buildPath = path.join(__dirname, './dist');
 // const { typeDefs, resolvers } = require('./schema');
 // const {db} = require('./config/connection');
 
-// const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3001
 
 const app = express();
 
