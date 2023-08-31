@@ -1,14 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useMutation } from "@apollo/client";
-
 import ConstructMfer from "../../utils/ConstructMfer";
-
 import NamiWalletApi, { Cardano } from "../../nami-js";
 import blockfrostApiKey from "../../../config.js";
-
 import { MINT, SUBMIT_MINT } from "../../utils/mutations";
-import LoadingSpinner from "../LoadingSpinner";
-
 
 let nami;
 
@@ -44,12 +39,12 @@ const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
 
   const canvas = useRef(null);
 
-  useEffect(() => {
+  useEffect(async () => {
     if (canvas.current) {
       if (dbag && whip) {
         // build the mfer + whip
         const constructMfer = new ConstructMfer();
-        constructMfer.generateDbagImage(canvas, dbag, whip);
+        await constructMfer.generateDbagImage(canvas, dbag, whip);
         setIsLoadingAssets(false); // Assets are no longer loading
       } else {
         const context = canvas.current.getContext("2d");

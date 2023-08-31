@@ -6,7 +6,8 @@ import './input.css';
 import App from './App';
 
 // render application
-render(
+render
+(
   <App />,
   document.getElementById('app')
 );
