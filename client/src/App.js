@@ -14,11 +14,11 @@ import {
   createHttpLink,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import Authentication from "./components/Authentication/index.js";
+// import Authentication from "./components/Authentication/index.js";
 import Home from "./pages/Home";
-import Join from "./pages/Join";
-import Login from "./pages/Login";
-import Minting from "./pages/Minting";
+// import Join from "./pages/Join";
+// import Login from "./pages/Login";
+// import Minting from "./pages/Minting";
 import Test from "./components/Test/"
 
 import './App.css'
@@ -50,16 +50,16 @@ const client = new ApolloClient({
 export default function App() {
   return (
     <>
-      
       <ApolloProvider client={client}>
         <Router>
           <Routes>
-            <Route path="/auth" element={<Authentication />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/" element={<Test />} />
-            <Route path="/join" element={<Join />} />
+            {/* <Route path="/auth" element={<Authentication />} />
+            <Route path="/home" element={<Home />} /> */}
+            <Route path="/" element={<Home />} />
+            {/* <Route path="/home" element={<Home />} /> */}
+            {/* <Route path="/join" element={<Join />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/minting" element={<Minting />} />
+            <Route path="/minting" element={<Minting />} /> */}
           </Routes>
         </Router>
       </ApolloProvider>

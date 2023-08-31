@@ -1,4 +1,5 @@
 
+import React, { useEffect, useState } from "react";
 
 // header component
 function Test() {
@@ -6,7 +7,7 @@ function Test() {
 
   return (
     <>
-    <h1 className="text-white">Testing</h1>
+    <h1 className="text-white">Testing 1.. 2... 3 ...</h1>
     </>
 
   );
