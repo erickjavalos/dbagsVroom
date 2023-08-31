@@ -1,35 +1,26 @@
 const express = require('express');
-require('dotenv').config();
-const { ApolloServer } = require('apollo-server-express');
 const path = require('path');
-const { authMiddleware } = require('./utils/auth');
 const buildPath = path.join(__dirname, './dist');
-console.log(__dirname)
-const fs = require('fs');
+const { ApolloServer } = require('apollo-server-express');
+const { typeDefs, resolvers } = require('./schema/index.js');
+const { authMiddleware } = require('./utils/auth');
 
-const files = fs.readdirSync('./schema');
-console.log(files)
-
-// const { typeDefs, resolvers } = require('./schema/index.js');
-console.log(typeDefs)
-console.log(__dirname)
-// const {db} = require('./config/connection');
+require('dotenv').config();
 
 const PORT = process.env.PORT || 3001
 
 const app = express();
 
-// const server = new ApolloServer({
-//   typeDefs,
-//   resolvers,
-//   context: authMiddleware,
-//   persistedQueries: false
-// });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: authMiddleware,
+  persistedQueries: false
+});
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static(buildPath));
-
 
 
 if (process.env.NODE_ENV === 'production') {
