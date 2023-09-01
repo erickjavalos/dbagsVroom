@@ -20,6 +20,13 @@ mutation Mutation($code: String) {
     token
   }
 }`
+export const SIGNIN_USER = gql`
+mutation SignupMutation($DiscordID: String!, $password: String!, $email: String!) {
+  signup(DiscordID: $DiscordID, password: $password, email: $email) {
+    token
+  }
+}
+`;
 
 export const GET_ASSETS = gql`
 mutation Mutation($address: String) {

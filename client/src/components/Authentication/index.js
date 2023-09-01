@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../../utils/mutations';
-import Auth from "../../utils/auth"
-import backgroundImage from "../../images/background_auto.png"
-
+import Auth from "../../utils/auth";
+import backgroundImage from "../../images/background_auto.png";
 
 const styles = {
   container: {
@@ -14,46 +13,35 @@ const styles = {
     backgroundColor: 'black',
     width: '100vw',
     height: '100vh',
-    // position: 'relative', // Added to make the position relative for absolute positioning of the header
     fontFamily: 'architects daughter'
   }
-}
+};
 
 const Authentication = () => {
-  const queryParams = new URLSearchParams(window.location.search)
-  const [login, { error, data }] = useMutation(LOGIN_USER);
+  const queryParams = new URLSearchParams(window.location.search);
+  const [login, { error }] = useMutation(LOGIN_USER);
 
-
-
-  useEffect(async () => {
-    const verifyHash = async () => {
-      // get code from query parameter
-      const code = queryParams.get("code")
-      // attempt to login
-      if (code) {
-        // use mutation
-        console.log("Authenticating....")
-        try {
-          const { data } = await login({
-            variables: { code: code },
-          });
-          console.log("Authenticated!")
-          Auth.login(data.login.token);
-        } catch (e) {
-          console.error(e);
-          window.location.assign('/join');
-        }
+  const verifyHash = async () => {
+    const code = queryParams.get("code");
+    if (code) {
+      try {
+        const { data: loginData } = await login({
+          variables: { code: code },
+        });
+        Auth.login(loginData.login.token);
+      } catch (e) {
+        console.error(e);
+        window.location.assign('/join'); // Redirect to appropriate URL on error
       }
+    }
+  };
 
-    };
-
+  useEffect(() => {
     verifyHash();
   }, []);
 
-  return <>
-    <div style={styles.container}>
-    </div>
-  </>;
+  return <div style={styles.container}></div>;
 };
 
 export default Authentication;
+
