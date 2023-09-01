@@ -19,6 +19,7 @@ import Home from "./pages/Home";
 import Join from "./pages/Join";
 import Login from "./pages/Login";
 import Minting from "./pages/Minting";
+import Test from "./pages/Test";
 
 import './App.css'
 
@@ -52,11 +53,12 @@ export default function App() {
       <ApolloProvider client={client}>
         <Router>
           <Routes>
-            <Route path="/auth" element={<Authentication />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/join" element={<Join />} />
+            {/* <Route path="/auth" element={<Authentication />} /> */}
+            {/* <Route path="/home" element={<Home />} /> */}
+            <Route path="/home" element={<Test />} />
+            {/* <Route path="/join" element={<Join />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/minting" element={<Minting />} />
+            <Route path="/minting" element={<Minting />} /> */}
           </Routes>
         </Router>
       </ApolloProvider>
