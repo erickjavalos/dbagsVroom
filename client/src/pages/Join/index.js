@@ -31,7 +31,7 @@ function Join() {
               {/* title of Header */}
               {/* render assets */}
               <div className="flex flex-row text-center justify-center items-center p-5 m-10">
-                TODO: ADD an authentication schema like this https://www.goattribe.games/register/invitation
+                Join dbag server here: https://discord.com/invite/xezHbFSCuU
               </div>
             </div>
           </div>
