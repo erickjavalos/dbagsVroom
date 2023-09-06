@@ -31,6 +31,7 @@ class ExtractAssets {
         // retrieve stake address to poll wallets assets
         const stakeAddress = await this.getStakeAddress()
         // extract dbag and whip assets
+        // TODO: BUG HERE!! poll assets with one call, we are using 2x the amount of recources
         const dbagAssets = await this.pollAssets(stakeAddress, this.mDbagPolicyID)
         const whipAssets = await this.pollAssets(stakeAddress, this.mWhipPolicyID)
 
@@ -41,18 +42,6 @@ class ExtractAssets {
 
 
     }
-
-    getAssetsPagination = async (page, stakeAddress) => {
-
-        const assetsEndpoint = `https://cardano-preprod.blockfrost.io/api/v0/accounts/${stakeAddress}/addresses/assets?page=${page}`
-        const response = await fetch(assetsEndpoint, {
-            headers,
-        })
-        const data = await response.json()
-
-        return data
-    }
-
     pollAssets = async (stakeAddress, policyID) => {
         // local variables for control
         let assets = []
@@ -62,6 +51,7 @@ class ExtractAssets {
         while (!iteratedAllAssets) {
             pageCnt += 1;
             const assetsUnit = await this.getAssetsPagination(pageCnt, stakeAddress)
+            console.log(assetsUnit)
             // iterate through each asset and figure out policy id
             for (let i = 0; i < assetsUnit.length; i++) {
                 const unit = assetsUnit[i].unit
@@ -81,6 +71,19 @@ class ExtractAssets {
         return assets
 
     }
+
+    getAssetsPagination = async (page, stakeAddress) => {
+
+        const assetsEndpoint = `https://cardano-preprod.blockfrost.io/api/v0/accounts/${stakeAddress}/addresses/assets?page=${page}`
+        const response = await fetch(assetsEndpoint, {
+            headers,
+        })
+        const data = await response.json()
+
+        return data
+    }
+
+
 
     getStakeAddress = async () => {
 
