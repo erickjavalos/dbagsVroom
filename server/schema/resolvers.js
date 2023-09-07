@@ -7,6 +7,8 @@ const { Profile } = require('../models');
 const { getAuthToken, getUserInfo, checkUserInGuild, signToken } = require('../utils/auth');
 const { checkMint, getMetadata, updateMetadata, uploadIPFS, changeState, txHashExists, assetsExists } = require('../utils/mint');
 const ConstructMfer = require('../utils/ConstructMfer');
+const express = require('express');
+const router = express.Router();
 
 const fetch = require('node-fetch');
 
@@ -88,44 +90,51 @@ const resolvers = {
       return createdAsset;
     },
 
-    login: async (parent, { code }) => {
-      // extract token from mutation
-      const Auth = await getAuthToken(code)
-      // verify auth token was returned 
-      if (!Auth?.error) {
-        // Verify Discord presence
-        const userInfo = await getUserInfo(Auth)
-        if (userInfo) {
-          // verify user is in discord user
-          if (checkUserInGuild(userInfo.guilds)) {
-            // extract data from api
-            const discordId = userInfo.me.id
-            const username = userInfo.me.username;
-            const email = userInfo.me.email
-            // search for profile based on discordID (unique)
-            let profile = await Profile.findOne({ discordId });
-            // add user to database and authenticate if they do not exist
-            if (!profile) {
-              // create profile
-              profile = await Profile.create({ username, discordId, email });
+    login: async (parent, { code }, context, info) => {
+      try {
+        // extract token from mutation
+        const Auth = await getAuthToken(code)
+        // verify auth token was returned
+        if (!Auth?.error) {
+          // Verify Discord presence
+          const userInfo = await getUserInfo(Auth)
+          if (userInfo) {
+            // verify user is in discord user
+            if (checkUserInGuild(userInfo.guilds)) {
+              // extract data from api
+              const discordId = userInfo.me.id
+              const username = userInfo.me.username;
+              const email = userInfo.me.email
+              // search for profile based on discordID (unique)
+              let profile = await Profile.findOne({ discordId });
+              // add user to the database and authenticate if they do not exist
+              if (!profile) {
+                // create profile
+                profile = await Profile.create({ username, discordId, email });
+              }
+              // create jwt with profile from db
+              const token = signToken(profile);
+              // return jwt
+              return {
+                token: token
+              }
+            } else {
+              throw new AuthenticationError('User not in guilds');
             }
-            // create jwt with profile from db
-            const token = signToken(profile);
-            // return jwt
-            return {
-              token: token
-            }
-          }
-          else {
-            throw new AuthenticationError('User not in guilds');
           }
         }
-      }
-      // token has already been used! or hacker using fake query parameter...
-      else {
-        // TODO: Reroute to /info page
-        console.log(Auth)
-        throw new AuthenticationError('Error in Authentication code provided!');
+        // token has already been used! or hacker using a fake query parameter...
+        else {
+          // Handle the case where login fails by redirecting to the Join page
+          const joinPageURL = '/join'; // Update this with the actual URL of your Join page
+          router.redirect(joinPageURL);
+          // You can also throw an AuthenticationError if you want to return an error message to the client.
+          throw new AuthenticationError('Error in Authentication code provided!');
+        }
+      } catch (error) {
+        // Handle any errors that occur during the login process
+        console.error('Login error:', error);
+        throw new AuthenticationError('An error occurred during login');
       }
     },
 
