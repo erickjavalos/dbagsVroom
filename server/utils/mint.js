@@ -130,7 +130,7 @@ module.exports = {
     }
   },
   // given an address that the 
-  assetsExists: async function(address, metadataStr, whipAsset)
+  assetsExists: async function(address, metadataStr, whipAsset,Wallets)
   {
     // parse metadata
     const metadata = JSON.parse(metadataStr)
@@ -139,8 +139,9 @@ module.exports = {
     // get dbag and auto names
     const dbag = metadata['721'][`${process.env.POLICY_ID}`][`dbagxauto${assetNumber}`]['Dbag']
     const auto = metadata['721'][`${process.env.POLICY_ID}`][`dbagxauto${assetNumber}`]['Auto']
+
     // instantiante helper class to extract assets
-    const extractAssets = new ExtractAssets(address, DBAGS_POLICY, WHIPS_POLICY);
+    const extractAssets = new ExtractAssets(address, DBAGS_POLICY, WHIPS_POLICY, Wallets);
     // get assets in a wallet
     const assets = await extractAssets.getAssets()
     // check if dbag selected exists in the user wallet that is receiving the ada

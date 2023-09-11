@@ -31,13 +31,8 @@ class ExtractAssets {
     getAssets = async () => {
         // retrieve stake address to poll wallets assets
         const stakeAddress = await this.getStakeAddress()
-        console.log(stakeAddress)
         // extract dbag and whip assets
         const wallet = await this.mWalletDB.findOne({ stakeAddress }).exec();
-
-        // TODO: BUG HERE!! poll assets with one call, we are using 2x the amount of recources
-        // const dbagAssets = await this.pollAssets(stakeAddress, this.mDbagPolicyID)
-        // const whipAssets = await this.pollAssets(stakeAddress, this.mWhipPolicyID)
 
         return {
             'dbags' : wallet.dbagAssets,

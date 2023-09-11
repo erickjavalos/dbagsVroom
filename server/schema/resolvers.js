@@ -141,7 +141,6 @@ const resolvers = {
           const extractAssets = new ExtractAssets(address, DBAGS_POLICY, WHIPS_POLICY, Wallets);
           // extract assets
           const assets = await extractAssets.getAssets()
-          console.log(assets)
 
           return assets
         }
@@ -244,6 +243,7 @@ const resolvers = {
     submitMint: async (parent, { transaction, witnessSignature, autoInput }, context) => {
       // verify user is signed in
       if (context.user) {
+        console.log('submitting mint...')
         // verify no txHash in database
         let hashExists = await txHashExists(Mint, autoInput)
         // continue mint if hash doesnt exist, means it wasnt already minted
@@ -334,8 +334,9 @@ const resolvers = {
 
           }
 
+
           // verify assets exist in wallet
-          const assetsExist = await assetsExists(minter.address, metadata, autoInput)
+          const assetsExist = await assetsExists(minter.address, metadata, autoInput, Wallets)
           // error out!
           if (!assetsExist) {
             console.log("ERROR with assets not existing in input address field")
