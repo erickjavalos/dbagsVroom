@@ -13,11 +13,12 @@ let headers = {
     "project_id": blockfrostApiKey[networkID],
 };
 class ExtractAssets {
-    constructor(walletAddress, dbagPolicyID, whipPolicyID) {
+    constructor(walletAddress, dbagPolicyID, whipPolicyID, walletDB) {
         // save as member variables
         this.mWalletAddress = walletAddress
         this.mDbagPolicyID = dbagPolicyID
         this.mWhipPolicyID = whipPolicyID
+        this.mWalletDB = walletDB
 
     }
     // ********************************************
@@ -30,14 +31,17 @@ class ExtractAssets {
     getAssets = async () => {
         // retrieve stake address to poll wallets assets
         const stakeAddress = await this.getStakeAddress()
+        console.log(stakeAddress)
         // extract dbag and whip assets
+        const wallet = await this.mWalletDB.findOne({ stakeAddress }).exec();
+
         // TODO: BUG HERE!! poll assets with one call, we are using 2x the amount of recources
-        const dbagAssets = await this.pollAssets(stakeAddress, this.mDbagPolicyID)
-        const whipAssets = await this.pollAssets(stakeAddress, this.mWhipPolicyID)
+        // const dbagAssets = await this.pollAssets(stakeAddress, this.mDbagPolicyID)
+        // const whipAssets = await this.pollAssets(stakeAddress, this.mWhipPolicyID)
 
         return {
-            'dbags' : dbagAssets,
-            'whips' : whipAssets
+            'dbags' : wallet.dbagAssets,
+            'whips' : wallet.autoAssets
         }
 
 
@@ -51,7 +55,6 @@ class ExtractAssets {
         while (!iteratedAllAssets) {
             pageCnt += 1;
             const assetsUnit = await this.getAssetsPagination(pageCnt, stakeAddress)
-            console.log(assetsUnit)
             // iterate through each asset and figure out policy id
             for (let i = 0; i < assetsUnit.length; i++) {
                 const unit = assetsUnit[i].unit

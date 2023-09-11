@@ -1,6 +1,6 @@
 const { AuthenticationError } = require('apollo-server-express');
 const { GraphQLError } = require('graphql')
-const { Dbags, Autos, Mint } = require('../server/../models');
+const { Dbags, Autos, Mint, Wallets } = require('../server/../models');
 const { DBAGS_POLICY, WHIPS_POLICY } = require('../Constants.js');
 const ExtractAssets = require('../utils/ExtractAssets');
 const { Profile } = require('../models');
@@ -138,9 +138,10 @@ const resolvers = {
       if (context.user) {
         if (address) {
           // instantiante helper class to extract assets
-          const extractAssets = new ExtractAssets(address, DBAGS_POLICY, WHIPS_POLICY);
+          const extractAssets = new ExtractAssets(address, DBAGS_POLICY, WHIPS_POLICY, Wallets);
           // extract assets
           const assets = await extractAssets.getAssets()
+          console.log(assets)
 
           return assets
         }
