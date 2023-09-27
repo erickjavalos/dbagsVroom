@@ -22,7 +22,7 @@ nami.setPrivateKey(process.env.WALLET_PRIVATE_KEY)
 router.get('/startMintDbags', async (req, res) => {
     try {
         // get unminted from database
-        const dbags = await DbagsMint.find({ minted: "FALSE" }).limit(10);
+        const dbags = await DbagsMint.find({ minted: "FALSE" }).limit(30);
         console.log('found dbags')
         console.log(dbags)
         // iterate through each dbag and construct metadata
@@ -62,7 +62,7 @@ router.get('/startMintDbags', async (req, res) => {
 router.get('/startMintWhips', async (req, res) => {
     try {
         // get unminted from database
-        const whips = await AutosMint.find({ minted: "FALSE" }).limit(10);
+        const whips = await AutosMint.find({ minted: "FALSE" }).limit(30);
         // iterate through each dbag and construct metadata
         const assets = {}
         whips.forEach((whip) => {
