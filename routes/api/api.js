@@ -20,9 +20,13 @@ var nami = new NamiWalletApi(blockfrostApiKey)
 nami.setPrivateKey(process.env.WALLET_PRIVATE_KEY)
 
 router.get('/startMintDbags', async (req, res) => {
+    console.log('hit')
     try {
         // get unminted from database
-        const dbags = await DbagsMint.find({ minted: "FALSE" }).limit(10);
+        const dbags = await DbagsMint.aggregate([
+            { $match: { minted: "FALSE" } }, // Use $match to find documents where `minted` is "FALSE"
+            { $sample: { size: 10 } } // Use $sample to randomly select 10 documents from the matched documents
+        ]); 
         console.log('found dbags')
         console.log(dbags)
         // iterate through each dbag and construct metadata
@@ -62,8 +66,10 @@ router.get('/startMintDbags', async (req, res) => {
 router.get('/startMintWhips', async (req, res) => {
     try {
         // get unminted from database
-        const whips = await AutosMint.find({ minted: "FALSE" }).limit(10);
-        // iterate through each dbag and construct metadata
+        const whips = await AutosMint.aggregate([
+            { $match: { minted: "FALSE" } }, // Use $match to find documents where `minted` is "FALSE"
+            { $sample: { size: 10 } } // Use $sample to randomly select 10 documents from the matched documents
+        ]);        // iterate through each dbag and construct metadata
         const assets = {}
         whips.forEach((whip) => {
             assets[`${whip.onchain_metadata.name}`] = whip.onchain_metadata
@@ -105,21 +111,20 @@ router.post('/submitMintDbags', async (req, res) => {
         transaction &&
         witnessSignature &&
         metadata
-    ) 
-    {
+    ) {
         // sign transaction
         let witnessMinting = await nami.signTxCBOR(transaction, "1b6f6d0e540f600bf5c4f0f1e426b0353d62dbed6839a57784ffede59d244456")
         // generate witnesses array
         let witnesses = [witnessSignature, witnessMinting]
-        
+
         // submit transaction to blockchain
         let txHash = await nami.submitTx({
-          transactionRaw: transaction,
-          witnesses: witnesses,
-          networkId: 0,
-          metadata: JSON.parse(metadata)
+            transactionRaw: transaction,
+            witnesses: witnesses,
+            networkId: 0,
+            metadata: JSON.parse(metadata)
         })
-        
+
         // update state in the database
         const formattedMeta = JSON.parse(metadata)
         const assets = formattedMeta['721'][`${dbagsPolicyID}`]
@@ -156,21 +161,20 @@ router.post('/submitMintWhips', async (req, res) => {
         transaction &&
         witnessSignature &&
         metadata
-    ) 
-    {
+    ) {
         // sign transaction
         let witnessMinting = await nami.signTxCBOR(transaction, "fca21479d3b04f840ca31cf34149c685f23ce2fca800a85ab37bbe2f0cd9953c")
         // generate witnesses array
         let witnesses = [witnessSignature, witnessMinting]
-        
+
         // submit transaction to blockchain
         let txHash = await nami.submitTx({
-          transactionRaw: transaction,
-          witnesses: witnesses,
-          networkId: 0,
-          metadata: JSON.parse(metadata)
+            transactionRaw: transaction,
+            witnesses: witnesses,
+            networkId: 0,
+            metadata: JSON.parse(metadata)
         })
-        
+
         // update state in the database
         const formattedMeta = JSON.parse(metadata)
         const assets = formattedMeta['721'][`${whipsPolicyID}`]
@@ -192,7 +196,7 @@ router.post('/submitMintWhips', async (req, res) => {
         const result = await AutosMint.updateMany(query, update, options);
         console.log(result)
         console.log(txHash)
-        
+
         res.status(200).json(txHash)
 
     }

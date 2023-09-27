@@ -30,8 +30,11 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+app.get("/test", async (req, res) => {
+  console.log('testing..')
+})
+
 // use api routes
-app.use(routes)
 
 
 // Create a new instance of an Apollo server with the GraphQL schema
@@ -41,6 +44,8 @@ const startApolloServer = async (typeDefs, resolvers) => {
   
   db.once('open', () => {
     app.listen(PORT, () => {
+
+      app.use(routes)
       console.log(`API server running on port ${PORT}!`);
       console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
     })

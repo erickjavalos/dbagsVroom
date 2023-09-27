@@ -48,6 +48,7 @@ const Minting = () => {
     try {
       // get 10 assets from backend
       const response = await fetch(url)
+      
       // deconstruct data
       const data = await response.json()
 
