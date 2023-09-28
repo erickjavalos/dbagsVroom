@@ -124,8 +124,8 @@ function Header({ updateWalletConnected, loggedIn, logout }) {
           onClick={(e) => {
             e.preventDefault();
             window.location.href =
-              // 'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=https%3A%2F%2Fsecret-spire-72123-38831fd4091a.herokuapp.com%2Fauth&response_type=code&scope=identify%20guilds%20email'
-              'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth&response_type=code&scope=identify%20guilds%20email'
+              'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=https%3A%2F%2Fsecret-spire-72123-38831fd4091a.herokuapp.com%2Fauth&response_type=code&scope=identify%20guilds%20email'
+              // 'https://discord.com/api/oauth2/authorize?client_id=1106720134615289937&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth&response_type=code&scope=identify%20guilds%20email'
           }}
         >
           log in mfer

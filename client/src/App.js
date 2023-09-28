@@ -23,7 +23,8 @@ import Minting from "./pages/Minting";
 import './App.css'
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:3001/graphql',
+  // uri: 'http://localhost:3001/graphql',
+  uri : 'https://secret-spire-72123-38831fd4091a.herokuapp.com/graphql',
 });
 
 // Construct request middleware that will attach the JWT token to every request as an `authorization` header
