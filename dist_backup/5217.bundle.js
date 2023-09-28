@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunknami_wallet_integration=self.webpackChunknami_wallet_integration||[]).push([[5217],{4923:(e,a,n)=>{e.exports=n.p+"23a9ced06a9a48ebe084.png"}}]);
