@@ -73,6 +73,7 @@ function Home() {
     // return normally
     catch (e) {
       console.log("issue with polling assets")
+      console.log(e)
       return
     }
     f
