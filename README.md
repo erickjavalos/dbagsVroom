@@ -13,22 +13,23 @@ This project allowed an NFT project in the Cardano ecosystem combine two assets 
 # Running the files 
 1. ``` npm install ```
 2. Fill in .env in server/.env
-    BLOCKFROST_PREPROD=
-    DBAGS_GUILD_ID=
-    CLIENT_ID =
-    CLIENT_SECRET =
-    # NODE_ENV=production
-    PINATA_API_KEY=
-    PINATA_API_SECRET=
-    PINATA_JWT=
-    POLICY_ID=
-    POLICY_SIGNING_CBOR=
-    REDIRECT_URI =
-    SECRET=
-    WALLET_PRIVATE_KEY=
+        
+        BLOCKFROST_PREPROD=
+        DBAGS_GUILD_ID=
+        CLIENT_ID =
+        CLIENT_SECRET =
+        # NODE_ENV=production
+        PINATA_API_KEY=
+        PINATA_API_SECRET=
+        PINATA_JWT=
+        POLICY_ID=
+        POLICY_SIGNING_CBOR=
+        REDIRECT_URI =
+        SECRET=
+        WALLET_PRIVATE_KEY=
 
 3. ``` npm run develop ```
 
-# Sample
+# Exemplar
 ![alt text](imgs/image.png)
 
