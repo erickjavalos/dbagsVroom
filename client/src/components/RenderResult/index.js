@@ -64,8 +64,6 @@ const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
 
   const processMintRequest = async () => {
     setIsMinting(true);
-    // get hashed metadata
-    // console.log("gettin address");
 
     // instantiate serialization lib that helps decode blockchain data
     const S = await Cardano();
@@ -104,8 +102,6 @@ const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
       setMinted(false)
       return
     }
-    // extract asset name 
-    // const assetName = Object.keys(metadata["721"]["91d319c0fc8c557244d2ac5c2d1c0cbeaeb40a13804f122a51705da1"])[0];
     // extract payment address
     let paymentAddress = await nami.getAddress(); // nami wallet address
 
@@ -127,9 +123,9 @@ const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
             assetName: assetName,
             quantity: "1",
             policyId:
-              "cbee942c033ace397faca24b6481f1c7a99cdc5b8005ccd25fe2ac64",
+              "e34bc1363d03f5e3a4c0a8fb9fbbba34dbe643f1e2c798f2da56eba8",
             policyScript:
-              "8201828200581c99aa9e80028ce41a3ae7199674b49e705a9cc826167f8406672b263e82051a0411e679",
+              "8201828200581c624d55c0e5d2a1712436b3bb188be1703e33b478dc2da3a31985f7d482051a051538a8",
           },
         ],
       }, // NFTs to be minted
@@ -138,7 +134,7 @@ const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
     let dummyMetadata = {
       721: {
         // policyId
-        cbee942c033ace397faca24b6481f1c7a99cdc5b8005ccd25fe2ac64: {
+        e34bc1363d03f5e3a4c0a8fb9fbbba34dbe643f1e2c798f2da56eba8: {
           // NFTName
           assetName: {
             name: `dbagxauto000000000`, // dynamic
@@ -166,9 +162,11 @@ const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
         utxosRaw: await nami.getUtxosHex(),
         multiSig: true,
       });
+      console.log("built transaction")
       // prompting user for signature
       const witnessBuyer = await nami.signTx(transaction, true);
       // submit metadata to the backend
+      console.log("signed mint")
       const { data } = await submitMint({
         variables: {
           transaction: transaction,
@@ -176,6 +174,7 @@ const RenderResult = ({ dbag, whip, walletConnected, setMinted }) => {
           autoInput: whip,
         },
       });
+      console.log("submitted Mint")
       console.log(data)
 
       setIsMinting(false)

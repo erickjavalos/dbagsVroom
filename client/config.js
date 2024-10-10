@@ -1,5 +1,5 @@
 const blockfrostApiKey = {
-    0: "preprodEfV6mA9d1Mkavc5XRYmFGsPdqAfj1HGx", // testnet
+    0: "preprodCEdjuMANIQbUepP2h7PPQnXekyCGEfvr", // testnet, no longer a valid project
 }
 
 export default blockfrostApiKey;
