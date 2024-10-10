@@ -1,9 +1,6 @@
-# Simple Minting Machine
+# DbagsVroom
 
-The intent of this repository is to set up a barebones multi signature system that mints assets. The system will be able to take an mint request
-from the user where they will be prompted a transaction that is built on the backend for them to sign. The transaction will hold contents of 
-the asset they will be minting along with the amount they have to pay. Upon confirmation that the user signs the contract to receive an NFT 
-for an X amount of ADA. 
+This project allowed an NFT project in the Cardano ecosystem combine two assets from different policyIDs into a unique NFT. Utilizing the dbagMfers collection and their respected Dbag Mfer Auto Club we were able to allow owners select a dbagMfer nft and a Auto Club nft which then combined into a unique NFT. Users were able to then purchase and mint that custom NFT into their crypto wallet. 
 
 # Technologies Used
 - TypeScript
@@ -14,5 +11,24 @@ for an X amount of ADA.
 - Blockfrost
 
 # Running the files 
-``` npm install ```
-``` npm run develop ```
+1. ``` npm install ```
+2. Fill in .env in server/.env
+    BLOCKFROST_PREPROD=
+    DBAGS_GUILD_ID=
+    CLIENT_ID =
+    CLIENT_SECRET =
+    # NODE_ENV=production
+    PINATA_API_KEY=
+    PINATA_API_SECRET=
+    PINATA_JWT=
+    POLICY_ID=
+    POLICY_SIGNING_CBOR=
+    REDIRECT_URI =
+    SECRET=
+    WALLET_PRIVATE_KEY=
+
+3. ``` npm run develop ```
+
+# Sample
+![alt text](imgs/image.png)
+
