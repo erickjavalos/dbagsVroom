@@ -36,7 +36,9 @@ The authentication to this system uses Discords OAuth2 API where users must be a
 
 # Demo
 
-<video controls src="content/demo.mp4" title="Title"></video>
+https://github.com/user-attachments/assets/2552b342-edd7-4b97-8628-d69f5843fddd
+
+
 
 
 
