@@ -1,11 +1,15 @@
 # DbagsVroom
 
-This project allowed an NFT project in the Cardano ecosystem combine two assets from different policyIDs into a unique NFT. Utilizing the dbagMfers collection and their respected Dbag Mfer Auto Club we were able to allow owners select a dbagMfer nft and a Auto Club nft which then combined into a unique NFT. Users were able to then purchase and mint that custom NFT into their crypto wallet. 
+This project allowed an NFT project in the Cardano ecosystem combine two assets from different policyIDs into a unique NFT. Utilizing the dbagMfers collection and their respected Dbag Mfer Auto Club we were able to allow owners select a dbagMfer NFT and a Auto Club NFT which then combines into a unique NFT. Users are able to purchase and mint that custom NFT into their crypto wallet. 
+
+The authentication to this system uses Discords OAuth2 API where users must be a part of the Discord server pertaining to the Dbag project. Upon valid authentication, a JWT token is generated in the backend thats used for authentication. 
+
 
 # Technologies Used
 - TypeScript
 - React
 - Lucid-Cardano
+- Discord OAuth2.0 Integration
 - Node
 - Express
 - Blockfrost
@@ -30,6 +34,10 @@ This project allowed an NFT project in the Cardano ecosystem combine two assets 
 
 3. ``` npm run develop ```
 
-# Exemplar
-![alt text](imgs/image.png)
+# Demo
+
+<video controls src="content/demo.mp4" title="Title"></video>
+
+
+
 
